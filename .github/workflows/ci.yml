@@ -20,8 +20,21 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      # ===== LINTER (CHECKSTYLE) =====
+      - name: Run Checkstyle
+        run: mvn -B checkstyle:checkstyle
+
+      # Subir reporte como artifact (para poder verlo en GitHub)
+      - name: Upload Checkstyle report
+        uses: actions/upload-artifact@v4
+        with:
+          name: checkstyle-report
+          path: target/checkstyle-result.xml
+
+      # ===== BUILD =====
       - name: Build with Maven
         run: mvn -B package --file pom.xml
 
+      # ===== TESTS =====
       - name: Run tests
         run: mvn test
