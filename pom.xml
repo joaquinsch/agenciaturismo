@@ -106,25 +106,49 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>3.3.1</version>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-checkstyle-plugin</artifactId>
+			<version>3.3.1</version>
+
+			<dependencies>
+				<dependency>
+					<groupId>com.puppycrawl.tools</groupId>
+					<artifactId>checkstyle</artifactId>
+					<version>10.12.4</version>
+				</dependency>
+			</dependencies>
+
+			<configuration>
+				<configLocation>src/main/resources/google_checks.xml</configLocation>
+				<consoleOutput>true</consoleOutput>
+				<failOnViolation>true</failOnViolation>
+			</configuration>
+		</plugin>
+			<plugin>
+				<groupId>com.diffplug.spotless</groupId>
+				<artifactId>spotless-maven-plugin</artifactId>
+				<version>2.43.0</version>
+
+				<configuration>
+					<java>
+						<googleJavaFormat/>
+						<removeUnusedImports/>
+					</java>
+				</configuration>
+
 				<executions>
 					<execution>
-						<id>checkstyle-validation</id>
-						<phase>validate</phase>
 						<goals>
-							<goal>check</goal>
+							<goal>apply</goal>
 						</goals>
 					</execution>
 				</executions>
-				<configuration>
-					<configLocation>checkstyle.xml</configLocation>
-					<encoding>UTF-8</encoding>
-					<consoleOutput>true</consoleOutput>
-					<failOnViolation>true</failOnViolation>
-				</configuration>
 			</plugin>
+
+
+
+
+
 
 		</plugins>
 	</build>
