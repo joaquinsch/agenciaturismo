@@ -4,6 +4,8 @@ import com.agenciaturismo.agenciaturismo.model.ServicioTuristico;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
+
 public class ServicioTuristicoTests {
 
     ServicioTuristico serv = new ServicioTuristico();
@@ -24,5 +26,11 @@ public class ServicioTuristicoTests {
     public void deberiaCrearseConDescripcionBreve(){
         serv.setDescripcion_breve("Por 4 noches en Cancún");
         Assertions.assertEquals("Por 4 noches en Cancún", serv.getDescripcion_breve());
+    }
+
+    @Test
+    public void deberiaCrearseConFecha_servicio(){
+        serv.setFecha_servicio(LocalDate.of(2026, 1, 15));
+        Assertions.assertEquals(LocalDate.of(2026, 1, 15), serv.getFecha_servicio());
     }
 }
