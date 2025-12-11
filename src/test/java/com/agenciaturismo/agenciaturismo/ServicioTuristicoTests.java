@@ -33,4 +33,16 @@ public class ServicioTuristicoTests {
         serv.setFecha_servicio(LocalDate.of(2026, 1, 15));
         Assertions.assertEquals(LocalDate.of(2026, 1, 15), serv.getFecha_servicio());
     }
+
+    @Test
+    public void deberiaCrearseConDestino_servicio(){
+        serv.setDestino_servicio("Argentina");
+        Assertions.assertEquals("Argentina", serv.getDestino_servicio());
+    }
+
+    @Test
+    public void deberiaCrearseConCosto_servicio(){
+        serv.setCosto_servicio(5000.0);
+        Assertions.assertEquals(5000, serv.getCosto_servicio());
+    }
 }
