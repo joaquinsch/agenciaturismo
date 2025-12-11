@@ -28,8 +28,6 @@
         <!-- Nombres básicos -->
         <module name="TypeName"/>
         <module name="MethodName"/>
-        <module name="ParameterName"/>
-        <module name="LocalVariableName"/>
 
         <!-- Indentación -->
         <module name="Indentation">

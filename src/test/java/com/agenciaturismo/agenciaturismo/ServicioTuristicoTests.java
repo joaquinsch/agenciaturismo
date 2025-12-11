@@ -45,4 +45,11 @@ public class ServicioTuristicoTests {
         serv.setCosto_servicio(5000.0);
         Assertions.assertEquals(5000, serv.getCosto_servicio());
     }
+
+    @Test
+    public void deberiaValidarQueElCostoNoSeaNegativo(){
+        serv.setCosto_servicio(-500.0);
+        Assertions.assertThrows(IllegalArgumentException.class, ()-> new ServicioTuristico(2L,"pasaje", "pasaje por colectivo", "formosa", LocalDate.of(2026, 1, 7), -500.0)
+                );
+    }
 }
