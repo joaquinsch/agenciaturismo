@@ -2,8 +2,12 @@ package com.agenciaturismo.agenciaturismo;
 
 
 import com.agenciaturismo.agenciaturismo.model.PaqueteTuristico;
+import com.agenciaturismo.agenciaturismo.model.ServicioTuristico;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PaqueteTuristicoTests {
 
@@ -19,5 +23,14 @@ public class PaqueteTuristicoTests {
     public void deberiaCrearseConUnCosto(){
         paquete.setCosto_paquete(100.0);
         Assertions.assertEquals(100.0, paquete.getCosto_paquete());
+    }
+
+    @Test
+    public void deberiaCrearseConListaDeServiciosIncluidos(){
+        List<ServicioTuristico> lista_servicios = new ArrayList<>();
+        lista_servicios.add(new ServicioTuristico());
+        paquete.setLista_servicios_incluidos(lista_servicios);
+        Assertions.assertEquals(1,
+                paquete.getLista_servicios_incluidos().size());
     }
 }
