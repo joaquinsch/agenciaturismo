@@ -9,4 +9,6 @@ public class PaqueteTuristico {
 
     private Long codigo_producto;
 
+    private Double costo_paquete;
+
 }

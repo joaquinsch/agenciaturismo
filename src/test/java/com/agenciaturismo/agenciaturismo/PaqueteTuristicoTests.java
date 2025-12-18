@@ -14,4 +14,10 @@ public class PaqueteTuristicoTests {
         paquete.setCodigo_producto(1L);
         Assertions.assertEquals(1L, paquete.getCodigo_producto());
     }
+
+    @Test
+    public void deberiaCrearseConUnCosto(){
+        paquete.setCosto_paquete(100.0);
+        Assertions.assertEquals(100.0, paquete.getCosto_paquete());
+    }
 }
