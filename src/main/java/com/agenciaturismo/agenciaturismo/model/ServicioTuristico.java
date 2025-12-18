@@ -10,18 +10,18 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 public class ServicioTuristico {
-    private Long codigo_servicio;
+    private Long codigo_producto;
     private String nombre;
     private String descripcion_breve;
     private String destino_servicio;
     private LocalDate fecha_servicio;
     private Double costo_servicio;
 
-    public ServicioTuristico(Long codigo_servicio, String nombre,
+    public ServicioTuristico(Long codigo_producto, String nombre,
                              String descripcion_breve,
                              String destino_servicio, LocalDate fecha_servicio,
                              Double costo_servicio) {
-        this.codigo_servicio = codigo_servicio;
+        this.codigo_producto = codigo_producto;
         this.nombre = nombre;
         this.descripcion_breve = descripcion_breve;
         this.destino_servicio = destino_servicio;

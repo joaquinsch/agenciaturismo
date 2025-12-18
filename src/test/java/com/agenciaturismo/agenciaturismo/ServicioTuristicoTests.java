@@ -12,8 +12,8 @@ public class ServicioTuristicoTests {
 
     @Test
     public void deberiaCrearseConUnCodigo(){
-        serv.setCodigo_servicio(1L);
-        Assertions.assertEquals(1, serv.getCodigo_servicio());
+        serv.setCodigo_producto(1L);
+        Assertions.assertEquals(1, serv.getCodigo_producto());
     }
 
     @Test
