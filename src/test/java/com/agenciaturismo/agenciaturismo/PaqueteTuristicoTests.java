@@ -6,6 +6,7 @@ import com.agenciaturismo.agenciaturismo.model.ServicioTuristico;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,5 +33,14 @@ public class PaqueteTuristicoTests {
         paquete.setLista_servicios_incluidos(lista_servicios);
         Assertions.assertEquals(1,
                 paquete.getLista_servicios_incluidos().size());
+    }
+
+    @Test
+    public void noDeberiaPoderCrearseConCeroServicios(){
+        List<ServicioTuristico> lista_servicios = new ArrayList<>();
+        paquete.setLista_servicios_incluidos(lista_servicios);
+        Assertions.assertThrows(IllegalArgumentException.class,
+                ()-> new PaqueteTuristico(1L, lista_servicios, 500.0)
+        );
     }
 }
