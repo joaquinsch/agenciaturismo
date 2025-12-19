@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ServicioTuristico {
+public class ServicioTuristico extends ProductoTuristico {
     private Long codigo_producto;
     private String nombre;
     private String descripcion_breve;
