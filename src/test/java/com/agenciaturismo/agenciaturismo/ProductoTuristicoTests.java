@@ -6,10 +6,16 @@ import org.junit.jupiter.api.Test;
 
 public class ProductoTuristicoTests {
 
+    ProductoTuristico producto = new ProductoTuristico();
     @Test
     public void deberiaCrearseConCodigoProducto(){
-        ProductoTuristico producto = new ProductoTuristico();
         producto.setCodigo_producto(1L);
         Assertions.assertEquals(1L, producto.getCodigo_producto());
+    }
+
+    @Test
+    public void deberiaCrearseConTipoProducto(){
+        producto.setTipo_producto("SERVICIO");
+        Assertions.assertEquals("SERVICIO", producto.getTipo_producto());
     }
 }

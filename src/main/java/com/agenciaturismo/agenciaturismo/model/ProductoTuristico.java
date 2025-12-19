@@ -7,4 +7,5 @@ import lombok.Setter;
 @Getter
 public class ProductoTuristico {
     private Long codigo_producto;
+    private String tipo_producto;
 }
