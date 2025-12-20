@@ -2,11 +2,12 @@ package com.agenciaturismo.agenciaturismo.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
 @AllArgsConstructor
-@Getter
+@Getter @Setter
 public abstract class Usuario {
     private String nombre;
     private String apellido;
