@@ -13,5 +13,6 @@ public class Venta {
     private final String medio_pago;
     private final Cliente cliente;
     private final Empleado empleado;
+    private final ProductoTuristico producto_turistico;
 
 }

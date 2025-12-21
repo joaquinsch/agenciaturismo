@@ -8,12 +8,14 @@ import java.time.LocalDate;
 
 public class ServicioTuristicoTests {
 
-    ServicioTuristico serv = new ServicioTuristico();
+    ServicioTuristico serv = ServicioTuristico.builder()
+            .costo_servicio(100.0)
+            .build();
 
     @Test
     public void deberiaCrearseConUnCodigo(){
         serv.setCodigo_producto(1L);
-        Assertions.assertEquals(1, serv.getCodigo_producto());
+        Assertions.assertEquals(1L, serv.getCodigo_producto());
     }
 
     @Test
@@ -49,7 +51,18 @@ public class ServicioTuristicoTests {
     @Test
     public void deberiaValidarQueElCostoNoSeaNegativo(){
         serv.setCosto_servicio(-500.0);
-        Assertions.assertThrows(IllegalArgumentException.class, ()-> new ServicioTuristico(2L,"pasaje", "pasaje por colectivo", "formosa", LocalDate.of(2026, 1, 7), -500.0)
+        Assertions.assertThrows(IllegalArgumentException.class, ()-> ServicioTuristico.builder()
+                        .codigo_producto(2L)
+                        .nombre("pasaje")
+                        .descripcion_breve("pasaje por colectivo")
+                        .destino_servicio("formosa")
+                        .fecha_servicio(LocalDate.of(2026, 1, 7))
+                        .costo_servicio(-500.0)
+                        .build()
                 );
+
+        /*
+        2L,"pasaje", "pasaje por colectivo", "formosa", LocalDate.of(2026, 1, 7), -500.0
+         */
     }
 }

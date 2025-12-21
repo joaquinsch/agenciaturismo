@@ -2,10 +2,12 @@ package com.agenciaturismo.agenciaturismo.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Setter
 @Getter
-public abstract class ProductoTuristico {
+@SuperBuilder
+public class ProductoTuristico {
     private Long codigo_producto;
     private String tipo_producto;
 }

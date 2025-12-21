@@ -7,10 +7,13 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class ProductoTuristicoTests {
 
-    ProductoTuristico productoServicio = new ServicioTuristico();
+    ProductoTuristico productoServicio = ServicioTuristico.builder()
+            .costo_servicio(100.0)
+            .build();
     @Test
     public void deberiaCrearseConCodigoProducto(){
         productoServicio.setCodigo_producto(1L);
@@ -25,13 +28,23 @@ public class ProductoTuristicoTests {
 
     @Test
     public void deberiaSerUnServicio(){
-        ProductoTuristico servicioTuristico = new ServicioTuristico(1L, "un servicio", "el mejor", "cancun", LocalDate.of(2026,1,6), 500.0);
+        ProductoTuristico servicioTuristico = ServicioTuristico.builder()
+        .codigo_producto(1L)
+                .nombre("un servicio")
+                .descripcion_breve("el mejor")
+                .destino_servicio("cancun")
+                .fecha_servicio(LocalDate.of(2026,1,6))
+                .costo_servicio(500.0)
+                .build();
         Assertions.assertInstanceOf(ServicioTuristico.class, servicioTuristico);
     }
 
     @Test
     public void deberiaSerUnPaquete(){
-        ProductoTuristico paqueteTuristico = new PaqueteTuristico();
+        ProductoTuristico paqueteTuristico = PaqueteTuristico.builder()
+                .lista_servicios_incluidos(new ArrayList<>())
+                .costo_paquete(500.0)
+                .build();
         Assertions.assertInstanceOf(PaqueteTuristico.class, paqueteTuristico);
     }
 

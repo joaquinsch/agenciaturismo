@@ -12,7 +12,11 @@ import java.util.List;
 
 public class PaqueteTuristicoTests {
 
-    PaqueteTuristico paquete = new PaqueteTuristico();
+    PaqueteTuristico paquete = PaqueteTuristico.builder()
+            .codigo_producto(1L)
+            .lista_servicios_incluidos(new ArrayList<>())
+            .costo_paquete(100.0)
+            .build();
 
     @Test
     public void deberiaCrearseConUnCodigo(){
@@ -22,25 +26,30 @@ public class PaqueteTuristicoTests {
 
     @Test
     public void deberiaCrearseConUnCosto(){
-        paquete.setCosto_paquete(100.0);
+
         Assertions.assertEquals(100.0, paquete.getCosto_paquete());
     }
 
     @Test
     public void deberiaCrearseConListaDeServiciosIncluidos(){
         List<ServicioTuristico> lista_servicios = new ArrayList<>();
-        lista_servicios.add(new ServicioTuristico());
+        lista_servicios.add(ServicioTuristico.builder()
+                .codigo_producto(1L)
+                .costo_servicio(100.0)
+                .build());
         paquete.setLista_servicios_incluidos(lista_servicios);
         Assertions.assertEquals(1,
                 paquete.getLista_servicios_incluidos().size());
     }
 
     @Test
-    public void noDeberiaPoderCrearseConCeroServicios(){
-        List<ServicioTuristico> lista_servicios = new ArrayList<>();
-        paquete.setLista_servicios_incluidos(lista_servicios);
+    public void noDeberiaPoderCrearseConCostoCeroONegativo(){
+       //List<ServicioTuristico> lista_servicios = new ArrayList<>();
+        //paquete.setLista_servicios_incluidos(lista_servicios);
         Assertions.assertThrows(IllegalArgumentException.class,
-                ()-> new PaqueteTuristico(1L, lista_servicios, 500.0)
+                ()-> PaqueteTuristico.builder()
+                        .costo_paquete(-500.0)
+                        .build()
         );
     }
 }
