@@ -11,7 +11,11 @@ public class VentaTests {
     Cliente cli = Cliente.builder()
             .id_cliente(1L)
             .build();
-    Venta venta = new Venta(1L, LocalDate.of(2025,12,20), "Tarjeta", cli);
+    Venta venta = Venta.builder().num_venta(1L)
+            .fecha_venta(LocalDate.of(2025,12,20))
+            .medio_pago("tarjeta")
+            .cliente(cli)
+            .build();
 
     @Test
     public void deberiaCrearseConNumeroDeVenta(){
