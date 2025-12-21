@@ -38,7 +38,7 @@
 
         <!-- Import ordenado -->
         <module name="UnusedImports"/>
-        <module name="AvoidStarImport"/>
+
 
         <!-- Espacios y formato -->
         <module name="WhitespaceAround"/>

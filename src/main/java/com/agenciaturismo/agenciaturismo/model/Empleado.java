@@ -1,12 +1,21 @@
 package com.agenciaturismo.agenciaturismo.model;
 
+import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @Getter
 @SuperBuilder
+@Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Empleado extends Usuario {
-    private final Long id_empleado;
-    private final String cargo;
-    private final Double sueldo;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id_empleado;
+    private String cargo;
+    private Double sueldo;
+    @OneToOne
+    private  Venta venta;
 }

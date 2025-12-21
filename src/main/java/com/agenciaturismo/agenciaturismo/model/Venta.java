@@ -1,18 +1,31 @@
 package com.agenciaturismo.agenciaturismo.model;
 
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Getter
 @Builder
+@Entity
+@AllArgsConstructor
+@NoArgsConstructor
 public class Venta {
-    private final Long num_venta;
-    private final LocalDate fecha_venta;
-    private final String medio_pago;
-    private final Cliente cliente;
-    private final Empleado empleado;
-    private final ProductoTuristico producto_turistico;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private  Long num_venta;
+    private  LocalDate fecha_venta;
+    private  String medio_pago;
+    @ManyToOne
+    @JoinColumn(name = "id_cliente")
+    private  Cliente cliente;
+    @OneToOne
+    @JoinColumn(name = "id_empleado")
+    private  Empleado empleado;
+    @OneToOne
+    private  ProductoTuristico producto_turistico;
 
 }

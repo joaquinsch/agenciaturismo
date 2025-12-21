@@ -1,8 +1,6 @@
 package com.agenciaturismo.agenciaturismo.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
@@ -10,6 +8,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Getter @Setter
 @SuperBuilder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class Usuario {
     private String nombre;
     private String apellido;
