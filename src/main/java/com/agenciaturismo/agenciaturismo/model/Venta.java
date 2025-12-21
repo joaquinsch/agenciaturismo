@@ -12,5 +12,6 @@ public class Venta {
     private final LocalDate fecha_venta;
     private final String medio_pago;
     private final Cliente cliente;
+    private final Empleado empleado;
 
 }
