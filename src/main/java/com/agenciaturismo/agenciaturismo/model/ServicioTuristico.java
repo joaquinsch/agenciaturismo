@@ -1,9 +1,6 @@
 package com.agenciaturismo.agenciaturismo.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
@@ -14,10 +11,8 @@ import java.time.LocalDate;
 @Setter
 @SuperBuilder
 @Entity
+@Table(name = "servicios_turisticos")
 public class ServicioTuristico extends ProductoTuristico {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long codigo_producto;
     private String nombre;
     private String descripcion_breve;
     private String destino_servicio;
@@ -30,7 +25,7 @@ public class ServicioTuristico extends ProductoTuristico {
         if (this.costo_servicio == null || this.costo_servicio < 0) {
             throw new IllegalArgumentException("El costo es inválido");
         }
-        this.codigo_producto = b.codigo_producto;
+
         this.nombre = b.nombre;
         this.descripcion_breve = b.descripcion_breve;
         this.destino_servicio = b.destino_servicio;

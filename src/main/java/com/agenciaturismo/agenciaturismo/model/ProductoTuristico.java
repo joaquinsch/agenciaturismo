@@ -10,13 +10,14 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @SuperBuilder
 @Entity
+@Table(name = "productos_turisticos")
 @NoArgsConstructor
+@Inheritance(strategy = InheritanceType.JOINED)
 public class ProductoTuristico {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long codigo_producto;
     private String tipo_producto;
     @OneToOne
-    @JoinColumn(name = "num_venta")
     private Venta venta;
 }
