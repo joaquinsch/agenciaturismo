@@ -1,5 +1,9 @@
 package com.agenciaturismo.agenciaturismo.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
@@ -9,7 +13,10 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @SuperBuilder
+@Entity
 public class ServicioTuristico extends ProductoTuristico {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long codigo_producto;
     private String nombre;
     private String descripcion_breve;

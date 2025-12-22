@@ -17,5 +17,6 @@ public class ProductoTuristico {
     private Long codigo_producto;
     private String tipo_producto;
     @OneToOne
+    @JoinColumn(name = "num_venta")
     private Venta venta;
 }

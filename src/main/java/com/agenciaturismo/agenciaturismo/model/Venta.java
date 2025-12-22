@@ -26,6 +26,7 @@ public class Venta {
     @JoinColumn(name = "id_empleado")
     private  Empleado empleado;
     @OneToOne
+    @JoinColumn(name = "codigo_producto")
     private  ProductoTuristico producto_turistico;
 
 }
