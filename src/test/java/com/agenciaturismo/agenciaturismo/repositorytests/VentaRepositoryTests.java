@@ -8,15 +8,15 @@ import com.agenciaturismo.agenciaturismo.repository.VentaRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @DataJpaTest
-@AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
+// @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2) ya lo hace @datajpatest
+@ActiveProfiles("test")
 public class VentaRepositoryTests {
 
     @Autowired

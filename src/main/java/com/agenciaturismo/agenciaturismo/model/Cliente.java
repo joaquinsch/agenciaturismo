@@ -21,6 +21,6 @@ public class Cliente extends Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_cliente;
-    @OneToMany
+    @OneToMany(mappedBy = "cliente")
     private  List<Venta> ventas;
 }

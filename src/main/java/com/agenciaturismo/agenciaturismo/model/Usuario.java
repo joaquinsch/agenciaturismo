@@ -1,5 +1,6 @@
 package com.agenciaturismo.agenciaturismo.model;
 
+import jakarta.persistence.MappedSuperclass;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -9,6 +10,7 @@ import java.time.LocalDate;
 @Getter @Setter
 @SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@MappedSuperclass
 public abstract class Usuario {
     private String nombre;
     private String apellido;
