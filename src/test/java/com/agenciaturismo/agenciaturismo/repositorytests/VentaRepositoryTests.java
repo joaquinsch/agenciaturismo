@@ -70,9 +70,8 @@ public class VentaRepositoryTests {
 
         ventaRepository.save(venta);
 
-        Venta buscada = ventaRepository.findById(1L).orElse(null);
-        assert buscada != null;
-        Assertions.assertNotNull( buscada.getNum_venta());
+        ventaRepository.findById(1L).ifPresent(buscada -> Assertions.assertNotNull(buscada.getNum_venta()));
+
     }
 
     @Test
@@ -107,6 +106,21 @@ public class VentaRepositoryTests {
 
         List<Venta> ventas = ventaRepository.findAll();
         Assertions.assertEquals(2, ventas.size());
+    }
+
+    @Test
+    public void deberiaEliminarUnaVenta(){
+        clienteRepository.save(cli);
+        empleadoRepository.save(empleado);
+        productoRepository.save(prod);
+
+        Venta guardada = ventaRepository.save(venta);
+        Assertions.assertNotNull(guardada.getNum_venta());
+        Assertions.assertEquals(1L, guardada.getNum_venta());
+        Assertions.assertEquals(1, ventaRepository.findAll().size());
+        ventaRepository.deleteById(1L);
+        Assertions.assertEquals(0, ventaRepository.findAll().size());
+
     }
 
 }
