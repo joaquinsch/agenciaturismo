@@ -1,4 +1,4 @@
-package com.agenciaturismo.agenciaturismo;
+package com.agenciaturismo.agenciaturismo.modeltests;
 
 import com.agenciaturismo.agenciaturismo.model.ServicioTuristico;
 import org.junit.jupiter.api.Assertions;
