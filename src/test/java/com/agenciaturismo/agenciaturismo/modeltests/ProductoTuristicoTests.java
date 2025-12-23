@@ -43,7 +43,7 @@ public class ProductoTuristicoTests {
     public void deberiaSerUnPaquete(){
         ProductoTuristico paqueteTuristico = PaqueteTuristico.builder()
                 .lista_servicios_incluidos(new ArrayList<>())
-                .costo_paquete(500.0)
+                .costo_paquete(0.0)
                 .build();
         Assertions.assertInstanceOf(PaqueteTuristico.class, paqueteTuristico);
     }

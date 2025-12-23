@@ -16,6 +16,6 @@ public class Empleado extends Usuario {
     private Long id_empleado;
     private String cargo;
     private Double sueldo;
-    @OneToOne
+    @OneToOne(mappedBy = "empleado")
     private  Venta venta;
 }

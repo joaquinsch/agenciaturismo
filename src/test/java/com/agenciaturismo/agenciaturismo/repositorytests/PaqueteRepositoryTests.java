@@ -40,7 +40,7 @@ public class PaqueteRepositoryTests {
 
         paquete = PaqueteTuristico.builder()
                 .lista_servicios_incluidos(List.of(servicio1, servicio2))
-                .costo_paquete(100.0)
+                .costo_paquete(180.0)
                 .tipo_producto("PAQUETE")
                 .build();
         PaqueteTuristico guardado = paqueteRepository.save(paquete);
