@@ -11,7 +11,6 @@ import java.util.List;
 
 public class PaqueteTuristicoTests {
 
-    //List<ServicioTuristico> lista = new ArrayList<>();
     PaqueteTuristico paquete = PaqueteTuristico.builder()
             .codigo_producto(1L)
             .lista_servicios_incluidos(

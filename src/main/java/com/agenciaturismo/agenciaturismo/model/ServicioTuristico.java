@@ -1,5 +1,6 @@
 package com.agenciaturismo.agenciaturismo.model;
 
+import com.agenciaturismo.agenciaturismo.exceptions.CostoInvalidoError;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,7 +27,7 @@ public class ServicioTuristico extends ProductoTuristico {
         super(b);
         this.costo_servicio = b.costo_servicio;
         if (this.costo_servicio == null || this.costo_servicio < 0) {
-            throw new IllegalArgumentException("El costo es inválido");
+            throw new CostoInvalidoError("El costo es inválido");
         }
 
         this.nombre = b.nombre;
