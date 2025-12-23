@@ -1,6 +1,8 @@
 package com.agenciaturismo.agenciaturismo.modeltests;
 
 
+import com.agenciaturismo.agenciaturismo.exceptions.CostoInvalidoError;
+import com.agenciaturismo.agenciaturismo.exceptions.PaqueteInvalidoError;
 import com.agenciaturismo.agenciaturismo.model.PaqueteTuristico;
 import com.agenciaturismo.agenciaturismo.model.ServicioTuristico;
 import org.junit.jupiter.api.Assertions;
@@ -41,13 +43,33 @@ public class PaqueteTuristicoTests {
     }
 
     @Test
-    public void noDeberiaPoderCrearseConCostoCeroONegativo(){
-        Assertions.assertThrows(IllegalArgumentException.class,
+    public void noDeberiaPoderCrearseSinServicios(){
+        PaqueteInvalidoError excepcion = Assertions.assertThrows(PaqueteInvalidoError.class,
+                () -> PaqueteTuristico.builder()
+                        .tipo_producto("PAQUETE")
+                        .build());
+        Assertions.assertEquals("El paquete no tiene servicios asociados", excepcion.getMessage());
+    }
+
+    @Test
+    public void noDeberiaPoderCrearseConCostoInvalido(){
+        CostoInvalidoError excepcion = Assertions.assertThrows(CostoInvalidoError.class,
                 ()-> PaqueteTuristico.builder()
-                        .costo_paquete(-500.0)
+                        .lista_servicios_incluidos(
+                                List.of(ServicioTuristico.builder()
+                                                .costo_servicio(100.0)
+                                                .build(),
+                                        ServicioTuristico.builder()
+                                                .costo_servicio(100.0)
+                                                .build())
+                        )
+                        .costo_paquete(359.0)
                         .build()
         );
+        Assertions.assertEquals("El costo del paquete no coincide con la suma de los servicios menos 10%",
+                excepcion.getMessage());
     }
+
 
     @Test
     public void deberiaCrearseSiElCostoEsLaSumaDeLosServiciosMenosDiezPorciento(){

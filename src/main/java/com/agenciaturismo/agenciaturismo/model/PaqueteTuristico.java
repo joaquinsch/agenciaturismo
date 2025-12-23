@@ -1,5 +1,7 @@
 package com.agenciaturismo.agenciaturismo.model;
 
+import com.agenciaturismo.agenciaturismo.exceptions.CostoInvalidoError;
+import com.agenciaturismo.agenciaturismo.exceptions.PaqueteInvalidoError;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,17 +29,12 @@ public class PaqueteTuristico extends ProductoTuristico {
         super(b);
         this.costo_paquete = b.costo_paquete;
         this.lista_servicios_incluidos = b.lista_servicios_incluidos;
-        if (lista_servicios_incluidos == null) {
-            throw new IllegalArgumentException("El paquete no tiene servicios asociados");
+        if (lista_servicios_incluidos == null) { // y si tiene 0 o 1 ?
+            throw new PaqueteInvalidoError("El paquete no tiene servicios asociados");
         }
-        if (this.costo_paquete < 0) {
-            throw new IllegalArgumentException("El costo es inválido");
-        } else if (!validarCostoDePaquete()) {
-            throw new IllegalArgumentException("El costo del paquete no coincide con la suma de los servicios menos 10%");
+        if (!validarCostoDePaquete()) {
+            throw new CostoInvalidoError("El costo del paquete no coincide con la suma de los servicios menos 10%");
         }
-
-
-
     }
 
     /*
