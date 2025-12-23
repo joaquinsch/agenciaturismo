@@ -23,8 +23,8 @@ public class ProductoTuristicoTests {
 
     @Test
     public void deberiaCrearseConTipoProducto(){
-        productoServicio.setTipo_producto("SERVICIO");
-        Assertions.assertEquals("SERVICIO", productoServicio.getTipo_producto());
+        productoServicio.setTipo_producto(ProductoTuristico.TipoProducto.SERVICIO);
+        Assertions.assertEquals(ProductoTuristico.TipoProducto.SERVICIO, productoServicio.getTipo_producto());
     }
 
     @Test
@@ -55,5 +55,20 @@ public class ProductoTuristicoTests {
         Assertions.assertInstanceOf(PaqueteTuristico.class, paqueteTuristico);
     }
 
+    @Test
+    public void elTipoDeProductoDeberiaSerSoloSERVICIOoPAQUETE(){
+        ProductoTuristico paqueteTuristico = PaqueteTuristico.builder()
+                .tipo_producto(ProductoTuristico.TipoProducto.SERVICIO)
+                .lista_servicios_incluidos(
+                        List.of(ServicioTuristico.builder()
+                                        .costo_servicio(100.0)
+                                        .build(),
+                                ServicioTuristico.builder()
+                                        .costo_servicio(100.0)
+                                        .build()))
+                .costo_paquete(180.0)
+                .build();
 
+        Assertions.assertEquals(ProductoTuristico.TipoProducto.SERVICIO, paqueteTuristico.getTipo_producto());
+    }
 }

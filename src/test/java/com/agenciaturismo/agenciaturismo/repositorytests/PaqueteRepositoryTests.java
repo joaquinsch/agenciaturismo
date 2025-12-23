@@ -1,6 +1,7 @@
 package com.agenciaturismo.agenciaturismo.repositorytests;
 
 import com.agenciaturismo.agenciaturismo.model.PaqueteTuristico;
+import com.agenciaturismo.agenciaturismo.model.ProductoTuristico;
 import com.agenciaturismo.agenciaturismo.model.ServicioTuristico;
 import com.agenciaturismo.agenciaturismo.repository.PaqueteRepository;
 import com.agenciaturismo.agenciaturismo.repository.ServicioRepository;
@@ -21,27 +22,23 @@ public class PaqueteRepositoryTests {
     @Autowired
     ServicioRepository servicioRepository;
 
-    private PaqueteTuristico paquete;
-    private ServicioTuristico servicio1;
-    private ServicioTuristico servicio2;
-
     @Test
     public void deberiaGuardarPaqueteConServiciosAsociados(){
-        servicio1 = ServicioTuristico.builder()
+        ServicioTuristico servicio1 = ServicioTuristico.builder()
                 .nombre("VIAJE EN COLECTIVO")
                 .costo_servicio(100.0)
                 .build();
-        servicio2 = ServicioTuristico.builder()
+        ServicioTuristico servicio2 = ServicioTuristico.builder()
                 .nombre("PASAJE GRATIS")
                 .costo_servicio(100.0)
                 .build();
         servicioRepository.save(servicio1);
         servicioRepository.save(servicio2);
 
-        paquete = PaqueteTuristico.builder()
+        PaqueteTuristico paquete = PaqueteTuristico.builder()
                 .lista_servicios_incluidos(List.of(servicio1, servicio2))
                 .costo_paquete(180.0)
-                .tipo_producto("PAQUETE")
+                .tipo_producto(ProductoTuristico.TipoProducto.PAQUETE)
                 .build();
         PaqueteTuristico guardado = paqueteRepository.save(paquete);
         Assertions.assertEquals(2, servicioRepository.findAll().size());
