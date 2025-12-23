@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -18,6 +19,8 @@ public class ServicioTuristico extends ProductoTuristico {
     private String destino_servicio;
     private LocalDate fecha_servicio;
     private Double costo_servicio;
+    @ManyToMany(mappedBy = "lista_servicios_incluidos")
+    private List<PaqueteTuristico> paquetes;
 
     protected ServicioTuristico(ServicioTuristicoBuilder<?, ?> b) {
         super(b);

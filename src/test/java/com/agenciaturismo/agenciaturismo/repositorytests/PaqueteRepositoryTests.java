@@ -1,0 +1,50 @@
+package com.agenciaturismo.agenciaturismo.repositorytests;
+
+import com.agenciaturismo.agenciaturismo.model.PaqueteTuristico;
+import com.agenciaturismo.agenciaturismo.model.ServicioTuristico;
+import com.agenciaturismo.agenciaturismo.repository.PaqueteRepository;
+import com.agenciaturismo.agenciaturismo.repository.ServicioRepository;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.ActiveProfiles;
+
+import java.util.List;
+
+@DataJpaTest
+@ActiveProfiles("test")
+public class PaqueteRepositoryTests {
+
+    @Autowired
+    PaqueteRepository paqueteRepository;
+    @Autowired
+    ServicioRepository servicioRepository;
+
+    private PaqueteTuristico paquete;
+    private ServicioTuristico servicio1;
+    private ServicioTuristico servicio2;
+
+    @Test
+    public void deberiaGuardarPaqueteConServiciosAsociados(){
+        servicio1 = ServicioTuristico.builder()
+                .nombre("VIAJE EN COLECTIVO")
+                .costo_servicio(100.0)
+                .build();
+        servicio2 = ServicioTuristico.builder()
+                .nombre("PASAJE GRATIS")
+                .costo_servicio(100.0)
+                .build();
+        servicioRepository.save(servicio1);
+        servicioRepository.save(servicio2);
+
+        paquete = PaqueteTuristico.builder()
+                .lista_servicios_incluidos(List.of(servicio1, servicio2))
+                .costo_paquete(100.0)
+                .tipo_producto("PAQUETE")
+                .build();
+        PaqueteTuristico guardado = paqueteRepository.save(paquete);
+        Assertions.assertEquals(2, servicioRepository.findAll().size());
+        Assertions.assertNotNull(guardado.getCodigo_producto());
+    }
+}

@@ -18,6 +18,6 @@ public class ProductoTuristico {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long codigo_producto;
     private String tipo_producto;
-    @OneToOne
+    @OneToOne(mappedBy = "producto_turistico")
     private Venta venta;
 }

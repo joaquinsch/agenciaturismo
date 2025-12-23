@@ -1,6 +1,6 @@
 package com.agenciaturismo.agenciaturismo.model;
 
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
@@ -11,9 +11,14 @@ import java.util.List;
 @Setter
 @SuperBuilder
 @Table(name = "paquetes_turisticos")
+@Entity
 public class PaqueteTuristico extends ProductoTuristico {
 
-
+    @ManyToMany
+    @JoinTable(name = "paquetes_servicios",
+               joinColumns = @JoinColumn(name = "codigo_paquete"),
+               inverseJoinColumns = @JoinColumn(name = "codigo_servicio")
+    )
     private List<ServicioTuristico> lista_servicios_incluidos;
     private Double costo_paquete;
 
