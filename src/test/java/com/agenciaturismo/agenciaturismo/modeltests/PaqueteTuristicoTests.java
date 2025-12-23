@@ -46,9 +46,23 @@ public class PaqueteTuristicoTests {
     public void noDeberiaPoderCrearseSinServicios(){
         PaqueteInvalidoError excepcion = Assertions.assertThrows(PaqueteInvalidoError.class,
                 () -> PaqueteTuristico.builder()
-                        .tipo_producto("PAQUETE")
                         .build());
         Assertions.assertEquals("El paquete no tiene servicios asociados", excepcion.getMessage());
+    }
+
+    @Test
+    public void noDeberiaPoderCrearseConUnSoloServicio(){
+        PaqueteInvalidoError excepcion = Assertions.assertThrows(
+                PaqueteInvalidoError.class, ()->
+                    PaqueteTuristico.builder()
+                    .lista_servicios_incluidos(
+                            List.of(ServicioTuristico.builder()
+                                    .costo_servicio(100.0)
+                                    .build())
+                    )
+                    .build());
+        Assertions.assertEquals("El paquete debe tener mas de un servicio asociado", excepcion.getMessage());
+
     }
 
     @Test

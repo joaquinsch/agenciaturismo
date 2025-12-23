@@ -29,8 +29,10 @@ public class PaqueteTuristico extends ProductoTuristico {
         super(b);
         this.costo_paquete = b.costo_paquete;
         this.lista_servicios_incluidos = b.lista_servicios_incluidos;
-        if (lista_servicios_incluidos == null) { // y si tiene 0 o 1 ?
+        if (lista_servicios_incluidos == null) {
             throw new PaqueteInvalidoError("El paquete no tiene servicios asociados");
+        } else if (lista_servicios_incluidos.size() < 2) {
+            throw new PaqueteInvalidoError("El paquete debe tener mas de un servicio asociado");
         }
         if (!validarCostoDePaquete()) {
             throw new CostoInvalidoError("El costo del paquete no coincide con la suma de los servicios menos 10%");

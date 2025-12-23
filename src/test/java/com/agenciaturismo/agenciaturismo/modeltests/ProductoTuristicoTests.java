@@ -7,13 +7,14 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.List;
 
 public class ProductoTuristicoTests {
 
     ProductoTuristico productoServicio = ServicioTuristico.builder()
             .costo_servicio(100.0)
             .build();
+
     @Test
     public void deberiaCrearseConCodigoProducto(){
         productoServicio.setCodigo_producto(1L);
@@ -42,8 +43,14 @@ public class ProductoTuristicoTests {
     @Test
     public void deberiaSerUnPaquete(){
         ProductoTuristico paqueteTuristico = PaqueteTuristico.builder()
-                .lista_servicios_incluidos(new ArrayList<>())
-                .costo_paquete(0.0)
+                .lista_servicios_incluidos(
+                        List.of(ServicioTuristico.builder()
+                                        .costo_servicio(100.0)
+                                        .build(),
+                                ServicioTuristico.builder()
+                                        .costo_servicio(100.0)
+                                        .build()))
+                .costo_paquete(180.0)
                 .build();
         Assertions.assertInstanceOf(PaqueteTuristico.class, paqueteTuristico);
     }
