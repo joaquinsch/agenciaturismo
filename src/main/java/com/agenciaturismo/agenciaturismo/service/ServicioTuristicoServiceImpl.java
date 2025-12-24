@@ -1,5 +1,6 @@
 package com.agenciaturismo.agenciaturismo.service;
 
+import com.agenciaturismo.agenciaturismo.exceptions.ServicioInexistenteError;
 import com.agenciaturismo.agenciaturismo.model.ServicioTuristico;
 import com.agenciaturismo.agenciaturismo.repository.ServicioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,15 @@ public class ServicioTuristicoServiceImpl implements ServicioTuristicoService {
 
     @Override
     public void eliminarServicio(Long codigo_producto) {
+        buscarServicio(codigo_producto);
         this.servicioRepository.deleteById(codigo_producto);
+    }
+
+    @Override
+    public ServicioTuristico buscarServicio(Long codigo_producto) {
+        return this.servicioRepository.findById(codigo_producto).orElseThrow(
+                () ->
+                new ServicioInexistenteError("El servicio buscado no existe")
+        );
     }
 }

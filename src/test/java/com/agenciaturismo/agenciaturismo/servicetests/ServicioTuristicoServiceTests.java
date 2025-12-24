@@ -1,5 +1,6 @@
 package com.agenciaturismo.agenciaturismo.servicetests;
 
+import com.agenciaturismo.agenciaturismo.exceptions.ServicioInexistenteError;
 import com.agenciaturismo.agenciaturismo.model.ServicioTuristico;
 import com.agenciaturismo.agenciaturismo.repository.ServicioRepository;
 import com.agenciaturismo.agenciaturismo.service.ServicioTuristicoServiceImpl;
@@ -13,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 @ActiveProfiles("test")
@@ -45,9 +47,20 @@ public class ServicioTuristicoServiceTests {
 
     @Test
     public void deberiaEliminarUnServicio(){
+        Mockito.when(servicioRepository.findById(servicio.getCodigo_producto()))
+                .thenReturn(Optional.of(servicio));
         servicioTuristicoService.eliminarServicio(servicio.getCodigo_producto());
 
         Mockito.verify(servicioRepository).deleteById(servicio.getCodigo_producto());
         Mockito.verifyNoMoreInteractions(servicioRepository); // qcyo
+    }
+
+    @Test
+    public void deberiaDarErrorSiIntentaEliminarServicioInexistente(){
+        ServicioInexistenteError exception = Assertions.assertThrows(
+                ServicioInexistenteError.class,() ->
+                servicioTuristicoService.eliminarServicio(2L)
+        );
+        Assertions.assertEquals("El servicio buscado no existe", exception.getMessage());
     }
 }
