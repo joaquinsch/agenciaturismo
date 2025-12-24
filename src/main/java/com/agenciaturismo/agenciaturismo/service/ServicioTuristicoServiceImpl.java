@@ -15,4 +15,9 @@ public class ServicioTuristicoServiceImpl implements ServicioTuristicoService {
     public ServicioTuristico guardarServicio(ServicioTuristico servicioTuristico) {
         return this.servicioRepository.save(servicioTuristico);
     }
+
+    @Override
+    public void eliminarServicio(Long codigo_producto) {
+        this.servicioRepository.deleteById(codigo_producto);
+    }
 }

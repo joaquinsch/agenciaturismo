@@ -24,15 +24,16 @@ public class ServicioTuristicoServiceTests {
     @InjectMocks
     ServicioTuristicoServiceImpl servicioTuristicoService;
 
+    ServicioTuristico servicio = ServicioTuristico.builder()
+            .codigo_producto(1L)
+            .nombre("Viaje a China")
+            .descripcion_breve("el mejor")
+            .fecha_servicio(LocalDate.of(2026,1,10))
+            .costo_servicio(100.0)
+            .build();
+
     @Test
     public void deberiaGuardarElServicio(){
-        ServicioTuristico servicio = ServicioTuristico.builder()
-                .codigo_producto(1L)
-                .nombre("Viaje a China")
-                .descripcion_breve("el mejor")
-                .fecha_servicio(LocalDate.of(2026,1,10))
-                .costo_servicio(100.0)
-                .build();
         Mockito.when(servicioRepository.save(Mockito.any(ServicioTuristico.class))).thenReturn(servicio);
 
         ServicioTuristico guardado = servicioTuristicoService.guardarServicio(servicio);
@@ -40,5 +41,13 @@ public class ServicioTuristicoServiceTests {
         Assertions.assertNotNull(guardado);
         Mockito.verify(servicioRepository).save(servicio);
 
+    }
+
+    @Test
+    public void deberiaEliminarUnServicio(){
+        servicioTuristicoService.eliminarServicio(servicio.getCodigo_producto());
+
+        Mockito.verify(servicioRepository).deleteById(servicio.getCodigo_producto());
+        Mockito.verifyNoMoreInteractions(servicioRepository); // qcyo
     }
 }
