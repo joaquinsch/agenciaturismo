@@ -1,9 +1,9 @@
 package com.agenciaturismo.agenciaturismo.controller;
 
-import com.agenciaturismo.agenciaturismo.exceptions.ServicioInexistenteError;
 import com.agenciaturismo.agenciaturismo.model.ServicioTuristico;
 import com.agenciaturismo.agenciaturismo.service.ServicioTuristicoServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,12 +18,7 @@ public class ServicioTuristicoController {
 
     @GetMapping("/{codigo_producto}")
     public ResponseEntity<ServicioTuristico> buscarServicio(@PathVariable Long codigo_producto) {
-        try {
-            ServicioTuristico buscado = this.servicioTuristicoService.buscarServicio(codigo_producto);
-            return ResponseEntity.ok(buscado);
-        } catch (ServicioInexistenteError e) {
-            return ResponseEntity.notFound().build();
-        }
-
+        ServicioTuristico buscado = this.servicioTuristicoService.buscarServicio(codigo_producto);
+        return new ResponseEntity<>(buscado, HttpStatus.OK);
     }
 }

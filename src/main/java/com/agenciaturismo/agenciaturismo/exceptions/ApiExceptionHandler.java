@@ -1,0 +1,17 @@
+package com.agenciaturismo.agenciaturismo.exceptions;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+@RestControllerAdvice
+public class ApiExceptionHandler {
+
+    @ExceptionHandler(value = {ServicioInexistenteError.class})
+    public ResponseEntity<ApiError> handleServicioInexistenteError(ServicioInexistenteError e) {
+        ApiError apiError = new ApiError(e.getMessage(), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
+    }
+
+}
