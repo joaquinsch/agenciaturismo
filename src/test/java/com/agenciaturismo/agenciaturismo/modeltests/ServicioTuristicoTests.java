@@ -53,7 +53,7 @@ public class ServicioTuristicoTests {
     public void deberiaValidarQueElCostoNoSeaNegativo(){
         serv.setCosto_servicio(-500.0);
         CostoInvalidoError excepcion = Assertions.assertThrows(CostoInvalidoError.class, ()-> ServicioTuristico.builder()
-                        .codigo_producto(2L)
+                        //.codigo_producto(2L)
                         .nombre("pasaje")
                         .descripcion_breve("pasaje por colectivo")
                         .destino_servicio("formosa")
