@@ -1,6 +1,7 @@
 package com.agenciaturismo.agenciaturismo.controllertests;
 
 import com.agenciaturismo.agenciaturismo.controller.ServicioTuristicoController;
+import com.agenciaturismo.agenciaturismo.exceptions.ServicioInexistenteError;
 import com.agenciaturismo.agenciaturismo.model.ServicioTuristico;
 import com.agenciaturismo.agenciaturismo.service.ServicioTuristicoServiceImpl;
 import org.junit.jupiter.api.Test;
@@ -25,13 +26,6 @@ public class ServicioTuristicoControllerTests {
     @MockBean
     private ServicioTuristicoServiceImpl servicioTuristicoService;
 
-    /*@BeforeEach
-    public void setUp() {
-        // necesario para usar LocalDate
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-    }*/
-
     ServicioTuristico servicio = ServicioTuristico.builder()
                         .codigo_producto(1L)
                         .nombre("pasaje")
@@ -45,9 +39,6 @@ public class ServicioTuristicoControllerTests {
     public void deberiaDevolverUnServicioTuristico() throws Exception{
         Mockito.when(servicioTuristicoService.buscarServicio(1L))
                 .thenReturn(servicio);
-
-
-
         mockMvc.perform(MockMvcRequestBuilders.get("/api/servicios/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.nombre").value("pasaje"))
@@ -56,5 +47,14 @@ public class ServicioTuristicoControllerTests {
                 .andExpect(jsonPath("$.fecha_servicio").value("2026-01-07"))
                 .andExpect(jsonPath("$.costo_servicio").value(500.0));
 
+    }
+
+    @Test
+    public void deberiaDarErrorSiNoEncuentraElServicioBuscado() throws Exception {
+        Mockito.when(servicioTuristicoService.buscarServicio(1L))
+                .thenThrow(ServicioInexistenteError.class);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/servicios/1"))
+                .andExpect(status().isNotFound());
     }
 }
