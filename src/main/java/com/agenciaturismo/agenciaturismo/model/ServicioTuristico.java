@@ -3,6 +3,7 @@ package com.agenciaturismo.agenciaturismo.model;
 import com.agenciaturismo.agenciaturismo.exceptions.CostoInvalidoError;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
@@ -14,6 +15,7 @@ import java.util.List;
 @SuperBuilder
 @Entity
 @Table(name = "servicios_turisticos")
+@NoArgsConstructor
 public class ServicioTuristico extends ProductoTuristico {
     private String nombre;
     private String descripcion_breve;

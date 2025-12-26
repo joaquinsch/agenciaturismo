@@ -5,10 +5,7 @@ import com.agenciaturismo.agenciaturismo.service.ServicioTuristicoServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/servicios")
@@ -20,5 +17,11 @@ public class ServicioTuristicoController {
     public ResponseEntity<ServicioTuristico> buscarServicio(@PathVariable Long codigo_producto) {
         ServicioTuristico buscado = this.servicioTuristicoService.buscarServicio(codigo_producto);
         return new ResponseEntity<>(buscado, HttpStatus.OK);
+    }
+
+    @PostMapping("/guardar")
+    public ResponseEntity<ServicioTuristico> guardarServicio(@RequestBody ServicioTuristico servicioTuristico) {
+        ServicioTuristico guardado = this.servicioTuristicoService.guardarServicio(servicioTuristico);
+        return new ResponseEntity<>(guardado, HttpStatus.CREATED);
     }
 }
