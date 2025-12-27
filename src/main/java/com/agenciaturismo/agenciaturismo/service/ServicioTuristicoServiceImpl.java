@@ -30,4 +30,16 @@ public class ServicioTuristicoServiceImpl implements ServicioTuristicoService {
                 new ServicioInexistenteError("El servicio buscado no existe")
         );
     }
+
+    @Override
+    public ServicioTuristico editarServicio(ServicioTuristico servicioTuristico) {
+        ServicioTuristico buscado = this.buscarServicio(servicioTuristico.getCodigo_producto());
+        buscado.setCodigo_producto(servicioTuristico.getCodigo_producto());
+        buscado.setNombre(servicioTuristico.getNombre());
+        buscado.setDescripcion_breve(servicioTuristico.getDescripcion_breve());
+        buscado.setDestino_servicio(servicioTuristico.getDestino_servicio());
+        buscado.setFecha_servicio(servicioTuristico.getFecha_servicio());
+        buscado.setCosto_servicio(servicioTuristico.getCosto_servicio());
+        return this.servicioRepository.save(buscado);
+    }
 }

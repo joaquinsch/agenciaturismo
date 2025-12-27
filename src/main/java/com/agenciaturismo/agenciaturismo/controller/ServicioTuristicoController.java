@@ -24,4 +24,10 @@ public class ServicioTuristicoController {
         ServicioTuristico guardado = this.servicioTuristicoService.guardarServicio(servicioTuristico);
         return new ResponseEntity<>(guardado, HttpStatus.CREATED);
     }
+
+    @PutMapping("/editar")
+    public ResponseEntity<ServicioTuristico> editarServicio(@RequestBody ServicioTuristico servicioTuristico) {
+        ServicioTuristico editado = this.servicioTuristicoService.editarServicio(servicioTuristico);
+        return new ResponseEntity<>(editado, HttpStatus.OK);
+    }
 }

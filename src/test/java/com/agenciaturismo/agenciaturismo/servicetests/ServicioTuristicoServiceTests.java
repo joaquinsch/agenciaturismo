@@ -63,4 +63,32 @@ public class ServicioTuristicoServiceTests {
         );
         Assertions.assertEquals("El servicio buscado no existe", exception.getMessage());
     }
+
+    @Test
+    public void deberiaEditarElServicioTuristico(){
+        Mockito.when(this.servicioRepository.findById(servicio.getCodigo_producto()))
+                .thenReturn(Optional.of(servicio));
+        // voy a editar el servicio 1 con estos datos, el código_producto no se puede editar
+        ServicioTuristico aEditar = ServicioTuristico.builder()
+                .codigo_producto(1L)
+                .nombre("pasaje")
+                .descripcion_breve("pasaje por colectivo")
+                .destino_servicio("chaco")
+                .fecha_servicio(LocalDate.of(2026,2,1))
+                .costo_servicio(400.0)
+                .build();
+
+        Mockito.when(servicioRepository.save(Mockito.any(ServicioTuristico.class))).thenReturn(aEditar);
+
+        ServicioTuristico servicioEditado = this.servicioTuristicoService.editarServicio(aEditar);
+
+        Assertions.assertEquals(1L, servicioEditado.getCodigo_producto());
+        Assertions.assertEquals("pasaje", servicioEditado.getNombre());
+        Assertions.assertEquals("pasaje por colectivo", servicioEditado.getDescripcion_breve());
+        Assertions.assertEquals("chaco", servicioEditado.getDestino_servicio());
+        Assertions.assertEquals(LocalDate.of(2026,2,1), servicioEditado.getFecha_servicio());
+        Assertions.assertEquals(400.0, servicioEditado.getCosto_servicio());
+
+        Mockito.verify(servicioRepository, Mockito.times(1)).save(Mockito.any(ServicioTuristico.class));
+    }
 }

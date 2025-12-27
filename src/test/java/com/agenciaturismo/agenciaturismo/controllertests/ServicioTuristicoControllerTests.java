@@ -87,4 +87,22 @@ public class ServicioTuristicoControllerTests {
                 .andExpect(jsonPath("$.fecha_servicio").value("2026-01-07"))
                 .andExpect(jsonPath("$.costo_servicio").value(500.0));
     }
+
+    @Test
+    public void deberiaEditarElServicioTuristico() throws Exception{
+        Mockito.when(servicioTuristicoService.editarServicio(Mockito.any()))
+                .thenReturn(servicio);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/servicios/editar")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(servicio))
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.codigo_producto").value(1L))
+                .andExpect(jsonPath("$.nombre").value("pasaje"))
+                .andExpect(jsonPath("$.descripcion_breve").value("pasaje por colectivo"))
+                .andExpect(jsonPath("$.destino_servicio").value("formosa"))
+                .andExpect(jsonPath("$.fecha_servicio").value("2026-01-07"))
+                .andExpect(jsonPath("$.costo_servicio").value(500.0));
+    }
 }
