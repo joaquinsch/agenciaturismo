@@ -30,4 +30,10 @@ public class ServicioTuristicoController {
         ServicioTuristico editado = this.servicioTuristicoService.editarServicio(servicioTuristico);
         return new ResponseEntity<>(editado, HttpStatus.OK);
     }
+
+    @DeleteMapping("/eliminar/{codigo_producto}")
+    public ResponseEntity<ServicioTuristico> eliminarProducto(@PathVariable Long codigo_producto) {
+        this.servicioTuristicoService.eliminarServicio(codigo_producto);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }

@@ -105,4 +105,12 @@ public class ServicioTuristicoControllerTests {
                 .andExpect(jsonPath("$.fecha_servicio").value("2026-01-07"))
                 .andExpect(jsonPath("$.costo_servicio").value(500.0));
     }
+
+    @Test
+    public void deberiaEliminarElServicioTuristico() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/servicios/eliminar/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(servicio))
+        ).andExpect(status().isNoContent());
+    }
 }

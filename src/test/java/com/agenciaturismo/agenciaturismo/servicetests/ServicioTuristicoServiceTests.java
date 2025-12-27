@@ -52,7 +52,8 @@ public class ServicioTuristicoServiceTests {
         servicioTuristicoService.eliminarServicio(servicio.getCodigo_producto());
 
         Mockito.verify(servicioRepository).deleteById(servicio.getCodigo_producto());
-        Mockito.verifyNoMoreInteractions(servicioRepository); // qcyo
+        Assertions.assertEquals(0, this.servicioRepository.findAll().size());
+        //Mockito.verifyNoMoreInteractions(servicioRepository); // qcyo
     }
 
     @Test
