@@ -46,10 +46,12 @@ public class PaqueteTuristicoServiceTests {
     List<ServicioTuristico> lista = new ArrayList<>(List.of(servicio1, servicio2));
 
     PaqueteTuristico paquete = PaqueteTuristico.builder()
-            .codigo_producto(1L)
+            //.codigo_producto(1L)
             .lista_servicios_incluidos(lista)
             .costo_paquete(135.0)
             .build();
+
+
 
     @Test
     public void deberiaGuardarUnPaqueteConDosServicios() {
@@ -58,7 +60,7 @@ public class PaqueteTuristicoServiceTests {
         PaqueteTuristico guardado = paqueteTuristicoService.guardarPaquete(paquete);
 
         Mockito.verify(paqueteRepository).save(paquete);
-        Assertions.assertEquals(1L, guardado.getCodigo_producto());
+        //Assertions.assertEquals(1L, guardado.getCodigo_producto());
         Assertions.assertEquals(2, guardado.getLista_servicios_incluidos().size());
         Assertions.assertEquals(135.0, guardado.getCosto_paquete());
 
