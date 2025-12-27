@@ -4,6 +4,7 @@ import com.agenciaturismo.agenciaturismo.exceptions.CostoInvalidoError;
 import com.agenciaturismo.agenciaturismo.exceptions.PaqueteInvalidoError;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
@@ -14,6 +15,7 @@ import java.util.List;
 @SuperBuilder
 @Table(name = "paquetes_turisticos")
 @Entity
+@NoArgsConstructor
 public class PaqueteTuristico extends ProductoTuristico {
 
     @ManyToMany
