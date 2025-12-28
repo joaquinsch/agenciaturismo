@@ -14,4 +14,10 @@ public class ApiExceptionHandler {
         return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(value = {CostoInvalidoError.class})
+    public ResponseEntity<ApiError> handleCostoInvalidoErrorError(CostoInvalidoError e) {
+        ApiError apiError = new ApiError(e.getMessage(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+    }
+
 }

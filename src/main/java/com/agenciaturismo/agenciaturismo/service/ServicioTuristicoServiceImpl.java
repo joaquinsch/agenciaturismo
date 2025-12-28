@@ -1,5 +1,6 @@
 package com.agenciaturismo.agenciaturismo.service;
 
+import com.agenciaturismo.agenciaturismo.exceptions.CostoInvalidoError;
 import com.agenciaturismo.agenciaturismo.exceptions.ServicioInexistenteError;
 import com.agenciaturismo.agenciaturismo.model.ServicioTuristico;
 import com.agenciaturismo.agenciaturismo.repository.ServicioRepository;
@@ -14,6 +15,9 @@ public class ServicioTuristicoServiceImpl implements ServicioTuristicoService {
 
     @Override
     public ServicioTuristico guardarServicio(ServicioTuristico servicioTuristico) {
+        if (servicioTuristico.getCosto_servicio() == null || servicioTuristico.getCosto_servicio() < 0) {
+            throw new CostoInvalidoError("El costo es inválido");
+        }
         return this.servicioRepository.save(servicioTuristico);
     }
 

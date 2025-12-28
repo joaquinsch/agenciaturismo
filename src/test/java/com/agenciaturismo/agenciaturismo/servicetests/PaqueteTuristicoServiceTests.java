@@ -1,5 +1,7 @@
 package com.agenciaturismo.agenciaturismo.servicetests;
 
+import com.agenciaturismo.agenciaturismo.exceptions.CostoInvalidoError;
+import com.agenciaturismo.agenciaturismo.exceptions.PaqueteInvalidoError;
 import com.agenciaturismo.agenciaturismo.model.PaqueteTuristico;
 import com.agenciaturismo.agenciaturismo.model.ServicioTuristico;
 import com.agenciaturismo.agenciaturismo.repository.PaqueteRepository;
@@ -63,6 +65,53 @@ public class PaqueteTuristicoServiceTests {
         //Assertions.assertEquals(1L, guardado.getCodigo_producto());
         Assertions.assertEquals(2, guardado.getLista_servicios_incluidos().size());
         Assertions.assertEquals(135.0, guardado.getCosto_paquete());
+
+    }
+
+    @Test
+    public void noDeberiaPoderGuardarseSinServicios(){
+        PaqueteTuristico paq = PaqueteTuristico.builder()
+                .build();
+        PaqueteInvalidoError excepcion = Assertions.assertThrows(PaqueteInvalidoError.class,
+                () -> paqueteTuristicoService.guardarPaquete(paq)
+        );
+        Assertions.assertEquals("El paquete no tiene servicios asociados", excepcion.getMessage());
+    }
+
+    @Test
+    public void noDeberiaPoderCrearseConCostoInvalido(){
+        PaqueteTuristico paq = PaqueteTuristico.builder()
+                .lista_servicios_incluidos(
+                        List.of(ServicioTuristico.builder()
+                                        .costo_servicio(100.0)
+                                        .build(),
+                                ServicioTuristico.builder()
+                                        .costo_servicio(100.0)
+                                        .build())
+                )
+                .costo_paquete(359.0)
+                .build();
+        CostoInvalidoError excepcion = Assertions.assertThrows(CostoInvalidoError.class,
+                ()-> paqueteTuristicoService.guardarPaquete(paq)
+        );
+        Assertions.assertEquals("El costo del paquete no coincide con la suma de los servicios menos 10%",
+                excepcion.getMessage());
+    }
+
+    @Test
+    public void noDeberiaPoderCrearseConUnSoloServicio(){
+        PaqueteTuristico paq = PaqueteTuristico.builder()
+                .lista_servicios_incluidos(
+                        List.of(ServicioTuristico.builder()
+                                .costo_servicio(100.0)
+                                .build())
+                )
+                .build();
+        PaqueteInvalidoError excepcion = Assertions.assertThrows(
+                PaqueteInvalidoError.class, ()->
+                        paqueteTuristicoService.guardarPaquete(paq)
+        );
+        Assertions.assertEquals("El paquete debe tener mas de un servicio asociado", excepcion.getMessage());
 
     }
 }

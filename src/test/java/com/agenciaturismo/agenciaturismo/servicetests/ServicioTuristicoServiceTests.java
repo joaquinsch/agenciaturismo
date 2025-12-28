@@ -1,5 +1,6 @@
 package com.agenciaturismo.agenciaturismo.servicetests;
 
+import com.agenciaturismo.agenciaturismo.exceptions.CostoInvalidoError;
 import com.agenciaturismo.agenciaturismo.exceptions.ServicioInexistenteError;
 import com.agenciaturismo.agenciaturismo.model.ServicioTuristico;
 import com.agenciaturismo.agenciaturismo.repository.ServicioRepository;
@@ -63,6 +64,21 @@ public class ServicioTuristicoServiceTests {
                 servicioTuristicoService.eliminarServicio(2L)
         );
         Assertions.assertEquals("El servicio buscado no existe", exception.getMessage());
+    }
+
+    @Test
+    public void deberiaDarErrorSiIntentaPonerCostoNegativo(){
+        ServicioTuristico serv = ServicioTuristico.builder()
+                .nombre("pasaje")
+                .descripcion_breve("pasaje por colectivo")
+                .destino_servicio("formosa")
+                .fecha_servicio(LocalDate.of(2026, 1, 7))
+                .costo_servicio(-500.0)
+                .build();
+        CostoInvalidoError excepcion = Assertions.assertThrows(CostoInvalidoError.class,
+                ()-> servicioTuristicoService.guardarServicio(serv)
+        );
+        Assertions.assertEquals("El costo es inválido", excepcion.getMessage());
     }
 
     @Test

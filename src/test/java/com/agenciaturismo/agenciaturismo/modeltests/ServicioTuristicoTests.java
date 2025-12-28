@@ -1,6 +1,5 @@
 package com.agenciaturismo.agenciaturismo.modeltests;
 
-import com.agenciaturismo.agenciaturismo.exceptions.CostoInvalidoError;
 import com.agenciaturismo.agenciaturismo.model.ServicioTuristico;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -47,20 +46,5 @@ public class ServicioTuristicoTests {
     public void deberiaCrearseConCosto_servicio(){
         serv.setCosto_servicio(5000.0);
         Assertions.assertEquals(5000, serv.getCosto_servicio());
-    }
-
-    @Test
-    public void deberiaValidarQueElCostoNoSeaNegativo(){
-        serv.setCosto_servicio(-500.0);
-        CostoInvalidoError excepcion = Assertions.assertThrows(CostoInvalidoError.class, ()-> ServicioTuristico.builder()
-                        //.codigo_producto(2L)
-                        .nombre("pasaje")
-                        .descripcion_breve("pasaje por colectivo")
-                        .destino_servicio("formosa")
-                        .fecha_servicio(LocalDate.of(2026, 1, 7))
-                        .costo_servicio(-500.0)
-                        .build()
-                );
-        Assertions.assertEquals("El costo es inválido", excepcion.getMessage());
     }
 }

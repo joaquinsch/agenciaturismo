@@ -1,6 +1,5 @@
 package com.agenciaturismo.agenciaturismo.model;
 
-import com.agenciaturismo.agenciaturismo.exceptions.CostoInvalidoError;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,17 +23,4 @@ public class ServicioTuristico extends ProductoTuristico {
     private Double costo_servicio;
     @ManyToMany(mappedBy = "lista_servicios_incluidos")
     private List<PaqueteTuristico> paquetes;
-
-    protected ServicioTuristico(ServicioTuristicoBuilder<?, ?> b) {
-        super(b);
-        this.costo_servicio = b.costo_servicio;
-        if (this.costo_servicio == null || this.costo_servicio < 0) {
-            throw new CostoInvalidoError("El costo es inválido");
-        }
-
-        this.nombre = b.nombre;
-        this.descripcion_breve = b.descripcion_breve;
-        this.destino_servicio = b.destino_servicio;
-        this.fecha_servicio = b.fecha_servicio;
-    }
 }

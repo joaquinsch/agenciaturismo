@@ -1,8 +1,5 @@
 package com.agenciaturismo.agenciaturismo.modeltests;
 
-
-import com.agenciaturismo.agenciaturismo.exceptions.CostoInvalidoError;
-import com.agenciaturismo.agenciaturismo.exceptions.PaqueteInvalidoError;
 import com.agenciaturismo.agenciaturismo.model.PaqueteTuristico;
 import com.agenciaturismo.agenciaturismo.model.ServicioTuristico;
 import org.junit.jupiter.api.Assertions;
@@ -41,47 +38,6 @@ public class PaqueteTuristicoTests {
                 paquete.getLista_servicios_incluidos().size());
     }
 
-    @Test
-    public void noDeberiaPoderCrearseSinServicios(){
-        PaqueteInvalidoError excepcion = Assertions.assertThrows(PaqueteInvalidoError.class,
-                () -> PaqueteTuristico.builder()
-                        .build());
-        Assertions.assertEquals("El paquete no tiene servicios asociados", excepcion.getMessage());
-    }
-
-    @Test
-    public void noDeberiaPoderCrearseConUnSoloServicio(){
-        PaqueteInvalidoError excepcion = Assertions.assertThrows(
-                PaqueteInvalidoError.class, ()->
-                    PaqueteTuristico.builder()
-                    .lista_servicios_incluidos(
-                            List.of(ServicioTuristico.builder()
-                                    .costo_servicio(100.0)
-                                    .build())
-                    )
-                    .build());
-        Assertions.assertEquals("El paquete debe tener mas de un servicio asociado", excepcion.getMessage());
-
-    }
-
-    @Test
-    public void noDeberiaPoderCrearseConCostoInvalido(){
-        CostoInvalidoError excepcion = Assertions.assertThrows(CostoInvalidoError.class,
-                ()-> PaqueteTuristico.builder()
-                        .lista_servicios_incluidos(
-                                List.of(ServicioTuristico.builder()
-                                                .costo_servicio(100.0)
-                                                .build(),
-                                        ServicioTuristico.builder()
-                                                .costo_servicio(100.0)
-                                                .build())
-                        )
-                        .costo_paquete(359.0)
-                        .build()
-        );
-        Assertions.assertEquals("El costo del paquete no coincide con la suma de los servicios menos 10%",
-                excepcion.getMessage());
-    }
 
 
     @Test
