@@ -1,5 +1,6 @@
 package com.agenciaturismo.agenciaturismo.controller;
 
+import com.agenciaturismo.agenciaturismo.dto.PaqueteDTO;
 import com.agenciaturismo.agenciaturismo.model.PaqueteTuristico;
 import com.agenciaturismo.agenciaturismo.service.PaqueteTuristicoServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +15,8 @@ public class PaqueteTuristicoController {
     private PaqueteTuristicoServiceImpl paqueteTuristicoService;
 
     @PostMapping("/guardar")
-    public ResponseEntity<PaqueteTuristico> guardarPaquete(@RequestBody PaqueteTuristico paqueteTuristico) {
-        PaqueteTuristico guardado = paqueteTuristicoService.guardarPaquete(paqueteTuristico);
-        return new ResponseEntity<>(paqueteTuristico, HttpStatus.CREATED);
+    public ResponseEntity<PaqueteTuristico> guardarPaquete(@RequestBody PaqueteDTO paqueteDTO) {
+        PaqueteTuristico guardado = paqueteTuristicoService.guardarPaquete(paqueteDTO);
+        return new ResponseEntity<>(guardado, HttpStatus.CREATED);
     }
 }

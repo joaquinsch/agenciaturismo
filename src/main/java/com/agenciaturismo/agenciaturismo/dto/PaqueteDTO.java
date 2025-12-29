@@ -1,0 +1,17 @@
+package com.agenciaturismo.agenciaturismo.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
+
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+public class PaqueteDTO {
+
+    private List<Long> ids_servicios_incluidos;
+    private Double costo_paquete;
+
+}

@@ -1,5 +1,6 @@
 package com.agenciaturismo.agenciaturismo.controllertests;
 import com.agenciaturismo.agenciaturismo.controller.PaqueteTuristicoController;
+import com.agenciaturismo.agenciaturismo.dto.PaqueteDTO;
 import com.agenciaturismo.agenciaturismo.model.PaqueteTuristico;
 import com.agenciaturismo.agenciaturismo.model.ServicioTuristico;
 import com.agenciaturismo.agenciaturismo.service.PaqueteTuristicoServiceImpl;
@@ -58,7 +59,7 @@ public class PaqueteTuristicoControllerTests {
 
     @Test
     public void deberiaGuardarUnPaqueteConDosServicios() throws Exception {
-        Mockito.when(this.paqueteTuristicoService.guardarPaquete(Mockito.any(PaqueteTuristico.class)))
+        Mockito.when(this.paqueteTuristicoService.guardarPaquete(Mockito.any(PaqueteDTO.class)))
                         .thenReturn(paquete);
         mockMvc.perform(MockMvcRequestBuilders.post("/api/paquetes/guardar")
                 .contentType(MediaType.APPLICATION_JSON)

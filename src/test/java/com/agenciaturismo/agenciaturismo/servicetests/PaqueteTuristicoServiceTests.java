@@ -1,10 +1,12 @@
 package com.agenciaturismo.agenciaturismo.servicetests;
 
+import com.agenciaturismo.agenciaturismo.dto.PaqueteDTO;
 import com.agenciaturismo.agenciaturismo.exceptions.CostoInvalidoError;
 import com.agenciaturismo.agenciaturismo.exceptions.PaqueteInvalidoError;
 import com.agenciaturismo.agenciaturismo.model.PaqueteTuristico;
 import com.agenciaturismo.agenciaturismo.model.ServicioTuristico;
 import com.agenciaturismo.agenciaturismo.repository.PaqueteRepository;
+import com.agenciaturismo.agenciaturismo.repository.ServicioRepository;
 import com.agenciaturismo.agenciaturismo.service.PaqueteTuristicoServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -25,6 +27,9 @@ public class PaqueteTuristicoServiceTests {
 
     @Mock
     private PaqueteRepository paqueteRepository;
+
+    @Mock
+    private ServicioRepository servicioRepository;
 
     @InjectMocks
     private PaqueteTuristicoServiceImpl paqueteTuristicoService;
@@ -47,11 +52,14 @@ public class PaqueteTuristicoServiceTests {
 
     List<ServicioTuristico> lista = new ArrayList<>(List.of(servicio1, servicio2));
 
+
+
     PaqueteTuristico paquete = PaqueteTuristico.builder()
             //.codigo_producto(1L)
             .lista_servicios_incluidos(lista)
             .costo_paquete(135.0)
             .build();
+    PaqueteDTO paqueteDTO = new PaqueteDTO(List.of(1L, 2L), 135.0);
 
 
 
@@ -59,9 +67,11 @@ public class PaqueteTuristicoServiceTests {
     public void deberiaGuardarUnPaqueteConDosServicios() {
         Mockito.when(this.paqueteRepository.save(Mockito.any(PaqueteTuristico.class)))
                 .thenReturn(paquete);
-        PaqueteTuristico guardado = paqueteTuristicoService.guardarPaquete(paquete);
+        Mockito.when(this.servicioRepository.findAllById(Mockito.anyIterable()))
+                .thenReturn(List.of(servicio1,servicio2));
+        PaqueteTuristico guardado = paqueteTuristicoService.guardarPaquete(paqueteDTO);
 
-        Mockito.verify(paqueteRepository).save(paquete);
+        Mockito.verify(paqueteRepository).save(Mockito.any(PaqueteTuristico.class));
         //Assertions.assertEquals(1L, guardado.getCodigo_producto());
         Assertions.assertEquals(2, guardado.getLista_servicios_incluidos().size());
         Assertions.assertEquals(135.0, guardado.getCosto_paquete());
@@ -70,29 +80,23 @@ public class PaqueteTuristicoServiceTests {
 
     @Test
     public void noDeberiaPoderGuardarseSinServicios(){
-        PaqueteTuristico paq = PaqueteTuristico.builder()
-                .build();
+       PaqueteDTO paqDTO = new PaqueteDTO(new ArrayList<>(), 700.0);
         PaqueteInvalidoError excepcion = Assertions.assertThrows(PaqueteInvalidoError.class,
-                () -> paqueteTuristicoService.guardarPaquete(paq)
+                () -> paqueteTuristicoService.guardarPaquete(paqDTO)
         );
         Assertions.assertEquals("El paquete no tiene servicios asociados", excepcion.getMessage());
     }
 
     @Test
     public void noDeberiaPoderCrearseConCostoInvalido(){
-        PaqueteTuristico paq = PaqueteTuristico.builder()
-                .lista_servicios_incluidos(
-                        List.of(ServicioTuristico.builder()
-                                        .costo_servicio(100.0)
-                                        .build(),
-                                ServicioTuristico.builder()
-                                        .costo_servicio(100.0)
-                                        .build())
-                )
-                .costo_paquete(359.0)
-                .build();
+        PaqueteDTO paqDTO = new PaqueteDTO(
+                List.of(1L, 2L),
+                359.0);
+        Mockito.when(this.servicioRepository.findAllById(Mockito.anyIterable()))
+                .thenReturn(List.of(servicio1, servicio2));
+
         CostoInvalidoError excepcion = Assertions.assertThrows(CostoInvalidoError.class,
-                ()-> paqueteTuristicoService.guardarPaquete(paq)
+                ()-> paqueteTuristicoService.guardarPaquete(paqDTO)
         );
         Assertions.assertEquals("El costo del paquete no coincide con la suma de los servicios menos 10%",
                 excepcion.getMessage());
@@ -100,16 +104,14 @@ public class PaqueteTuristicoServiceTests {
 
     @Test
     public void noDeberiaPoderCrearseConUnSoloServicio(){
-        PaqueteTuristico paq = PaqueteTuristico.builder()
-                .lista_servicios_incluidos(
-                        List.of(ServicioTuristico.builder()
-                                .costo_servicio(100.0)
-                                .build())
-                )
-                .build();
+        PaqueteDTO paqDTO = new PaqueteDTO(
+                List.of(1L),
+                100.0);
+        Mockito.when(this.servicioRepository.findAllById(Mockito.anyIterable()))
+                .thenReturn(List.of(servicio1));
         PaqueteInvalidoError excepcion = Assertions.assertThrows(
                 PaqueteInvalidoError.class, ()->
-                        paqueteTuristicoService.guardarPaquete(paq)
+                        paqueteTuristicoService.guardarPaquete(paqDTO)
         );
         Assertions.assertEquals("El paquete debe tener mas de un servicio asociado", excepcion.getMessage());
 

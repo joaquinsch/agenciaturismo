@@ -20,4 +20,10 @@ public class ApiExceptionHandler {
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(value = {PaqueteInvalidoError.class})
+    public ResponseEntity<ApiError> handlePaqueteInvalidoError(PaqueteInvalidoError e) {
+        ApiError apiError = new ApiError(e.getMessage(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+    }
+
 }
