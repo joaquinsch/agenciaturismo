@@ -1,5 +1,6 @@
 package com.agenciaturismo.agenciaturismo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,5 +23,6 @@ public class ServicioTuristico extends ProductoTuristico {
     private LocalDate fecha_servicio;
     private Double costo_servicio;
     @ManyToMany(mappedBy = "lista_servicios_incluidos")
+    @JsonIgnore
     private List<PaqueteTuristico> paquetes;
 }
