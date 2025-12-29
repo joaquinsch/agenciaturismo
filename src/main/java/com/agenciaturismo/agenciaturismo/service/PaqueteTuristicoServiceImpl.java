@@ -30,14 +30,8 @@ public class PaqueteTuristicoServiceImpl implements PaqueteTuristicoService {
     @Override
     public PaqueteTuristico guardarPaquete(PaqueteDTO paqueteDTO) {
         List<ServicioTuristico> servicios_incluidos = servicioRepository.findAllById(paqueteDTO.getIds_servicios_incluidos());
+        validarPaquete(paqueteDTO, servicios_incluidos);
 
-        if (servicios_incluidos.size() != paqueteDTO.getIds_servicios_incluidos().size()) {
-            throw new PaqueteInvalidoError("Hay servicios turísticos inexistentes");
-        } else if (servicios_incluidos.isEmpty()) {
-            throw new PaqueteInvalidoError("El paquete no tiene servicios asociados");
-        } else if (servicios_incluidos.size() < 2) {
-            throw new PaqueteInvalidoError("El paquete debe tener mas de un servicio asociado");
-        }
         PaqueteTuristico paquete = PaqueteTuristico.builder()
                 .lista_servicios_incluidos(servicios_incluidos)
                 .costo_paquete(paqueteDTO.getCosto_paquete())
@@ -47,5 +41,15 @@ public class PaqueteTuristicoServiceImpl implements PaqueteTuristicoService {
             throw new CostoInvalidoError("El costo del paquete no coincide con la suma de los servicios menos 10%");
         }
         return paqueteRepository.save(paquete);
+    }
+
+    private void validarPaquete(PaqueteDTO paqueteDTO, List<ServicioTuristico> servicios_incluidos) {
+        if (servicios_incluidos.size() != paqueteDTO.getIds_servicios_incluidos().size()) {
+            throw new PaqueteInvalidoError("Hay servicios turísticos inexistentes");
+        } else if (servicios_incluidos.isEmpty()) {
+            throw new PaqueteInvalidoError("El paquete no tiene servicios asociados");
+        } else if (servicios_incluidos.size() < 2) {
+            throw new PaqueteInvalidoError("El paquete debe tener mas de un servicio asociado");
+        }
     }
 }
