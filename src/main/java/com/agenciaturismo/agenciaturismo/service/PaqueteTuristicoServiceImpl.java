@@ -2,6 +2,7 @@ package com.agenciaturismo.agenciaturismo.service;
 
 import com.agenciaturismo.agenciaturismo.dto.PaqueteDTO;
 import com.agenciaturismo.agenciaturismo.exceptions.CostoInvalidoError;
+import com.agenciaturismo.agenciaturismo.exceptions.PaqueteInexistenteError;
 import com.agenciaturismo.agenciaturismo.exceptions.PaqueteInvalidoError;
 import com.agenciaturismo.agenciaturismo.model.PaqueteTuristico;
 import com.agenciaturismo.agenciaturismo.model.ProductoTuristico;
@@ -41,6 +42,14 @@ public class PaqueteTuristicoServiceImpl implements PaqueteTuristicoService {
             throw new CostoInvalidoError("El costo del paquete no coincide con la suma de los servicios menos 10%");
         }
         return paqueteRepository.save(paquete);
+    }
+
+    @Override
+    public PaqueteTuristico buscarPaquete(Long codigo_producto) {
+        return this.paqueteRepository.findById(codigo_producto).orElseThrow(
+                () ->
+                        new PaqueteInexistenteError("El paquete buscado no existe")
+        );
     }
 
     private void validarPaquete(PaqueteDTO paqueteDTO, List<ServicioTuristico> servicios_incluidos) {

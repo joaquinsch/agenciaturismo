@@ -19,4 +19,10 @@ public class PaqueteTuristicoController {
         PaqueteTuristico guardado = paqueteTuristicoService.guardarPaquete(paqueteDTO);
         return new ResponseEntity<>(guardado, HttpStatus.CREATED);
     }
+
+    @GetMapping("/{codigo_producto}")
+    public ResponseEntity<PaqueteTuristico> buscarPaquete(@PathVariable Long codigo_producto) {
+        PaqueteTuristico buscado = paqueteTuristicoService.buscarPaquete(codigo_producto);
+        return new ResponseEntity<>(buscado, HttpStatus.FOUND);
+    }
 }

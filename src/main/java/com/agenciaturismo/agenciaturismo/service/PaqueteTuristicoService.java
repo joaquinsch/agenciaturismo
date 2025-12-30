@@ -5,4 +5,5 @@ import com.agenciaturismo.agenciaturismo.model.PaqueteTuristico;
 
 public interface PaqueteTuristicoService {
     PaqueteTuristico guardarPaquete(PaqueteDTO paqueteDTO);
+    PaqueteTuristico buscarPaquete(Long codigo_producto);
 }

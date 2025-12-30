@@ -67,4 +67,15 @@ public class PaqueteTuristicoControllerTests {
         ).andExpect(status().isCreated())
                 .andExpect(jsonPath("$.codigo_producto").value(1L));
     }
+
+    @Test
+    public void deberiaEncontrarElPaqueteBuscado() throws Exception{
+        Mockito.when(this.paqueteTuristicoService.buscarPaquete(1L))
+                .thenReturn(paquete);
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/paquetes/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(paquete))
+                ).andExpect(status().isFound())
+                .andExpect(jsonPath("$.codigo_producto").value(1L));
+    }
 }

@@ -26,4 +26,10 @@ public class ApiExceptionHandler {
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(value = {PaqueteInexistenteError.class})
+    public ResponseEntity<ApiError> handlePaqueteInexistenteError(PaqueteInexistenteError e) {
+        ApiError apiError = new ApiError(e.getMessage(), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
+    }
+
 }
