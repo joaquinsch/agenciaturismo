@@ -2,6 +2,7 @@ package com.agenciaturismo.agenciaturismo.servicetests;
 
 import com.agenciaturismo.agenciaturismo.dto.PaqueteDTO;
 import com.agenciaturismo.agenciaturismo.exceptions.CostoInvalidoError;
+import com.agenciaturismo.agenciaturismo.exceptions.PaqueteInexistenteError;
 import com.agenciaturismo.agenciaturismo.exceptions.PaqueteInvalidoError;
 import com.agenciaturismo.agenciaturismo.model.PaqueteTuristico;
 import com.agenciaturismo.agenciaturismo.model.ProductoTuristico;
@@ -21,6 +22,7 @@ import org.springframework.test.context.ActiveProfiles;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 @ActiveProfiles("test")
@@ -54,10 +56,10 @@ public class PaqueteTuristicoServiceTests {
     List<ServicioTuristico> lista = new ArrayList<>(List.of(servicio1, servicio2));
 
     PaqueteTuristico paquete = PaqueteTuristico.builder()
-            //.codigo_producto(1L)
+            .codigo_producto(1L)
             .lista_servicios_incluidos(lista)
-            .costo_paquete(135.0)
             .tipo_producto(ProductoTuristico.TipoProducto.PAQUETE)
+            .costo_paquete(135.0)
             .build();
     PaqueteDTO paqueteDTO = PaqueteDTO.builder()
             .ids_servicios_incluidos(List.of(1L, 2L))
@@ -137,5 +139,24 @@ public class PaqueteTuristicoServiceTests {
                 .thenReturn(paquete);
         PaqueteTuristico guardado = paqueteTuristicoService.guardarPaquete(paqDTO);
         Assertions.assertEquals(ProductoTuristico.TipoProducto.PAQUETE, guardado.getTipo_producto());
+    }
+
+    @Test
+    public void deberiaNoEncontrarElPaqueteYTirarExcepcion(){
+        PaqueteInexistenteError excepcion = Assertions.assertThrows(PaqueteInexistenteError.class,
+                ()-> paqueteTuristicoService.buscarPaquete(paquete.getCodigo_producto())
+        );
+        Assertions.assertEquals("El paquete buscado no existe",
+                excepcion.getMessage());
+    }
+
+    @Test
+    public void deberiaEncontrarElPaqueteSiExiste(){
+        Mockito.when(this.paqueteRepository.findById(Mockito.anyLong()))
+                .thenReturn(Optional.of(paquete));
+        PaqueteTuristico encontrado = paqueteTuristicoService.buscarPaquete(paquete.getCodigo_producto());
+
+        Mockito.verify(paqueteRepository).findById(1L);
+        Assertions.assertEquals(1L, encontrado.getCodigo_producto());
     }
 }
