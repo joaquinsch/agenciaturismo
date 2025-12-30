@@ -1,6 +1,7 @@
 package com.agenciaturismo.agenciaturismo.controllertests;
 import com.agenciaturismo.agenciaturismo.controller.PaqueteTuristicoController;
 import com.agenciaturismo.agenciaturismo.dto.PaqueteDTO;
+import com.agenciaturismo.agenciaturismo.exceptions.PaqueteInexistenteError;
 import com.agenciaturismo.agenciaturismo.model.PaqueteTuristico;
 import com.agenciaturismo.agenciaturismo.model.ServicioTuristico;
 import com.agenciaturismo.agenciaturismo.service.PaqueteTuristicoServiceImpl;
@@ -77,5 +78,15 @@ public class PaqueteTuristicoControllerTests {
                         .content(objectMapper.writeValueAsString(paquete))
                 ).andExpect(status().isFound())
                 .andExpect(jsonPath("$.codigo_producto").value(1L));
+    }
+
+    @Test
+    public void deberiaDarErrorNoEncontrado() throws Exception{
+        Mockito.when(this.paqueteTuristicoService.buscarPaquete(2L))
+                .thenThrow(PaqueteInexistenteError.class);
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/paquetes/2")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(paquete))
+        ).andExpect(status().isNotFound());
     }
 }
