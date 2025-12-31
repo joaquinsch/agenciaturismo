@@ -1,6 +1,7 @@
 package com.agenciaturismo.agenciaturismo.servicetests;
 
 import com.agenciaturismo.agenciaturismo.exceptions.CostoInvalidoError;
+import com.agenciaturismo.agenciaturismo.exceptions.FechaInvalidaError;
 import com.agenciaturismo.agenciaturismo.exceptions.ServicioInexistenteError;
 import com.agenciaturismo.agenciaturismo.model.ServicioTuristico;
 import com.agenciaturismo.agenciaturismo.repository.ServicioRepository;
@@ -107,5 +108,20 @@ public class ServicioTuristicoServiceTests {
         Assertions.assertEquals(400.0, servicioEditado.getCosto_servicio());
 
         Mockito.verify(servicioRepository, Mockito.times(1)).save(Mockito.any(ServicioTuristico.class));
+    }
+
+    @Test
+    public void deberiaDarErrorSiIngresaUnaFechaPasada(){
+        ServicioTuristico serv = ServicioTuristico.builder()
+                .nombre("pasaje")
+                .descripcion_breve("pasaje por colectivo")
+                .destino_servicio("formosa")
+                .fecha_servicio(LocalDate.of(2025, 1, 7))
+                .costo_servicio(500.0)
+                .build();
+        FechaInvalidaError excepcion = Assertions.assertThrows(FechaInvalidaError.class,
+                ()-> servicioTuristicoService.guardarServicio(serv)
+        );
+        Assertions.assertEquals("La fecha ingresada es inválida", excepcion.getMessage());
     }
 }

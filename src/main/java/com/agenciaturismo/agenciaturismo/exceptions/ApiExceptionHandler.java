@@ -32,4 +32,10 @@ public class ApiExceptionHandler {
         return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(value = {FechaInvalidaError.class})
+    public ResponseEntity<ApiError> handleFechaInvalidaError(FechaInvalidaError e) {
+        ApiError apiError = new ApiError(e.getMessage(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+    }
+
 }
