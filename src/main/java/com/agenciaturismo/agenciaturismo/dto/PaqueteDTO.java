@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 public class PaqueteDTO {
 
-    private List<Long> ids_servicios_incluidos;
+    private List<Long> lista_servicios_incluidos;
     private Double costo_paquete;
 
 }

@@ -30,7 +30,7 @@ public class PaqueteTuristicoServiceImpl implements PaqueteTuristicoService {
 
     @Override
     public PaqueteTuristico guardarPaquete(PaqueteDTO paqueteDTO) {
-        List<ServicioTuristico> servicios_incluidos = servicioRepository.findAllById(paqueteDTO.getIds_servicios_incluidos());
+        List<ServicioTuristico> servicios_incluidos = servicioRepository.findAllById(paqueteDTO.getLista_servicios_incluidos());
         validarPaquete(paqueteDTO, servicios_incluidos);
 
         PaqueteTuristico paquete = PaqueteTuristico.builder()
@@ -53,7 +53,7 @@ public class PaqueteTuristicoServiceImpl implements PaqueteTuristicoService {
     }
 
     private void validarPaquete(PaqueteDTO paqueteDTO, List<ServicioTuristico> servicios_incluidos) {
-        if (servicios_incluidos.size() != paqueteDTO.getIds_servicios_incluidos().size()) {
+        if (servicios_incluidos.size() != paqueteDTO.getLista_servicios_incluidos().size()) {
             throw new PaqueteInvalidoError("Hay servicios turísticos inexistentes");
         } else if (servicios_incluidos.isEmpty()) {
             throw new PaqueteInvalidoError("El paquete no tiene servicios asociados");

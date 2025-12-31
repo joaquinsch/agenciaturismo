@@ -35,6 +35,7 @@ public class PaqueteTuristicoControllerTests {
     private ObjectMapper objectMapper;
 
     ServicioTuristico servicio1 = ServicioTuristico.builder()
+            .codigo_producto(1L)
             .nombre("Viaje por colectivo")
             .costo_servicio(100.0)
             .fecha_servicio(LocalDate.of(2026,2,1))
@@ -43,6 +44,7 @@ public class PaqueteTuristicoControllerTests {
             .build();
 
     ServicioTuristico servicio2 = ServicioTuristico.builder()
+            .codigo_producto(2L)
             .nombre("hotel por noche")
             .costo_servicio(50.0)
             .fecha_servicio(LocalDate.of(2026,1,17))
@@ -62,9 +64,14 @@ public class PaqueteTuristicoControllerTests {
     public void deberiaGuardarUnPaqueteConDosServicios() throws Exception {
         Mockito.when(this.paqueteTuristicoService.guardarPaquete(Mockito.any(PaqueteDTO.class)))
                         .thenReturn(paquete);
+        PaqueteDTO paqDTO = PaqueteDTO.builder()
+                .lista_servicios_incluidos(List.of(1L,2L))
+                .costo_paquete(135.0)
+                .build();
+
         mockMvc.perform(MockMvcRequestBuilders.post("/api/paquetes/guardar")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(paquete))
+                .content(objectMapper.writeValueAsString(paqDTO))
         ).andExpect(status().isCreated())
                 .andExpect(jsonPath("$.codigo_producto").value(1L));
     }

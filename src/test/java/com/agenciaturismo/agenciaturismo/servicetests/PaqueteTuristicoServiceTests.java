@@ -62,7 +62,7 @@ public class PaqueteTuristicoServiceTests {
             .costo_paquete(135.0)
             .build();
     PaqueteDTO paqueteDTO = PaqueteDTO.builder()
-            .ids_servicios_incluidos(List.of(1L, 2L))
+            .lista_servicios_incluidos(List.of(1L, 2L))
             .costo_paquete(135.0)
             .build();
 
@@ -84,7 +84,7 @@ public class PaqueteTuristicoServiceTests {
     @Test
     public void noDeberiaPoderGuardarseSinServicios(){
        PaqueteDTO paqDTO = PaqueteDTO.builder()
-               .ids_servicios_incluidos(new ArrayList<>())
+               .lista_servicios_incluidos(new ArrayList<>())
                .costo_paquete(700.0)
                .build();
 
@@ -97,7 +97,7 @@ public class PaqueteTuristicoServiceTests {
     @Test
     public void noDeberiaPoderCrearseConCostoInvalido(){
         PaqueteDTO paqDTO = PaqueteDTO.builder()
-                .ids_servicios_incluidos(List.of(1L, 2L))
+                .lista_servicios_incluidos(List.of(1L, 2L))
                 .costo_paquete(359.0)
                 .build();
 
@@ -114,7 +114,7 @@ public class PaqueteTuristicoServiceTests {
     @Test
     public void noDeberiaPoderCrearseConUnSoloServicio(){
         PaqueteDTO paqDTO = PaqueteDTO.builder()
-                .ids_servicios_incluidos(List.of(1L))
+                .lista_servicios_incluidos(List.of(1L))
                 .costo_paquete(100.0)
                 .build();
 
@@ -130,7 +130,7 @@ public class PaqueteTuristicoServiceTests {
     @Test
     public void deberiaGuardarseConTipoProducto(){
         PaqueteDTO paqDTO = PaqueteDTO.builder()
-                .ids_servicios_incluidos(List.of(1L, 2L))
+                .lista_servicios_incluidos(List.of(1L, 2L))
                 .costo_paquete(135.0)
                 .build();
         Mockito.when(this.servicioRepository.findAllById(Mockito.anyIterable()))
