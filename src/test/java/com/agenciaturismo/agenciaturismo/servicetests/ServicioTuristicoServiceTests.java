@@ -1,15 +1,17 @@
 package com.agenciaturismo.agenciaturismo.servicetests;
 
+import com.agenciaturismo.agenciaturismo.ProveedorDeFechaFija;
 import com.agenciaturismo.agenciaturismo.exceptions.CostoInvalidoError;
 import com.agenciaturismo.agenciaturismo.exceptions.FechaInvalidaError;
 import com.agenciaturismo.agenciaturismo.exceptions.ServicioInexistenteError;
+import com.agenciaturismo.agenciaturismo.model.IProveedorDeFecha;
 import com.agenciaturismo.agenciaturismo.model.ServicioTuristico;
 import com.agenciaturismo.agenciaturismo.repository.ServicioRepository;
 import com.agenciaturismo.agenciaturismo.service.ServicioTuristicoServiceImpl;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -25,8 +27,19 @@ public class ServicioTuristicoServiceTests {
     @Mock
     ServicioRepository servicioRepository;
 
-    @InjectMocks
+    IProveedorDeFecha proveedorDeFechaFija;
+
     ServicioTuristicoServiceImpl servicioTuristicoService;
+
+    @BeforeEach
+    void setUp() {
+        proveedorDeFechaFija =
+                new ProveedorDeFechaFija(LocalDate.now());
+        servicioTuristicoService = new ServicioTuristicoServiceImpl(
+                servicioRepository,
+                proveedorDeFechaFija
+        );
+    }
 
     ServicioTuristico servicio = ServicioTuristico.builder()
             .codigo_producto(1L)
@@ -38,6 +51,8 @@ public class ServicioTuristicoServiceTests {
 
     @Test
     public void deberiaGuardarElServicio(){
+        // simulo q la fecha de hoy es anterior a la del servicio
+        proveedorDeFechaFija = new ProveedorDeFechaFija(LocalDate.of(2026, 1, 9));
         Mockito.when(servicioRepository.save(Mockito.any(ServicioTuristico.class))).thenReturn(servicio);
 
         ServicioTuristico guardado = servicioTuristicoService.guardarServicio(servicio);
@@ -112,16 +127,40 @@ public class ServicioTuristicoServiceTests {
 
     @Test
     public void deberiaDarErrorSiIngresaUnaFechaPasada(){
+        proveedorDeFechaFija =
+                new ProveedorDeFechaFija(LocalDate.of(2026, 1, 8));
+        ServicioTuristicoServiceImpl servicioTuristicoService1 =
+                new ServicioTuristicoServiceImpl(
+                        servicioRepository,
+                        proveedorDeFechaFija
+                );
         ServicioTuristico serv = ServicioTuristico.builder()
                 .nombre("pasaje")
                 .descripcion_breve("pasaje por colectivo")
                 .destino_servicio("formosa")
-                .fecha_servicio(LocalDate.of(2025, 1, 7))
+                .fecha_servicio(LocalDate.of(2026, 1, 6))
                 .costo_servicio(500.0)
                 .build();
         FechaInvalidaError excepcion = Assertions.assertThrows(FechaInvalidaError.class,
-                ()-> servicioTuristicoService.guardarServicio(serv)
+                ()-> servicioTuristicoService1.guardarServicio(serv)
         );
         Assertions.assertEquals("La fecha ingresada es inválida", excepcion.getMessage());
+    }
+    
+    @Test
+    public void deberiaGuardarUnServicioParaUnaFechaDada(){
+
+        proveedorDeFechaFija =
+                new ProveedorDeFechaFija(LocalDate.of(2026, 1, 8));
+        ServicioTuristico serv = ServicioTuristico.builder()
+                .nombre("pasaje")
+                .descripcion_breve("pasaje por colectivo")
+                .destino_servicio("formosa")
+                .fecha_servicio(LocalDate.of(2026, 1, 10))
+                .costo_servicio(500.0)
+                .build();
+
+        Assertions.assertEquals("pasaje", serv.getNombre());
+
     }
 }

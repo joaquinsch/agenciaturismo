@@ -3,24 +3,27 @@ package com.agenciaturismo.agenciaturismo.service;
 import com.agenciaturismo.agenciaturismo.exceptions.CostoInvalidoError;
 import com.agenciaturismo.agenciaturismo.exceptions.FechaInvalidaError;
 import com.agenciaturismo.agenciaturismo.exceptions.ServicioInexistenteError;
+import com.agenciaturismo.agenciaturismo.model.IProveedorDeFecha;
 import com.agenciaturismo.agenciaturismo.model.ServicioTuristico;
 import com.agenciaturismo.agenciaturismo.repository.ServicioRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
 
 @Service
 public class ServicioTuristicoServiceImpl implements ServicioTuristicoService {
 
-    @Autowired
-    private ServicioRepository servicioRepository;
+    private final ServicioRepository servicioRepository;
+    private final IProveedorDeFecha proveedor;
+
+    public ServicioTuristicoServiceImpl(ServicioRepository servicioRepository, IProveedorDeFecha proveedor) {
+        this.servicioRepository = servicioRepository;
+        this.proveedor = proveedor;
+    }
 
     @Override
     public ServicioTuristico guardarServicio(ServicioTuristico servicioTuristico) {
         if (servicioTuristico.getCosto_servicio() == null || servicioTuristico.getCosto_servicio() < 0) {
             throw new CostoInvalidoError("El costo es inválido");
-        } else if (servicioTuristico.getFecha_servicio().isBefore(LocalDate.now())) {
+        } else if (proveedor.esFechaPasada(servicioTuristico.getFecha_servicio())) {
             throw new FechaInvalidaError("La fecha ingresada es inválida");
         }
         return this.servicioRepository.save(servicioTuristico);
