@@ -1,6 +1,7 @@
 package com.agenciaturismo.agenciaturismo.servicetests;
 
 import com.agenciaturismo.agenciaturismo.dto.VentaDTO;
+import com.agenciaturismo.agenciaturismo.exceptions.ClienteInexistenteError;
 import com.agenciaturismo.agenciaturismo.model.*;
 import com.agenciaturismo.agenciaturismo.repository.ClienteRepository;
 import com.agenciaturismo.agenciaturismo.repository.EmpleadoRepository;
@@ -117,5 +118,14 @@ public class VentaServiceTests {
         Assertions.assertEquals(1L, guardada.getCliente().getId_cliente());
         Assertions.assertEquals(1L, guardada.getEmpleado().getId_empleado());
         Assertions.assertEquals(1L, guardada.getProducto_turistico().getCodigo_producto());
+    }
+
+    @Test
+    public void deberiaDarErrorSiIntentaGuardarLaVentaConClienteInexistente(){
+        ClienteInexistenteError excepcion = Assertions.assertThrows(
+                ClienteInexistenteError.class,
+                () -> ventaService.guardarVenta(ventaDTO)
+        );
+        Assertions.assertEquals("El cliente ingresado no existe", excepcion.getMessage());
     }
 }
