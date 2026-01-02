@@ -23,11 +23,6 @@ public class PaqueteTuristicoServiceImpl implements PaqueteTuristicoService {
     @Autowired
     private ServicioRepository servicioRepository;
 
-    /*
-    hay que arreglar la validacion del costo del paquete, recuperando
-    cada servicio del paquete para poder obtener su costo
-     */
-
     @Override
     public PaqueteTuristico guardarPaquete(PaqueteDTO paqueteDTO) {
         List<ServicioTuristico> servicios_incluidos = servicioRepository.findAllById(paqueteDTO.getLista_servicios_incluidos());

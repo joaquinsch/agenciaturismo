@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.util.List;
+
 @Getter
 @SuperBuilder
 @Entity
@@ -16,6 +18,6 @@ public class Empleado extends Usuario {
     private Long id_empleado;
     private String cargo;
     private Double sueldo;
-    @OneToOne(mappedBy = "empleado")
-    private  Venta venta;
+    @OneToMany(mappedBy = "empleado")
+    private List<Venta> ventas;
 }

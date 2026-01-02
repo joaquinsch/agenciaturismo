@@ -22,7 +22,7 @@ public class Venta {
     @ManyToOne
     @JoinColumn(name = "id_cliente")
     private  Cliente cliente;
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "id_empleado")
     private  Empleado empleado;
     @OneToOne
