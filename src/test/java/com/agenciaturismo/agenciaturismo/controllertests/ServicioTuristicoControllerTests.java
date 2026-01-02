@@ -1,6 +1,7 @@
 package com.agenciaturismo.agenciaturismo.controllertests;
 
 import com.agenciaturismo.agenciaturismo.controller.ServicioTuristicoController;
+import com.agenciaturismo.agenciaturismo.exceptions.FechaInvalidaError;
 import com.agenciaturismo.agenciaturismo.exceptions.ServicioInexistenteError;
 import com.agenciaturismo.agenciaturismo.model.ServicioTuristico;
 import com.agenciaturismo.agenciaturismo.service.ServicioTuristicoServiceImpl;
@@ -112,5 +113,25 @@ public class ServicioTuristicoControllerTests {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(servicio))
         ).andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void deberiaDarErrorSiIntentaGuardarServicioConFechaPasada() throws Exception {
+        ServicioTuristico serv = ServicioTuristico.builder()
+                .codigo_producto(1L)
+                .nombre("pasaje")
+                .descripcion_breve("pasaje por colectivo")
+                .destino_servicio("formosa")
+                .fecha_servicio(LocalDate.of(2026, 1, 1))
+                .costo_servicio(500.0)
+                .build();
+
+        Mockito.when(this.servicioTuristicoService.guardarServicio(Mockito.any(ServicioTuristico.class)))
+                .thenThrow(FechaInvalidaError.class);
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/servicios/guardar")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(serv))
+        ).andExpect(status().isBadRequest());
+
     }
 }
