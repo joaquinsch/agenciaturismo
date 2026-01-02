@@ -38,4 +38,10 @@ public class ApiExceptionHandler {
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(value = {ClienteInexistenteError.class})
+    public ResponseEntity<ApiError> handleClienteInexistenteError(ClienteInexistenteError e) {
+        ApiError apiError = new ApiError(e.getMessage(), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
+    }
+
 }

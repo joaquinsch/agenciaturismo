@@ -2,6 +2,7 @@ package com.agenciaturismo.agenciaturismo.controllertests;
 
 import com.agenciaturismo.agenciaturismo.controller.VentaController;
 import com.agenciaturismo.agenciaturismo.dto.VentaDTO;
+import com.agenciaturismo.agenciaturismo.exceptions.ClienteInexistenteError;
 import com.agenciaturismo.agenciaturismo.model.Cliente;
 import com.agenciaturismo.agenciaturismo.model.Empleado;
 import com.agenciaturismo.agenciaturismo.model.ServicioTuristico;
@@ -20,8 +21,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(VentaController.class)
 public class VentaControllerTests {
@@ -100,5 +100,17 @@ public class VentaControllerTests {
                         .value(venta.getProducto_turistico().getCodigo_producto()));
 
         Mockito.verify(ventaService).guardarVenta(Mockito.any(VentaDTO.class));
+    }
+
+    @Test
+    public void deberiaDarErrorClienteInexistente() throws Exception{
+        Mockito.when(this.ventaService.guardarVenta(Mockito.any(VentaDTO.class)))
+                .thenThrow(new ClienteInexistenteError("El cliente no existe"));
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/ventas/guardar")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(ventaDTO))
+        ).andExpect(status().isNotFound())
+         .andExpect(jsonPath("$.mensaje").value("El cliente no existe"));
     }
 }
