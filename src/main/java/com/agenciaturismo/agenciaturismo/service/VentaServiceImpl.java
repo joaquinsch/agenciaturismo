@@ -36,11 +36,19 @@ public class VentaServiceImpl implements VentaService {
 
     @Override
     public Venta guardarVenta(VentaDTO ventaDTO) {
-        Cliente clienteBuscado = this.clienteRepository.findById(ventaDTO.getId_cliente()).orElse(null);
-        Empleado empleadoBuscado = this.empleadoRepository.findById(ventaDTO.getId_empleado()).orElse(null);
-        ProductoTuristico productoTuristicoBuscado = this.productoRepository.findById(ventaDTO.getCodigo_producto()).orElse(null);
+        Cliente clienteBuscado = this.clienteRepository.findById(ventaDTO.getId_cliente())
+                .orElseThrow(
+                        () -> new ClienteInexistenteError("El cliente ingresado no existe")
+                );
+        Empleado empleadoBuscado = this.empleadoRepository.findById(ventaDTO.getId_empleado())
+                .orElseThrow(
+                        () -> new EmpleadoInexistenteError("El empleado ingresado no existe")
+                );
+        ProductoTuristico productoTuristicoBuscado = this.productoRepository.findById(ventaDTO.getCodigo_producto())
+                .orElseThrow(
+                        () -> new ProductoInexistenteError("El producto ingresado no existe")
+                );
 
-        validarVenta(clienteBuscado, empleadoBuscado, productoTuristicoBuscado);
         Venta venta = Venta.builder()
                 .fecha_venta(ventaDTO.getFecha_venta())
                 .medio_pago(ventaDTO.getMedio_pago())
@@ -49,17 +57,5 @@ public class VentaServiceImpl implements VentaService {
                 .producto_turistico(productoTuristicoBuscado)
                 .build();
         return this.ventaRepository.save(venta);
-    }
-
-    private void validarVenta(Cliente cliente, Empleado empleado, ProductoTuristico productoTuristico) {
-        if (cliente == null) {
-            throw new ClienteInexistenteError("El cliente ingresado no existe");
-        }
-        if (empleado == null) {
-            throw new EmpleadoInexistenteError("El empleado ingresado no existe");
-        }
-        if (productoTuristico == null) {
-            throw new ProductoInexistenteError("El producto ingresado no existe");
-        }
     }
 }
