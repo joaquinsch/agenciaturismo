@@ -3,6 +3,7 @@ package com.agenciaturismo.agenciaturismo.servicetests;
 import com.agenciaturismo.agenciaturismo.dto.VentaDTO;
 import com.agenciaturismo.agenciaturismo.exceptions.ClienteInexistenteError;
 import com.agenciaturismo.agenciaturismo.exceptions.EmpleadoInexistenteError;
+import com.agenciaturismo.agenciaturismo.exceptions.ProductoInexistenteError;
 import com.agenciaturismo.agenciaturismo.model.*;
 import com.agenciaturismo.agenciaturismo.repository.ClienteRepository;
 import com.agenciaturismo.agenciaturismo.repository.EmpleadoRepository;
@@ -139,5 +140,19 @@ public class VentaServiceTests {
                 () -> ventaService.guardarVenta(ventaDTO)
         );
         Assertions.assertEquals("El empleado ingresado no existe", excepcion.getMessage());
+    }
+
+    @Test
+    public void deberiaDarErrorSiIntentaGuardarLaVentaConProductoInexistente(){
+        Mockito.when(this.clienteRepository.findById(Mockito.any(Long.class)))
+                .thenReturn(Optional.ofNullable(cliente));
+        Mockito.when(this.empleadoRepository.findById(Mockito.any(Long.class)))
+                .thenReturn(Optional.ofNullable(empleado));
+
+        ProductoInexistenteError excepcion = Assertions.assertThrows(
+                ProductoInexistenteError.class,
+                () -> ventaService.guardarVenta(ventaDTO)
+        );
+        Assertions.assertEquals("El producto ingresado no existe", excepcion.getMessage());
     }
 }
