@@ -2,6 +2,7 @@ package com.agenciaturismo.agenciaturismo.service;
 
 import com.agenciaturismo.agenciaturismo.dto.VentaDTO;
 import com.agenciaturismo.agenciaturismo.exceptions.ClienteInexistenteError;
+import com.agenciaturismo.agenciaturismo.exceptions.EmpleadoInexistenteError;
 import com.agenciaturismo.agenciaturismo.model.Cliente;
 import com.agenciaturismo.agenciaturismo.model.Empleado;
 import com.agenciaturismo.agenciaturismo.model.ProductoTuristico;
@@ -53,6 +54,9 @@ public class VentaServiceImpl implements VentaService {
         if (cliente == null) {
             throw new ClienteInexistenteError("El cliente ingresado no existe");
         }
-        // validar empleado y producto
+        if (empleado == null) {
+            throw new EmpleadoInexistenteError("El empleado ingresado no existe");
+        }
+        // validar producto
     }
 }
