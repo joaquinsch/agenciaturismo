@@ -5,10 +5,7 @@ import com.agenciaturismo.agenciaturismo.dto.VentaDTO;
 import com.agenciaturismo.agenciaturismo.exceptions.ClienteInexistenteError;
 import com.agenciaturismo.agenciaturismo.exceptions.EmpleadoInexistenteError;
 import com.agenciaturismo.agenciaturismo.exceptions.VentaInexistenteError;
-import com.agenciaturismo.agenciaturismo.model.Cliente;
-import com.agenciaturismo.agenciaturismo.model.Empleado;
-import com.agenciaturismo.agenciaturismo.model.ServicioTuristico;
-import com.agenciaturismo.agenciaturismo.model.Venta;
+import com.agenciaturismo.agenciaturismo.model.*;
 import com.agenciaturismo.agenciaturismo.service.VentaServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -22,6 +19,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -87,6 +85,48 @@ public class VentaControllerTests {
             .id_empleado(1L)
             .codigo_producto(1L)
             .build();
+    /*************************/
+    ServicioTuristico servicio1 = ServicioTuristico.builder()
+            .codigo_producto(1L)
+            .nombre("Viaje por colectivo")
+            .costo_servicio(100.0)
+            .fecha_servicio(LocalDate.of(2026,2,1))
+            .descripcion_breve("viaje largo")
+            .destino_servicio("salta")
+            .build();
+
+    ServicioTuristico servicio2 = ServicioTuristico.builder()
+            .codigo_producto(2L)
+            .nombre("hotel por noche")
+            .costo_servicio(50.0)
+            .fecha_servicio(LocalDate.of(2026,1,17))
+            .descripcion_breve("cinco estrellas")
+            .destino_servicio("caribe")
+            .build();
+
+    List<ServicioTuristico> lista = new ArrayList<>(List.of(servicio1, servicio2));
+
+    PaqueteTuristico paqueteVendido = PaqueteTuristico.builder()
+            .codigo_producto(2L)
+            .lista_servicios_incluidos(lista)
+            .costo_paquete(135.0)
+            .build();
+    Venta ventaDePaquete = Venta.builder()
+            .num_venta(2L)
+            .fecha_venta(LocalDate.of(2026, 2, 1))
+            .medio_pago("tarjeta")
+            .cliente(cliente)
+            .empleado(empleado)
+            .producto_turistico(paqueteVendido)
+            .build();
+
+    VentaDTO ventaDTOpaquete = VentaDTO.builder()
+            .fecha_venta(LocalDate.of(2026, 2, 1))
+            .medio_pago("tarjeta")
+            .id_cliente(1L)
+            .id_empleado(1L)
+            .codigo_producto(2L)
+            .build();
 
     @Test
     public void deberiaGuardarLaVenta() throws Exception {
@@ -151,5 +191,24 @@ public class VentaControllerTests {
                         .contentType(MediaType.APPLICATION_JSON)
                 ).andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.mensaje").value("La venta no existe"));
+    }
+
+    @Test
+    public void deberiaGuardarLaVentaDeUnPaqueteTuristico() throws Exception {
+        Mockito.when(ventaService.guardarVenta(Mockito.any(VentaDTO.class)))
+                .thenReturn(ventaDePaquete);
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/ventas/guardar")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(ventaDTOpaquete))
+                ).andExpect(status().isCreated())
+                .andExpect(jsonPath("$.num_venta").value(ventaDePaquete.getNum_venta()))
+                .andExpect(jsonPath("$.medio_pago").value(ventaDePaquete.getMedio_pago()))
+                .andExpect(jsonPath("$.producto_turistico.codigo_producto")
+                        .value(ventaDePaquete.getProducto_turistico().getCodigo_producto()))
+                .andExpect(jsonPath("$.producto_turistico.costo_paquete")
+                        .value(135.0));
+
+
+        Mockito.verify(ventaService).guardarVenta(Mockito.any(VentaDTO.class));
     }
 }
