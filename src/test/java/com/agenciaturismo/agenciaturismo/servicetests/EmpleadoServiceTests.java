@@ -27,6 +27,7 @@ public class EmpleadoServiceTests {
     private EmpleadoServiceImpl empleadoService;
 
     Empleado empleado = Empleado.builder()
+            .id_empleado(1L)
             .nombre("jose")
             .apellido("gomez")
             .direccion("calle falsa 123")

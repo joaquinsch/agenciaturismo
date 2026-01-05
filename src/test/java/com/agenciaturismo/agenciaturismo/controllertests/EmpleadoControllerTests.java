@@ -7,7 +7,6 @@ import com.agenciaturismo.agenciaturismo.model.Empleado;
 import com.agenciaturismo.agenciaturismo.model.Venta;
 import com.agenciaturismo.agenciaturismo.service.EmpleadoServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +35,16 @@ public class EmpleadoControllerTests {
 
     Empleado empleado = Empleado.builder()
             .id_empleado(1L)
-            .nombre("pedro")
+            .nombre("jose")
             .apellido("gomez")
-            .cargo("vendedor")
+            .direccion("calle falsa 123")
+            .dni("1122223333")
+            .fecha_nac(LocalDate.of(1999, 9, 26))
+            .nacionalidad("argentino")
+            .celular("1112341234")
+            .email("asd@gmail.com")
+            .cargo("tecnico de soporte")
+            .sueldo(900000.0)
             .ventas(null)
             .build();
 
@@ -51,18 +57,30 @@ public class EmpleadoControllerTests {
             .producto_turistico(null)
             .build();
 
+    EmpleadoDTO empleadoDTO = EmpleadoDTO.builder()
+            .nombre("jose")
+            .apellido("gomez")
+            .direccion("calle falsa 123")
+            .dni("1122223333")
+            .fecha_nac(LocalDate.of(1999, 9, 26))
+            .nacionalidad("argentino")
+            .celular("1112341234")
+            .email("asd@gmail.com")
+            .cargo("tecnico de soporte")
+            .sueldo(900000.0)
+            .build();
+
     @Test
-    @Disabled
     public void deberiaGuardarElEmpleado() throws Exception {
         Mockito.when(empleadoService.guardarEmpleado(Mockito.any(EmpleadoDTO.class)))
                 .thenReturn(empleado);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/empleados/guardar")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(null))
+                        .content(objectMapper.writeValueAsString(empleadoDTO))
                 ).andExpect(status().isCreated())
-                .andExpect(jsonPath(".$id_empleado").value(1L))
-                .andExpect(jsonPath(".$nombre").value("pedro"));
+                .andExpect(jsonPath("$.id_empleado").value(1L))
+                .andExpect(jsonPath("$.nombre").value("jose"));
     }
 
 
