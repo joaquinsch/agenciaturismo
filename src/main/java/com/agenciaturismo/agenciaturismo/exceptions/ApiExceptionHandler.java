@@ -55,4 +55,10 @@ public class ApiExceptionHandler {
         ApiError apiError = new ApiError(e.getMessage(), HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(value = {VentaInexistenteError.class})
+    public ResponseEntity<ApiError> handleVentaInexistenteError(VentaInexistenteError e) {
+        ApiError apiError = new ApiError(e.getMessage(), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
+    }
 }

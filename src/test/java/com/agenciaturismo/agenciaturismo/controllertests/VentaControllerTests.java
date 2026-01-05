@@ -4,6 +4,7 @@ import com.agenciaturismo.agenciaturismo.controller.VentaController;
 import com.agenciaturismo.agenciaturismo.dto.VentaDTO;
 import com.agenciaturismo.agenciaturismo.exceptions.ClienteInexistenteError;
 import com.agenciaturismo.agenciaturismo.exceptions.EmpleadoInexistenteError;
+import com.agenciaturismo.agenciaturismo.exceptions.VentaInexistenteError;
 import com.agenciaturismo.agenciaturismo.model.Cliente;
 import com.agenciaturismo.agenciaturismo.model.Empleado;
 import com.agenciaturismo.agenciaturismo.model.ServicioTuristico;
@@ -139,5 +140,16 @@ public class VentaControllerTests {
                 .andExpect(jsonPath("$.medio_pago").value("tarjeta"))
                 .andExpect(jsonPath("$.cliente.nombre").value("carlos"))
                 .andExpect(jsonPath("$.producto_turistico.nombre").value("Viaje a China"));
+    }
+
+    @Test
+    public void deberiaDarErrorVentaInexistente() throws Exception {
+        Mockito.when(ventaService.buscarVenta(2L))
+                .thenThrow(new VentaInexistenteError("La venta no existe"));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/ventas/2")
+                        .contentType(MediaType.APPLICATION_JSON)
+                ).andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.mensaje").value("La venta no existe"));
     }
 }
