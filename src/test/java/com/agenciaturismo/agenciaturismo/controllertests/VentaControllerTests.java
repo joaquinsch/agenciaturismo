@@ -126,4 +126,18 @@ public class VentaControllerTests {
                 ).andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.mensaje").value("El empleado no existe"));
     }
+
+    @Test
+    public void deberiaDevolverUnaVenta() throws Exception{
+        Mockito.when(ventaService.buscarVenta(1L))
+                .thenReturn(venta);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/ventas/1"))
+                .andExpect(status().isFound())
+                .andExpect(jsonPath("$.num_venta").value(1L))
+                .andExpect(jsonPath("$.fecha_venta").value("2026-01-02"))
+                .andExpect(jsonPath("$.medio_pago").value("tarjeta"))
+                .andExpect(jsonPath("$.cliente.nombre").value("carlos"))
+                .andExpect(jsonPath("$.producto_turistico.nombre").value("Viaje a China"));
+    }
 }

@@ -4,6 +4,7 @@ import com.agenciaturismo.agenciaturismo.dto.VentaDTO;
 import com.agenciaturismo.agenciaturismo.exceptions.ClienteInexistenteError;
 import com.agenciaturismo.agenciaturismo.exceptions.EmpleadoInexistenteError;
 import com.agenciaturismo.agenciaturismo.exceptions.ProductoInexistenteError;
+import com.agenciaturismo.agenciaturismo.exceptions.VentaInexistenteError;
 import com.agenciaturismo.agenciaturismo.model.Cliente;
 import com.agenciaturismo.agenciaturismo.model.Empleado;
 import com.agenciaturismo.agenciaturismo.model.ProductoTuristico;
@@ -58,4 +59,12 @@ public class VentaServiceImpl implements VentaService {
                 .build();
         return this.ventaRepository.save(venta);
     }
+
+    @Override
+    public Venta buscarVenta(Long codigo_producto) {
+        return this.ventaRepository.findById(codigo_producto).orElseThrow(
+                () -> new VentaInexistenteError("La venta no existe")
+        );
+    }
+
 }

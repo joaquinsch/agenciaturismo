@@ -5,4 +5,5 @@ import com.agenciaturismo.agenciaturismo.model.Venta;
 
 public interface VentaService {
     Venta guardarVenta(VentaDTO ventaDTO);
+    Venta buscarVenta(Long codigo_producto);
 }
