@@ -1,7 +1,7 @@
 package com.agenciaturismo.agenciaturismo.controller;
 
 import com.agenciaturismo.agenciaturismo.model.ServicioTuristico;
-import com.agenciaturismo.agenciaturismo.service.ServicioTuristicoServiceImpl;
+import com.agenciaturismo.agenciaturismo.service.ServicioTuristicoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/servicios")
 public class ServicioTuristicoController {
     @Autowired
-    private ServicioTuristicoServiceImpl servicioTuristicoService;
+    private ServicioTuristicoService servicioTuristicoService;
 
     @GetMapping("/{codigo_producto}")
     public ResponseEntity<ServicioTuristico> buscarServicio(@PathVariable Long codigo_producto) {
