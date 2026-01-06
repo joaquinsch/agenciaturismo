@@ -25,7 +25,7 @@ public class Venta {
     @ManyToOne
     @JoinColumn(name = "id_empleado")
     private  Empleado empleado;
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "codigo_producto")
     private  ProductoTuristico producto_turistico;
 

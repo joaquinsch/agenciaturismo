@@ -5,6 +5,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.util.List;
+
 @Setter
 @Getter
 @SuperBuilder
@@ -23,7 +25,7 @@ public class ProductoTuristico {
     private Long codigo_producto;
     @Enumerated(EnumType.STRING)
     private TipoProducto tipo_producto;
-    @OneToOne(mappedBy = "producto_turistico")
-    private Venta venta;
+    @OneToMany(mappedBy = "producto_turistico")
+    private List<Venta> ventas;
 
 }
