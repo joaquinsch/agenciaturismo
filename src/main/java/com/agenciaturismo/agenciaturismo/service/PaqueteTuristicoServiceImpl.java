@@ -57,6 +57,9 @@ public class PaqueteTuristicoServiceImpl implements PaqueteTuristicoService {
     public PaqueteTuristico editarPaquete(PaqueteTuristico paqueteTuristico) {
         PaqueteTuristico buscado = buscarPaquete(paqueteTuristico.getCodigo_producto());
         buscado.setCodigo_producto(paqueteTuristico.getCodigo_producto());
+        if (!paqueteTuristico.validarCostoDePaquete()) {
+            throw new CostoInvalidoError("El costo del paquete no coincide con la suma de los servicios menos 10%");
+        }
         buscado.setCosto_paquete(paqueteTuristico.getCosto_paquete());
         buscado.setLista_servicios_incluidos(paqueteTuristico.getLista_servicios_incluidos());
 

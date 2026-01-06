@@ -207,9 +207,19 @@ public class PaqueteTuristicoServiceTests {
     }
 
     @Test
-    @Disabled
     public void deberiaDarErrorSiSeIntentaEditarElCostoConUnoQueNoCoincidaConElCorrecto() {
-
+        Mockito.when(this.paqueteRepository.findById(paquete.getCodigo_producto()))
+                .thenReturn(Optional.of(paquete));
+        PaqueteTuristico aEditar = PaqueteTuristico.builder()
+                .codigo_producto(1L)
+                .costo_paquete(90000.0)
+                .lista_servicios_incluidos(List.of(servicio1, servicio3))
+                .build();
+        CostoInvalidoError excepcion = Assertions.assertThrows(CostoInvalidoError.class,
+                () -> paqueteTuristicoService.editarPaquete(aEditar));
+        Assertions.assertEquals("El costo del paquete no coincide con la suma de los servicios menos 10%",
+                excepcion.getMessage());
+        Assertions.assertEquals(135.0 , paquete.getCosto_paquete());
     }
 
     @Test
@@ -221,6 +231,12 @@ public class PaqueteTuristicoServiceTests {
     @Test
     @Disabled
     public void deberiaEditarseElPaqueteConUnServicioMenos() {
+
+    }
+
+    @Test
+    @Disabled
+    public void deberiaDarErrorSiIntentaEditarseElPaqueteConUnServicioInexistente() {
 
     }
 
