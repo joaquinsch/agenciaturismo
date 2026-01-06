@@ -1,6 +1,7 @@
 package com.agenciaturismo.agenciaturismo.controller;
 
 import com.agenciaturismo.agenciaturismo.dto.PaqueteDTO;
+import com.agenciaturismo.agenciaturismo.dto.PaqueteEdicionDTO;
 import com.agenciaturismo.agenciaturismo.model.PaqueteTuristico;
 import com.agenciaturismo.agenciaturismo.service.PaqueteTuristicoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +34,8 @@ public class PaqueteTuristicoController {
     }
 
     @PutMapping("/editar")
-    public ResponseEntity<PaqueteTuristico> editarPaquete(@RequestBody PaqueteTuristico paqueteTuristico) {
-        PaqueteTuristico editado = this.paqueteTuristicoService.editarPaquete(paqueteTuristico);
+    public ResponseEntity<PaqueteTuristico> editarPaquete(@RequestBody PaqueteEdicionDTO paqueteEdicionDTO) {
+        PaqueteTuristico editado = this.paqueteTuristicoService.editarPaquete(paqueteEdicionDTO);
         return new ResponseEntity<>(editado, HttpStatus.OK);
     }
 }

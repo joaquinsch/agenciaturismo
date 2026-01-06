@@ -1,6 +1,7 @@
 package com.agenciaturismo.agenciaturismo.servicetests;
 
 import com.agenciaturismo.agenciaturismo.dto.PaqueteDTO;
+import com.agenciaturismo.agenciaturismo.dto.PaqueteEdicionDTO;
 import com.agenciaturismo.agenciaturismo.exceptions.CostoInvalidoError;
 import com.agenciaturismo.agenciaturismo.exceptions.PaqueteInexistenteError;
 import com.agenciaturismo.agenciaturismo.exceptions.PaqueteInvalidoError;
@@ -39,6 +40,7 @@ public class PaqueteTuristicoServiceTests {
     private PaqueteTuristicoServiceImpl paqueteTuristicoService;
 
     ServicioTuristico servicio1 = ServicioTuristico.builder()
+            .codigo_producto(1L)
             .nombre("Viaje por colectivo")
             .costo_servicio(100.0)
             .fecha_servicio(LocalDate.of(2026,2,1))
@@ -47,6 +49,7 @@ public class PaqueteTuristicoServiceTests {
             .build();
 
     ServicioTuristico servicio2 = ServicioTuristico.builder()
+            .codigo_producto(2L)
             .nombre("hotel por noche")
             .costo_servicio(50.0)
             .fecha_servicio(LocalDate.of(2026,1,17))
@@ -73,9 +76,10 @@ public class PaqueteTuristicoServiceTests {
             .costo_paquete(135.0)
             .build();
     PaqueteDTO paqueteDTO = PaqueteDTO.builder()
-            .lista_servicios_incluidos(List.of(1L, 2L))
+            .lista_ids_servicios_incluidos(List.of(1L, 2L))
             .costo_paquete(135.0)
             .build();
+
 
     @Test
     public void deberiaGuardarUnPaqueteConDosServicios() {
@@ -95,7 +99,7 @@ public class PaqueteTuristicoServiceTests {
     @Test
     public void noDeberiaPoderGuardarseSinServicios(){
        PaqueteDTO paqDTO = PaqueteDTO.builder()
-               .lista_servicios_incluidos(new ArrayList<>())
+               .lista_ids_servicios_incluidos(new ArrayList<>())
                .costo_paquete(700.0)
                .build();
 
@@ -108,7 +112,7 @@ public class PaqueteTuristicoServiceTests {
     @Test
     public void noDeberiaPoderCrearseConCostoInvalido(){
         PaqueteDTO paqDTO = PaqueteDTO.builder()
-                .lista_servicios_incluidos(List.of(1L, 2L))
+                .lista_ids_servicios_incluidos(List.of(1L, 2L))
                 .costo_paquete(359.0)
                 .build();
 
@@ -125,7 +129,7 @@ public class PaqueteTuristicoServiceTests {
     @Test
     public void noDeberiaPoderCrearseConUnSoloServicio(){
         PaqueteDTO paqDTO = PaqueteDTO.builder()
-                .lista_servicios_incluidos(List.of(1L))
+                .lista_ids_servicios_incluidos(List.of(1L))
                 .costo_paquete(100.0)
                 .build();
 
@@ -141,7 +145,7 @@ public class PaqueteTuristicoServiceTests {
     @Test
     public void deberiaGuardarseConTipoProducto(){
         PaqueteDTO paqDTO = PaqueteDTO.builder()
-                .lista_servicios_incluidos(List.of(1L, 2L))
+                .lista_ids_servicios_incluidos(List.of(1L, 2L))
                 .costo_paquete(135.0)
                 .build();
         Mockito.when(this.servicioRepository.findAllById(Mockito.anyIterable()))
@@ -185,23 +189,30 @@ public class PaqueteTuristicoServiceTests {
     public void deberiaEditarElPaquete(){
         Mockito.when(this.paqueteRepository.findById(paquete.getCodigo_producto()))
                 .thenReturn(Optional.of(paquete));
-        PaqueteTuristico aEditar = PaqueteTuristico.builder()
+        PaqueteEdicionDTO paqueteEdicionDTO = PaqueteEdicionDTO.builder()
+                .codigo_producto(1L)
+                .costo_paquete(270.0)
+                .lista_ids_servicios_incluidos(List.of(1L, 4L))
+                .build();
+        PaqueteTuristico paqueteEditadoDevueltoEsperado = PaqueteTuristico.builder()
                 .codigo_producto(1L)
                 .costo_paquete(270.0)
                 .lista_servicios_incluidos(List.of(servicio1, servicio3))
                 .build();
 
-        Mockito.when(paqueteRepository.save(Mockito.any(PaqueteTuristico.class))).thenReturn(aEditar);
-
+        Mockito.when(paqueteRepository.save(Mockito.any(PaqueteTuristico.class))).thenReturn(paqueteEditadoDevueltoEsperado);
+        Mockito.when(this.servicioRepository.findAllById(Mockito.anyIterable()))
+                .thenReturn(List.of(servicio1, servicio3));
         // antes de editar
         Assertions.assertEquals("hotel por noche", paquete.getLista_servicios_incluidos().get(1).getNombre());
 
-        PaqueteTuristico paqueteEditado = paqueteTuristicoService.editarPaquete(aEditar);
+        PaqueteTuristico paqueteEditado = paqueteTuristicoService.editarPaquete(paqueteEdicionDTO);
 
-        Assertions.assertEquals(1L, paqueteEditado.getCodigo_producto());
-        Assertions.assertEquals(270.0, paqueteEditado.getCosto_paquete());
-        Assertions.assertEquals(2, paqueteEditado.getLista_servicios_incluidos().size());
-        Assertions.assertEquals("EXCURSION AL HIELO", paqueteEditado.getLista_servicios_incluidos().get(1).getNombre());
+        Assertions.assertEquals(paqueteEditadoDevueltoEsperado.getCodigo_producto(), paqueteEditado.getCodigo_producto());
+        Assertions.assertEquals(paqueteEditadoDevueltoEsperado.getCosto_paquete(), paqueteEditado.getCosto_paquete());
+        Assertions.assertEquals(paqueteEditadoDevueltoEsperado.getLista_servicios_incluidos().size(), paqueteEditado.getLista_servicios_incluidos().size());
+        Assertions.assertEquals(paqueteEditadoDevueltoEsperado.getLista_servicios_incluidos().get(1).getNombre(),
+                paqueteEditado.getLista_servicios_incluidos().get(1).getNombre());
 
         Mockito.verify(paqueteRepository, Mockito.times(1)).save(Mockito.any(PaqueteTuristico.class));
     }
@@ -210,22 +221,44 @@ public class PaqueteTuristicoServiceTests {
     public void deberiaDarErrorSiSeIntentaEditarElCostoConUnoQueNoCoincidaConElCorrecto() {
         Mockito.when(this.paqueteRepository.findById(paquete.getCodigo_producto()))
                 .thenReturn(Optional.of(paquete));
-        PaqueteTuristico aEditar = PaqueteTuristico.builder()
+        PaqueteEdicionDTO paqueteEdicionDTO = PaqueteEdicionDTO.builder()
                 .codigo_producto(1L)
-                .costo_paquete(90000.0)
-                .lista_servicios_incluidos(List.of(servicio1, servicio3))
+                .costo_paquete(90000.0) // deberia ser 270.0, ya que se editó un servicio incluido
+                .lista_ids_servicios_incluidos(List.of(1L, 4L))
                 .build();
+        Mockito.when(this.servicioRepository.findAllById(Mockito.anyIterable()))
+                .thenReturn(List.of(servicio1, servicio3));
+
         CostoInvalidoError excepcion = Assertions.assertThrows(CostoInvalidoError.class,
-                () -> paqueteTuristicoService.editarPaquete(aEditar));
+                () -> paqueteTuristicoService.editarPaquete(paqueteEdicionDTO));
         Assertions.assertEquals("El costo del paquete no coincide con la suma de los servicios menos 10%",
                 excepcion.getMessage());
         Assertions.assertEquals(135.0 , paquete.getCosto_paquete());
     }
 
     @Test
-    @Disabled
     public void deberiaEditarseElPaqueteConUnServicioMas() {
+        Mockito.when(this.paqueteRepository.findById(paquete.getCodigo_producto()))
+                .thenReturn(Optional.of(paquete));
+        PaqueteEdicionDTO paqueteEdicionDTO = PaqueteEdicionDTO.builder()
+                .codigo_producto(1L)
+                .costo_paquete(315.0)
+                .lista_ids_servicios_incluidos(List.of(1L, 2L, 4L))
+                .build();
+        PaqueteTuristico paqueteEditadoDevueltoEsperado = PaqueteTuristico.builder()
+                .codigo_producto(1L)
+                .costo_paquete(315.0)
+                .lista_servicios_incluidos(List.of(servicio1, servicio2, servicio3))
+                .build();
+        Mockito.when(paqueteRepository.save(Mockito.any(PaqueteTuristico.class))).thenReturn(paqueteEditadoDevueltoEsperado);
+        Mockito.when(this.servicioRepository.findAllById(Mockito.anyIterable()))
+                .thenReturn(List.of(servicio1, servicio2, servicio3));
 
+        Assertions.assertEquals(2, paquete.getLista_servicios_incluidos().size());
+
+        PaqueteTuristico paqueteEditado = paqueteTuristicoService.editarPaquete(paqueteEdicionDTO);
+        Assertions.assertEquals(paqueteEditadoDevueltoEsperado.getLista_servicios_incluidos().size(), paqueteEditado.getLista_servicios_incluidos().size());
+        Assertions.assertEquals(paqueteEditadoDevueltoEsperado.getCosto_paquete(), paqueteEditado.getCosto_paquete());
     }
 
     @Test

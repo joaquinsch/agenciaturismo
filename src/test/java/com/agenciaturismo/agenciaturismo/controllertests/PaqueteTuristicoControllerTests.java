@@ -1,6 +1,7 @@
 package com.agenciaturismo.agenciaturismo.controllertests;
 import com.agenciaturismo.agenciaturismo.controller.PaqueteTuristicoController;
 import com.agenciaturismo.agenciaturismo.dto.PaqueteDTO;
+import com.agenciaturismo.agenciaturismo.dto.PaqueteEdicionDTO;
 import com.agenciaturismo.agenciaturismo.exceptions.PaqueteInexistenteError;
 import com.agenciaturismo.agenciaturismo.model.PaqueteTuristico;
 import com.agenciaturismo.agenciaturismo.model.ServicioTuristico;
@@ -74,7 +75,7 @@ public class PaqueteTuristicoControllerTests {
         Mockito.when(this.paqueteTuristicoService.guardarPaquete(Mockito.any(PaqueteDTO.class)))
                         .thenReturn(paquete);
         PaqueteDTO paqDTO = PaqueteDTO.builder()
-                .lista_servicios_incluidos(List.of(1L,2L))
+                .lista_ids_servicios_incluidos(List.of(1L,2L))
                 .costo_paquete(135.0)
                 .build();
 
@@ -122,7 +123,7 @@ public class PaqueteTuristicoControllerTests {
                 .costo_paquete(500.0)
                 .lista_servicios_incluidos(new ArrayList<>())
                 .build();
-        Mockito.when(paqueteTuristicoService.editarPaquete(Mockito.any(PaqueteTuristico.class)))
+        Mockito.when(paqueteTuristicoService.editarPaquete(Mockito.any(PaqueteEdicionDTO.class)))
                 .thenReturn(editado);
         mockMvc.perform(MockMvcRequestBuilders.put("/api/paquetes/editar")
                         .contentType(MediaType.APPLICATION_JSON)
