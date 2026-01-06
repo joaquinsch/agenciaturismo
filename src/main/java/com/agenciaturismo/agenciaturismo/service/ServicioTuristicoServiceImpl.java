@@ -4,6 +4,7 @@ import com.agenciaturismo.agenciaturismo.exceptions.CostoInvalidoError;
 import com.agenciaturismo.agenciaturismo.exceptions.FechaInvalidaError;
 import com.agenciaturismo.agenciaturismo.exceptions.ServicioInexistenteError;
 import com.agenciaturismo.agenciaturismo.model.IProveedorDeFecha;
+import com.agenciaturismo.agenciaturismo.model.ProductoTuristico;
 import com.agenciaturismo.agenciaturismo.model.ServicioTuristico;
 import com.agenciaturismo.agenciaturismo.repository.ServicioRepository;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,7 @@ public class ServicioTuristicoServiceImpl implements ServicioTuristicoService {
         } else if (proveedor.esFechaPasada(servicioTuristico.getFecha_servicio())) {
             throw new FechaInvalidaError("La fecha ingresada es inválida");
         }
+        servicioTuristico.setTipo_producto(ProductoTuristico.TipoProducto.SERVICIO);
         return this.servicioRepository.save(servicioTuristico);
     }
 

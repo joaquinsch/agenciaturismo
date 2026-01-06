@@ -159,4 +159,14 @@ public class PaqueteTuristicoServiceTests {
         Mockito.verify(paqueteRepository).findById(1L);
         Assertions.assertEquals(1L, encontrado.getCodigo_producto());
     }
+
+    @Test
+    public void deberiaEliminarElPaquete() {
+       Mockito.when(paqueteRepository.findById(1L))
+               .thenReturn(Optional.of(paquete));
+       paqueteTuristicoService.eliminarPaquete(1L);
+        Mockito.verify(paqueteRepository).deleteById(paquete.getCodigo_producto());
+        Assertions.assertEquals(0, this.paqueteRepository.findAll().size());
+
+    }
 }

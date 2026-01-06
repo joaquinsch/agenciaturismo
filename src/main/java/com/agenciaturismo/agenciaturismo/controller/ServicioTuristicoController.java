@@ -32,7 +32,7 @@ public class ServicioTuristicoController {
     }
 
     @DeleteMapping("/eliminar/{codigo_producto}")
-    public ResponseEntity<ServicioTuristico> eliminarProducto(@PathVariable Long codigo_producto) {
+    public ResponseEntity<ServicioTuristico> eliminarServicio(@PathVariable Long codigo_producto) {
         this.servicioTuristicoService.eliminarServicio(codigo_producto);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

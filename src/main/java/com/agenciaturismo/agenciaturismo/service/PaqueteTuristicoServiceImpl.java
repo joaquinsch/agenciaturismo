@@ -47,6 +47,12 @@ public class PaqueteTuristicoServiceImpl implements PaqueteTuristicoService {
         );
     }
 
+    @Override
+    public void eliminarPaquete(Long codigo_producto) {
+        buscarPaquete(codigo_producto);
+        this.paqueteRepository.deleteById(codigo_producto);
+    }
+
     private void validarPaquete(PaqueteDTO paqueteDTO, List<ServicioTuristico> servicios_incluidos) {
         if (servicios_incluidos.size() != paqueteDTO.getLista_servicios_incluidos().size()) {
             throw new PaqueteInvalidoError("Hay servicios turísticos inexistentes");

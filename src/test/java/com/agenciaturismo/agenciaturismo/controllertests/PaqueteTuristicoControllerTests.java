@@ -96,4 +96,12 @@ public class PaqueteTuristicoControllerTests {
                 .content(objectMapper.writeValueAsString(paquete))
         ).andExpect(status().isNotFound());
     }
+
+    @Test
+    public void deberiaEliminarElPaquete() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/paquetes/eliminar/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                //.content(objectMapper.writeValueAsString(paquete))
+        ).andExpect(status().isNoContent());
+    }
 }

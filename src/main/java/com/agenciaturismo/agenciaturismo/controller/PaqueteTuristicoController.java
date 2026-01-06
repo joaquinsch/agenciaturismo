@@ -25,4 +25,10 @@ public class PaqueteTuristicoController {
         PaqueteTuristico buscado = paqueteTuristicoService.buscarPaquete(codigo_producto);
         return new ResponseEntity<>(buscado, HttpStatus.FOUND);
     }
+
+    @DeleteMapping("/eliminar/{codigo_producto}")
+    public ResponseEntity<PaqueteTuristico> eliminarPaquete(@PathVariable Long codigo_producto) {
+        this.paqueteTuristicoService.eliminarPaquete(codigo_producto);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }
