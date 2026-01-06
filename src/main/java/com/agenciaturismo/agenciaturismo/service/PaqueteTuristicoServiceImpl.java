@@ -53,6 +53,16 @@ public class PaqueteTuristicoServiceImpl implements PaqueteTuristicoService {
         this.paqueteRepository.deleteById(codigo_producto);
     }
 
+    @Override
+    public PaqueteTuristico editarPaquete(PaqueteTuristico paqueteTuristico) {
+        PaqueteTuristico buscado = buscarPaquete(paqueteTuristico.getCodigo_producto());
+        buscado.setCodigo_producto(paqueteTuristico.getCodigo_producto());
+        buscado.setCosto_paquete(paqueteTuristico.getCosto_paquete());
+        buscado.setLista_servicios_incluidos(paqueteTuristico.getLista_servicios_incluidos());
+
+        return paqueteRepository.save(buscado);
+    }
+
     private void validarPaquete(PaqueteDTO paqueteDTO, List<ServicioTuristico> servicios_incluidos) {
         if (servicios_incluidos.size() != paqueteDTO.getLista_servicios_incluidos().size()) {
             throw new PaqueteInvalidoError("Hay servicios turísticos inexistentes");

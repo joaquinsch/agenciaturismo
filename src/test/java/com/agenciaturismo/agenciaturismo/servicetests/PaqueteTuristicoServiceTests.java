@@ -11,6 +11,7 @@ import com.agenciaturismo.agenciaturismo.repository.PaqueteRepository;
 import com.agenciaturismo.agenciaturismo.repository.ServicioRepository;
 import com.agenciaturismo.agenciaturismo.service.PaqueteTuristicoServiceImpl;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -52,6 +53,16 @@ public class PaqueteTuristicoServiceTests {
             .descripcion_breve("cinco estrellas")
             .destino_servicio("caribe")
             .build();
+
+    ServicioTuristico servicio3 = ServicioTuristico.builder()
+            .codigo_producto(4L)
+            .nombre("EXCURSION AL HIELO")
+            .costo_servicio(200.0)
+            .fecha_servicio(LocalDate.of(2026,1,17))
+            .descripcion_breve("la mejor")
+            .destino_servicio("groenlandia")
+            .build();
+
 
     List<ServicioTuristico> lista = new ArrayList<>(List.of(servicio1, servicio2));
 
@@ -169,4 +180,48 @@ public class PaqueteTuristicoServiceTests {
         Assertions.assertEquals(0, this.paqueteRepository.findAll().size());
 
     }
+
+    @Test
+    public void deberiaEditarElPaquete(){
+        Mockito.when(this.paqueteRepository.findById(paquete.getCodigo_producto()))
+                .thenReturn(Optional.of(paquete));
+        PaqueteTuristico aEditar = PaqueteTuristico.builder()
+                .codigo_producto(1L)
+                .costo_paquete(270.0)
+                .lista_servicios_incluidos(List.of(servicio1, servicio3))
+                .build();
+
+        Mockito.when(paqueteRepository.save(Mockito.any(PaqueteTuristico.class))).thenReturn(aEditar);
+
+        // antes de editar
+        Assertions.assertEquals("hotel por noche", paquete.getLista_servicios_incluidos().get(1).getNombre());
+
+        PaqueteTuristico paqueteEditado = paqueteTuristicoService.editarPaquete(aEditar);
+
+        Assertions.assertEquals(1L, paqueteEditado.getCodigo_producto());
+        Assertions.assertEquals(270.0, paqueteEditado.getCosto_paquete());
+        Assertions.assertEquals(2, paqueteEditado.getLista_servicios_incluidos().size());
+        Assertions.assertEquals("EXCURSION AL HIELO", paqueteEditado.getLista_servicios_incluidos().get(1).getNombre());
+
+        Mockito.verify(paqueteRepository, Mockito.times(1)).save(Mockito.any(PaqueteTuristico.class));
+    }
+
+    @Test
+    @Disabled
+    public void deberiaDarErrorSiSeIntentaEditarElCostoConUnoQueNoCoincidaConElCorrecto() {
+
+    }
+
+    @Test
+    @Disabled
+    public void deberiaEditarseElPaqueteConUnServicioMas() {
+
+    }
+
+    @Test
+    @Disabled
+    public void deberiaEditarseElPaqueteConUnServicioMenos() {
+
+    }
+
 }

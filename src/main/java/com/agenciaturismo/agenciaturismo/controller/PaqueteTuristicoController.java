@@ -31,4 +31,10 @@ public class PaqueteTuristicoController {
         this.paqueteTuristicoService.eliminarPaquete(codigo_producto);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @PutMapping("/editar")
+    public ResponseEntity<PaqueteTuristico> editarPaquete(@RequestBody PaqueteTuristico paqueteTuristico) {
+        PaqueteTuristico editado = this.paqueteTuristicoService.editarPaquete(paqueteTuristico);
+        return new ResponseEntity<>(editado, HttpStatus.OK);
+    }
 }
