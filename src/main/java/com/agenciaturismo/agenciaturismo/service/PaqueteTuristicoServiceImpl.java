@@ -27,16 +27,14 @@ public class PaqueteTuristicoServiceImpl implements PaqueteTuristicoService {
     @Override
     public PaqueteTuristico guardarPaquete(PaqueteDTO paqueteDTO) {
         List<ServicioTuristico> servicios_incluidos = servicioRepository.findAllById(paqueteDTO.getLista_ids_servicios_incluidos());
-        validarPaquete(paqueteDTO.getLista_ids_servicios_incluidos(), servicios_incluidos);
+        validarServiciosDelPaquete(paqueteDTO.getLista_ids_servicios_incluidos(), servicios_incluidos);
 
         PaqueteTuristico paquete = PaqueteTuristico.builder()
                 .lista_servicios_incluidos(servicios_incluidos)
                 .costo_paquete(paqueteDTO.getCosto_paquete())
                 .tipo_producto(ProductoTuristico.TipoProducto.PAQUETE)
                 .build();
-        if (!paquete.validarCostoDePaquete()) {
-            throw new CostoInvalidoError("El costo del paquete no coincide con la suma de los servicios menos 10%");
-        }
+        validarCostoDePaquete(paquete);
         return paqueteRepository.save(paquete);
     }
 
@@ -58,7 +56,7 @@ public class PaqueteTuristicoServiceImpl implements PaqueteTuristicoService {
     public PaqueteTuristico editarPaquete(PaqueteEdicionDTO paqueteEdicionDTO) {
         PaqueteTuristico buscado = buscarPaquete(paqueteEdicionDTO.getCodigo_producto());
         List<ServicioTuristico> servicios_incluidos = servicioRepository.findAllById(paqueteEdicionDTO.getLista_ids_servicios_incluidos());
-        validarPaquete(paqueteEdicionDTO.getLista_ids_servicios_incluidos(), servicios_incluidos);
+        validarServiciosDelPaquete(paqueteEdicionDTO.getLista_ids_servicios_incluidos(), servicios_incluidos);
 
         PaqueteTuristico paqueteEditado = PaqueteTuristico.builder()
                 .codigo_producto(buscado.getCodigo_producto())
@@ -66,20 +64,22 @@ public class PaqueteTuristicoServiceImpl implements PaqueteTuristicoService {
                 .costo_paquete(paqueteEdicionDTO.getCosto_paquete())
                 .tipo_producto(ProductoTuristico.TipoProducto.PAQUETE)
                 .build();
-        if (!paqueteEditado.validarCostoDePaquete()) {
-            throw new CostoInvalidoError("El costo del paquete no coincide con la suma de los servicios menos 10%");
-        }
+        validarCostoDePaquete(paqueteEditado);
 
         return paqueteRepository.save(paqueteEditado);
     }
 
-    private void validarPaquete(List<Long> ids_servicios_en_el_dto, List<ServicioTuristico> servicios_recuperados) {
-        if (ids_servicios_en_el_dto.size() != servicios_recuperados.size()) {
+    private void validarServiciosDelPaquete(List<Long> lista_ids_servicios_incluidos, List<ServicioTuristico> servicios_recuperados) {
+        if (lista_ids_servicios_incluidos.size() != servicios_recuperados.size()) {
             throw new PaqueteInvalidoError("Hay servicios turísticos inexistentes");
-        } else if (ids_servicios_en_el_dto.isEmpty()) {
+        } else if (lista_ids_servicios_incluidos.isEmpty()) {
             throw new PaqueteInvalidoError("El paquete no tiene servicios asociados");
-        } else if (ids_servicios_en_el_dto.size() < 2) {
+        } else if (lista_ids_servicios_incluidos.size() < 2) {
             throw new PaqueteInvalidoError("El paquete debe tener mas de un servicio asociado");
         }
+    }
+    private void validarCostoDePaquete(PaqueteTuristico paqueteTuristico) {
+        if (!paqueteTuristico.validarCostoDePaquete())
+            throw new CostoInvalidoError("El costo del paquete no coincide con la suma de los servicios menos 10%");
     }
 }
