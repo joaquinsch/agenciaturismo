@@ -1,9 +1,11 @@
 package com.agenciaturismo.agenciaturismo.servicetests;
 
+import com.agenciaturismo.agenciaturismo.ProveedorDeFechaFija;
 import com.agenciaturismo.agenciaturismo.dto.VentaDTO;
 import com.agenciaturismo.agenciaturismo.dto.VentaEdicionDTO;
 import com.agenciaturismo.agenciaturismo.exceptions.ClienteInexistenteError;
 import com.agenciaturismo.agenciaturismo.exceptions.EmpleadoInexistenteError;
+import com.agenciaturismo.agenciaturismo.exceptions.FechaInvalidaError;
 import com.agenciaturismo.agenciaturismo.exceptions.ProductoInexistenteError;
 import com.agenciaturismo.agenciaturismo.model.*;
 import com.agenciaturismo.agenciaturismo.repository.ClienteRepository;
@@ -43,13 +45,18 @@ public class VentaServiceTests {
 
     private VentaServiceImpl ventaService;
 
+    private IProveedorDeFecha proveedorDeFechaFija;
+
     @BeforeEach
     void setUp(){
+        // para los tests que no dependen de fechas se simula la fecha actual
+        proveedorDeFechaFija = new ProveedorDeFechaFija(LocalDate.now());
              ventaService = new VentaServiceImpl(
                      ventaRepository,
                      clienteRepository,
                      empleadoRepository,
-                     productoRepository
+                     productoRepository,
+                     proveedorDeFechaFija
              );
     }
 
@@ -106,6 +113,13 @@ public class VentaServiceTests {
 
     @Test
     public void deberiaGuardarUnaVenta(){
+        proveedorDeFechaFija = new ProveedorDeFechaFija(LocalDate.of(2026, 1, 1));
+        VentaServiceImpl ventaServiceConProveedor = new VentaServiceImpl(ventaRepository,
+                clienteRepository,
+                empleadoRepository,
+                productoRepository,
+                proveedorDeFechaFija);
+
         Mockito.when(this.ventaRepository.save(Mockito.any(Venta.class)))
                 .thenReturn(venta);
         Mockito.when(this.clienteRepository.findById(Mockito.any(Long.class)))
@@ -115,7 +129,7 @@ public class VentaServiceTests {
         Mockito.when(this.productoRepository.findById(Mockito.any(Long.class)))
                 .thenReturn(Optional.ofNullable(servicioVendido));
 
-        Venta guardada = ventaService.guardarVenta(ventaDTO);
+        Venta guardada = ventaServiceConProveedor.guardarVenta(ventaDTO);
         Assertions.assertEquals(1L, guardada.getNum_venta());
         Assertions.assertEquals(LocalDate.of(2026, 1, 2), guardada.getFecha_venta());
         Assertions.assertEquals(1L, guardada.getCliente().getId_cliente());
@@ -203,5 +217,32 @@ public class VentaServiceTests {
         Venta ventaEditada = ventaService.editarVenta(ventaEdicionDTO);
         Assertions.assertEquals(ventaEditadaDevueltaEsperada.getProducto_turistico(),
                 ventaEditada.getProducto_turistico());
+    }
+
+    @Test
+    public void deberiaDarErrorSiSeIntentaGuardarParaUnaFechaPasada() {
+        proveedorDeFechaFija = new ProveedorDeFechaFija(LocalDate.of(2021, 8, 1));
+        VentaServiceImpl ventaServiceConProveedor = new VentaServiceImpl(ventaRepository,
+                clienteRepository,
+                empleadoRepository,
+                productoRepository,
+                proveedorDeFechaFija);
+        Mockito.when(this.clienteRepository.findById(Mockito.any(Long.class)))
+                .thenReturn(Optional.ofNullable(cliente));
+        Mockito.when(this.empleadoRepository.findById(Mockito.any(Long.class)))
+                .thenReturn(Optional.ofNullable(empleado));
+        Mockito.when(this.productoRepository.findById(Mockito.any(Long.class)))
+                .thenReturn(Optional.ofNullable(servicioVendido));
+        VentaDTO ventaDTO = VentaDTO.builder()
+                .fecha_venta(LocalDate.of(2019, 12, 6))
+                .medio_pago("tarjeta")
+                .id_cliente(1L)
+                .id_empleado(1L)
+                .codigo_producto(1L)
+                .build();
+        FechaInvalidaError excepcion = Assertions.assertThrows(FechaInvalidaError.class,
+                () -> ventaServiceConProveedor.guardarVenta(ventaDTO)
+        );
+        Assertions.assertEquals("La fecha ingresada es inválida", excepcion.getMessage());
     }
 }

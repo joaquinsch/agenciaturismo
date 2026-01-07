@@ -33,6 +33,7 @@ public class ServicioTuristicoServiceTests {
 
     @BeforeEach
     void setUp() {
+        // para los tests que no dependen de fechas se simula la fecha actual
         proveedorDeFechaFija =
                 new ProveedorDeFechaFija(LocalDate.now());
         servicioTuristicoService = new ServicioTuristicoServiceImpl(

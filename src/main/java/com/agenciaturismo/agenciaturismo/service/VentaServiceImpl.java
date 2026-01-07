@@ -2,14 +2,8 @@ package com.agenciaturismo.agenciaturismo.service;
 
 import com.agenciaturismo.agenciaturismo.dto.VentaDTO;
 import com.agenciaturismo.agenciaturismo.dto.VentaEdicionDTO;
-import com.agenciaturismo.agenciaturismo.exceptions.ClienteInexistenteError;
-import com.agenciaturismo.agenciaturismo.exceptions.EmpleadoInexistenteError;
-import com.agenciaturismo.agenciaturismo.exceptions.ProductoInexistenteError;
-import com.agenciaturismo.agenciaturismo.exceptions.VentaInexistenteError;
-import com.agenciaturismo.agenciaturismo.model.Cliente;
-import com.agenciaturismo.agenciaturismo.model.Empleado;
-import com.agenciaturismo.agenciaturismo.model.ProductoTuristico;
-import com.agenciaturismo.agenciaturismo.model.Venta;
+import com.agenciaturismo.agenciaturismo.exceptions.*;
+import com.agenciaturismo.agenciaturismo.model.*;
 import com.agenciaturismo.agenciaturismo.repository.ClienteRepository;
 import com.agenciaturismo.agenciaturismo.repository.EmpleadoRepository;
 import com.agenciaturismo.agenciaturismo.repository.ProductoRepository;
@@ -24,16 +18,19 @@ public class VentaServiceImpl implements VentaService {
     private final ClienteRepository clienteRepository;
     private final EmpleadoRepository empleadoRepository;
     private final ProductoRepository productoRepository;
+    private final IProveedorDeFecha proveedorDeFecha;
 
     public VentaServiceImpl(VentaRepository ventaRepository,
                             ClienteRepository clienteRepository,
                             EmpleadoRepository empleadoRepository,
-                            ProductoRepository productoRepository
-                            ) {
+                            ProductoRepository productoRepository,
+                            IProveedorDeFecha proveedorDeFecha
+    ) {
         this.ventaRepository = ventaRepository;
         this.clienteRepository = clienteRepository;
         this.empleadoRepository = empleadoRepository;
         this.productoRepository = productoRepository;
+        this.proveedorDeFecha = proveedorDeFecha;
     }
 
     @Override
@@ -41,7 +38,7 @@ public class VentaServiceImpl implements VentaService {
         Cliente cliente = validarCliente(ventaDTO.getId_cliente());
         Empleado empleado = validarEmpleado(ventaDTO.getId_empleado());
         ProductoTuristico producto = validarProducto(ventaDTO.getCodigo_producto());
-
+        validarFecha(ventaDTO);
         Venta venta = Venta.builder()
                 .fecha_venta(ventaDTO.getFecha_venta())
                 .medio_pago(ventaDTO.getMedio_pago())
@@ -95,6 +92,12 @@ public class VentaServiceImpl implements VentaService {
     private ProductoTuristico validarProducto(Long codigo_producto) {
         return productoRepository.findById(codigo_producto)
                 .orElseThrow(() -> new ProductoInexistenteError("El producto ingresado no existe"));
+    }
+
+    private void validarFecha(VentaDTO ventaDTO) {
+        if (this.proveedorDeFecha.esFechaPasada(ventaDTO.getFecha_venta())) {
+            throw new FechaInvalidaError("La fecha ingresada es inválida");
+        }
     }
 
 }
