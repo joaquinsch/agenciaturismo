@@ -38,25 +38,16 @@ public class VentaServiceImpl implements VentaService {
 
     @Override
     public Venta guardarVenta(VentaDTO ventaDTO) {
-        Cliente clienteBuscado = this.clienteRepository.findById(ventaDTO.getId_cliente())
-                .orElseThrow(
-                        () -> new ClienteInexistenteError("El cliente ingresado no existe")
-                );
-        Empleado empleadoBuscado = this.empleadoRepository.findById(ventaDTO.getId_empleado())
-                .orElseThrow(
-                        () -> new EmpleadoInexistenteError("El empleado ingresado no existe")
-                );
-        ProductoTuristico productoTuristicoBuscado = this.productoRepository.findById(ventaDTO.getCodigo_producto())
-                .orElseThrow(
-                        () -> new ProductoInexistenteError("El producto ingresado no existe")
-                );
+        Cliente cliente = validarCliente(ventaDTO.getId_cliente());
+        Empleado empleado = validarEmpleado(ventaDTO.getId_empleado());
+        ProductoTuristico producto = validarProducto(ventaDTO.getCodigo_producto());
 
         Venta venta = Venta.builder()
                 .fecha_venta(ventaDTO.getFecha_venta())
                 .medio_pago(ventaDTO.getMedio_pago())
-                .cliente(clienteBuscado)
-                .empleado(empleadoBuscado)
-                .producto_turistico(productoTuristicoBuscado)
+                .cliente(cliente)
+                .empleado(empleado)
+                .producto_turistico(producto)
                 .build();
         return this.ventaRepository.save(venta);
     }
@@ -77,27 +68,33 @@ public class VentaServiceImpl implements VentaService {
     @Override
     public Venta editarVenta(VentaEdicionDTO ventaEdicionDTO) {
         buscarVenta(ventaEdicionDTO.getNum_venta());
-        Cliente clienteBuscado = this.clienteRepository.findById(ventaEdicionDTO.getId_cliente())
-                .orElseThrow(
-                        () -> new ClienteInexistenteError("El cliente ingresado no existe")
-                );
-        Empleado empleadoBuscado = this.empleadoRepository.findById(ventaEdicionDTO.getId_empleado())
-                .orElseThrow(
-                        () -> new EmpleadoInexistenteError("El empleado ingresado no existe")
-                );
-        ProductoTuristico productoTuristicoBuscado = this.productoRepository.findById(ventaEdicionDTO.getCodigo_producto())
-                .orElseThrow(
-                        () -> new ProductoInexistenteError("El producto ingresado no existe")
-                );
+        Cliente cliente = validarCliente(ventaEdicionDTO.getId_cliente());
+        Empleado empleado = validarEmpleado(ventaEdicionDTO.getId_empleado());
+        ProductoTuristico producto = validarProducto(ventaEdicionDTO.getCodigo_producto());
         Venta editada = Venta.builder()
                 .num_venta(ventaEdicionDTO.getNum_venta())
                 .fecha_venta(ventaEdicionDTO.getFecha_venta())
                 .medio_pago(ventaEdicionDTO.getMedio_pago())
-                .cliente(clienteBuscado)
-                .empleado(empleadoBuscado)
-                .producto_turistico(productoTuristicoBuscado)
+                .cliente(cliente)
+                .empleado(empleado)
+                .producto_turistico(producto)
                 .build();
         return ventaRepository.save(editada);
+    }
+
+    private Cliente validarCliente(Long id_cliente) {
+        return clienteRepository.findById(id_cliente)
+                .orElseThrow(() -> new ClienteInexistenteError("El cliente ingresado no existe"));
+    }
+
+    private Empleado validarEmpleado(Long id_empleado) {
+        return empleadoRepository.findById(id_empleado)
+                .orElseThrow(() -> new EmpleadoInexistenteError("El empleado ingresado no existe"));
+    }
+
+    private ProductoTuristico validarProducto(Long codigo_producto) {
+        return productoRepository.findById(codigo_producto)
+                .orElseThrow(() -> new ProductoInexistenteError("El producto ingresado no existe"));
     }
 
 }
