@@ -5,10 +5,7 @@ import com.agenciaturismo.agenciaturismo.service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/clientes")
@@ -21,6 +18,12 @@ public class ClienteController {
     public ResponseEntity<Cliente> guardarCliente(@RequestBody Cliente cliente) {
         Cliente guardado = clienteService.guardarCliente(cliente);
         return new ResponseEntity<>(guardado, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id_cliente}")
+    public ResponseEntity<Cliente> buscarCliente(@PathVariable Long id_cliente) {
+        Cliente buscado = clienteService.buscarCliente(id_cliente);
+        return new ResponseEntity<>(buscado, HttpStatus.FOUND);
     }
 
 }

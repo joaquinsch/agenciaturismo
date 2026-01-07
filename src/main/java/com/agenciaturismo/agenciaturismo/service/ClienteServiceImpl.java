@@ -1,5 +1,6 @@
 package com.agenciaturismo.agenciaturismo.service;
 
+import com.agenciaturismo.agenciaturismo.exceptions.ClienteInexistenteError;
 import com.agenciaturismo.agenciaturismo.model.Cliente;
 import com.agenciaturismo.agenciaturismo.repository.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,5 +15,13 @@ public class ClienteServiceImpl implements ClienteService {
     @Override
     public Cliente guardarCliente(Cliente cliente) {
         return clienteRepository.save(cliente);
+    }
+
+    @Override
+    public Cliente buscarCliente(Long id_cliente) {
+        return clienteRepository.findById(id_cliente)
+                .orElseThrow(
+                        () -> new ClienteInexistenteError("El cliente no existe")
+                );
     }
 }

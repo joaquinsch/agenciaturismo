@@ -52,4 +52,15 @@ public class ClienteControllerTests {
                 .andExpect(jsonPath("$.nombre").value("carlos"))
                 .andExpect(jsonPath("$.email").value("asd@gmail.com"));
     }
+
+    @Test
+    public void deberiaEncontrarElClienteBuscado() throws Exception{
+        Mockito.when(this.clienteService.buscarCliente(1L))
+                .thenReturn(cliente);
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/clientes/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(cliente))
+                ).andExpect(status().isFound())
+                .andExpect(jsonPath("$.id_cliente").value(1L));
+    }
 }
