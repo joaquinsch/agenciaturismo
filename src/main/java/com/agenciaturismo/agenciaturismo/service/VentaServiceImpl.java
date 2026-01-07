@@ -1,6 +1,7 @@
 package com.agenciaturismo.agenciaturismo.service;
 
 import com.agenciaturismo.agenciaturismo.dto.VentaDTO;
+import com.agenciaturismo.agenciaturismo.dto.VentaEdicionDTO;
 import com.agenciaturismo.agenciaturismo.exceptions.ClienteInexistenteError;
 import com.agenciaturismo.agenciaturismo.exceptions.EmpleadoInexistenteError;
 import com.agenciaturismo.agenciaturismo.exceptions.ProductoInexistenteError;
@@ -71,6 +72,32 @@ public class VentaServiceImpl implements VentaService {
     public void eliminarVenta(Long num_venta) {
         buscarVenta(num_venta);
         this.ventaRepository.deleteById(num_venta);
+    }
+
+    @Override
+    public Venta editarVenta(VentaEdicionDTO ventaEdicionDTO) {
+        buscarVenta(ventaEdicionDTO.getNum_venta());
+        Cliente clienteBuscado = this.clienteRepository.findById(ventaEdicionDTO.getId_cliente())
+                .orElseThrow(
+                        () -> new ClienteInexistenteError("El cliente ingresado no existe")
+                );
+        Empleado empleadoBuscado = this.empleadoRepository.findById(ventaEdicionDTO.getId_empleado())
+                .orElseThrow(
+                        () -> new EmpleadoInexistenteError("El empleado ingresado no existe")
+                );
+        ProductoTuristico productoTuristicoBuscado = this.productoRepository.findById(ventaEdicionDTO.getCodigo_producto())
+                .orElseThrow(
+                        () -> new ProductoInexistenteError("El producto ingresado no existe")
+                );
+        Venta editada = Venta.builder()
+                .num_venta(ventaEdicionDTO.getNum_venta())
+                .fecha_venta(ventaEdicionDTO.getFecha_venta())
+                .medio_pago(ventaEdicionDTO.getMedio_pago())
+                .cliente(clienteBuscado)
+                .empleado(empleadoBuscado)
+                .producto_turistico(productoTuristicoBuscado)
+                .build();
+        return ventaRepository.save(editada);
     }
 
 }

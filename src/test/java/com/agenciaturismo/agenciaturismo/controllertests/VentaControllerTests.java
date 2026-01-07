@@ -2,12 +2,14 @@ package com.agenciaturismo.agenciaturismo.controllertests;
 
 import com.agenciaturismo.agenciaturismo.controller.VentaController;
 import com.agenciaturismo.agenciaturismo.dto.VentaDTO;
+import com.agenciaturismo.agenciaturismo.dto.VentaEdicionDTO;
 import com.agenciaturismo.agenciaturismo.exceptions.ClienteInexistenteError;
 import com.agenciaturismo.agenciaturismo.exceptions.EmpleadoInexistenteError;
 import com.agenciaturismo.agenciaturismo.exceptions.VentaInexistenteError;
 import com.agenciaturismo.agenciaturismo.model.*;
 import com.agenciaturismo.agenciaturismo.service.VentaServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -219,5 +221,36 @@ public class VentaControllerTests {
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/ventas/eliminar/1")
                         .contentType(MediaType.APPLICATION_JSON)
                 ).andExpect(status().isNoContent());
+    }
+
+    @Test
+    @Disabled
+    public void deberiaEditarLaVentaDeUnServicioAlCambiarlaPorUnPaquete() throws Exception {
+        Venta ventaEditadaDevueltaEsperada = Venta.builder()
+                .num_venta(1L)
+                .fecha_venta(LocalDate.of(2026, 1, 18))
+                .medio_pago("tarjeta de credito")
+                .cliente(cliente)
+                .empleado(empleado)
+                .producto_turistico(paqueteVendido)
+                .build();
+        Mockito.when(ventaService.editarVenta(Mockito.any(VentaEdicionDTO.class)))
+                .thenReturn(ventaEditadaDevueltaEsperada);
+        VentaEdicionDTO ventaEdicionDTO = VentaEdicionDTO.builder()
+                .num_venta(1L)
+                .fecha_venta(LocalDate.of(2026, 1, 18))
+                .medio_pago("tarjeta de credito")
+                .id_cliente(1L)
+                .id_empleado(1L)
+                .codigo_producto(2L)
+                .build();
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/ventas/editar")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(ventaEdicionDTO))
+        ).andExpect(status().isOk())
+                .andExpect(jsonPath("$.producto_turistico.codigo_producto")
+                        .value(2))
+                .andExpect(jsonPath("$.producto_turistico.costo_paquete")
+                        .value(135.0));
     }
 }

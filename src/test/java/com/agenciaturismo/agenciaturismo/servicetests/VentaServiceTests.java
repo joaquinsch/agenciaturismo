@@ -1,6 +1,7 @@
 package com.agenciaturismo.agenciaturismo.servicetests;
 
 import com.agenciaturismo.agenciaturismo.dto.VentaDTO;
+import com.agenciaturismo.agenciaturismo.dto.VentaEdicionDTO;
 import com.agenciaturismo.agenciaturismo.exceptions.ClienteInexistenteError;
 import com.agenciaturismo.agenciaturismo.exceptions.EmpleadoInexistenteError;
 import com.agenciaturismo.agenciaturismo.exceptions.ProductoInexistenteError;
@@ -162,5 +163,45 @@ public class VentaServiceTests {
                 .thenReturn(Optional.ofNullable(venta));
         ventaService.eliminarVenta(venta.getNum_venta());
         Assertions.assertEquals(0, ventaRepository.findAll().size());
+    }
+
+    @Test
+    public void deberiaEditarUnaVentaCambiandoElServicioPorUnPaquete() {
+        Mockito.when(this.ventaRepository.findById(Mockito.anyLong()))
+                .thenReturn(Optional.ofNullable(venta));
+        Mockito.when(this.clienteRepository.findById(Mockito.any(Long.class)))
+                .thenReturn(Optional.ofNullable(cliente));
+        Mockito.when(this.empleadoRepository.findById(Mockito.any(Long.class)))
+                .thenReturn(Optional.ofNullable(empleado));
+
+        PaqueteTuristico paquete = PaqueteTuristico.builder()
+                .codigo_producto(2L)
+                .costo_paquete(500.0)
+                .lista_servicios_incluidos(null)
+                .build();
+        Mockito.when(this.productoRepository.findById(Mockito.any(Long.class)))
+                .thenReturn(Optional.ofNullable(paquete));
+
+        VentaEdicionDTO ventaEdicionDTO = VentaEdicionDTO.builder()
+                .num_venta(1L)
+                .fecha_venta(LocalDate.of(2026, 1, 18))
+                .medio_pago("tarjeta")
+                .id_cliente(1L)
+                .id_empleado(1L)
+                .codigo_producto(2L)
+                .build();
+        Venta ventaEditadaDevueltaEsperada = Venta.builder()
+                .num_venta(1L)
+                .fecha_venta(LocalDate.of(2026, 1, 2))
+                .medio_pago("tarjeta")
+                .cliente(cliente)
+                .empleado(empleado)
+                .producto_turistico(paquete)
+                .build();
+        Mockito.when(ventaRepository.save(Mockito.any(Venta.class)))
+                .thenReturn(ventaEditadaDevueltaEsperada);
+        Venta ventaEditada = ventaService.editarVenta(ventaEdicionDTO);
+        Assertions.assertEquals(ventaEditadaDevueltaEsperada.getProducto_turistico(),
+                ventaEditada.getProducto_turistico());
     }
 }
