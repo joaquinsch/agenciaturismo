@@ -1,6 +1,7 @@
 package com.agenciaturismo.agenciaturismo.controller;
 
 import com.agenciaturismo.agenciaturismo.dto.VentaDTO;
+import com.agenciaturismo.agenciaturismo.dto.VentaEdicionDTO;
 import com.agenciaturismo.agenciaturismo.model.Venta;
 import com.agenciaturismo.agenciaturismo.service.VentaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,5 +32,11 @@ public class VentaController {
     public ResponseEntity<Venta> eliminarVenta(@PathVariable Long num_venta) {
         Venta buscada = ventaService.buscarVenta(num_venta);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PutMapping("/editar")
+    public ResponseEntity<Venta> editarVenta(@RequestBody VentaEdicionDTO ventaEdicionDTO) {
+        Venta editada = ventaService.editarVenta(ventaEdicionDTO);
+        return new ResponseEntity<>(editada, HttpStatus.OK);
     }
 }

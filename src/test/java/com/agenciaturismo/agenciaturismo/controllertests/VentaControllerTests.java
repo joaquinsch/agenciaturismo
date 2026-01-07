@@ -9,7 +9,6 @@ import com.agenciaturismo.agenciaturismo.exceptions.VentaInexistenteError;
 import com.agenciaturismo.agenciaturismo.model.*;
 import com.agenciaturismo.agenciaturismo.service.VentaServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -224,7 +223,6 @@ public class VentaControllerTests {
     }
 
     @Test
-    @Disabled
     public void deberiaEditarLaVentaDeUnServicioAlCambiarlaPorUnPaquete() throws Exception {
         Venta ventaEditadaDevueltaEsperada = Venta.builder()
                 .num_venta(1L)
