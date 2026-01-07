@@ -61,10 +61,16 @@ public class VentaServiceImpl implements VentaService {
     }
 
     @Override
-    public Venta buscarVenta(Long codigo_producto) {
-        return this.ventaRepository.findById(codigo_producto).orElseThrow(
+    public Venta buscarVenta(Long num_venta) {
+        return this.ventaRepository.findById(num_venta).orElseThrow(
                 () -> new VentaInexistenteError("La venta no existe")
         );
+    }
+
+    @Override
+    public void eliminarVenta(Long num_venta) {
+        buscarVenta(num_venta);
+        this.ventaRepository.deleteById(num_venta);
     }
 
 }

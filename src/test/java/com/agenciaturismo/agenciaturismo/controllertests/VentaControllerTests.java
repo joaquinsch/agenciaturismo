@@ -211,4 +211,13 @@ public class VentaControllerTests {
 
         Mockito.verify(ventaService).guardarVenta(Mockito.any(VentaDTO.class));
     }
+
+    @Test
+    public void deberiaEliminarLaVenta() throws Exception {
+        Mockito.when(this.ventaService.buscarVenta(1L))
+                        .thenReturn(venta);
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/ventas/eliminar/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                ).andExpect(status().isNoContent());
+    }
 }

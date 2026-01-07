@@ -21,9 +21,15 @@ public class VentaController {
         return new ResponseEntity<>(guardada, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{codigo_producto}")
-    public ResponseEntity<Venta> buscarVenta(@PathVariable Long codigo_producto) {
-        Venta buscada = ventaService.buscarVenta(codigo_producto);
+    @GetMapping("/{num_venta}")
+    public ResponseEntity<Venta> buscarVenta(@PathVariable Long num_venta) {
+        Venta buscada = ventaService.buscarVenta(num_venta);
         return new ResponseEntity<>(buscada, HttpStatus.FOUND);
+    }
+
+    @DeleteMapping("/eliminar/{num_venta}")
+    public ResponseEntity<Venta> eliminarVenta(@PathVariable Long num_venta) {
+        Venta buscada = ventaService.buscarVenta(num_venta);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
