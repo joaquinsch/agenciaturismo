@@ -12,7 +12,6 @@ import com.agenciaturismo.agenciaturismo.repository.PaqueteRepository;
 import com.agenciaturismo.agenciaturismo.repository.ServicioRepository;
 import com.agenciaturismo.agenciaturismo.service.PaqueteTuristicoServiceImpl;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -262,14 +261,52 @@ public class PaqueteTuristicoServiceTests {
     }
 
     @Test
-    @Disabled
     public void deberiaEditarseElPaqueteConUnServicioMenos() {
+        PaqueteTuristico paqueteAEditar = PaqueteTuristico.builder()
+                .codigo_producto(2L)
+                .lista_servicios_incluidos(List.of(servicio1, servicio2, servicio3))
+                .tipo_producto(ProductoTuristico.TipoProducto.PAQUETE)
+                .costo_paquete(135.0)
+                .build();
+        Mockito.when(this.paqueteRepository.findById(paqueteAEditar.getCodigo_producto()))
+                .thenReturn(Optional.of(paqueteAEditar));
+        PaqueteEdicionDTO paqueteEdicionDTO = PaqueteEdicionDTO.builder()
+                .codigo_producto(2L)
+                .costo_paquete(225.0)
+                .lista_ids_servicios_incluidos(List.of(2L, 4L))
+                .build();
+        PaqueteTuristico paqueteEditadoDevueltoEsperado = PaqueteTuristico.builder()
+                .codigo_producto(2L)
+                .costo_paquete(225.0)
+                .lista_servicios_incluidos(List.of(servicio2, servicio3))
+                .build();
+        Mockito.when(paqueteRepository.save(Mockito.any(PaqueteTuristico.class)))
+                .thenReturn(paqueteEditadoDevueltoEsperado);
+        Mockito.when(this.servicioRepository.findAllById(Mockito.anyIterable()))
+                .thenReturn(List.of(servicio2, servicio3));
 
+        Assertions.assertEquals(2, paquete.getLista_servicios_incluidos().size());
+
+        PaqueteTuristico paqueteEditado = paqueteTuristicoService.editarPaquete(paqueteEdicionDTO);
+        Assertions.assertEquals(paqueteEditadoDevueltoEsperado.getLista_servicios_incluidos().size(), paqueteEditado.getLista_servicios_incluidos().size());
+        Assertions.assertEquals(paqueteEditadoDevueltoEsperado.getCosto_paquete(), paqueteEditado.getCosto_paquete());
     }
 
     @Test
-    @Disabled
     public void deberiaDarErrorSiIntentaEditarseElPaqueteConUnServicioInexistente() {
+        Mockito.when(this.paqueteRepository.findById(paquete.getCodigo_producto()))
+                .thenReturn(Optional.of(paquete));
+        PaqueteEdicionDTO paqueteEdicionDTO = PaqueteEdicionDTO.builder()
+                .codigo_producto(1L)
+                .costo_paquete(1000.0) // supongamos que lo calculo basándose en los servicios 2 y 9
+                .lista_ids_servicios_incluidos(List.of(2L, 9L))
+                .build();
+        Mockito.when(this.servicioRepository.findAllById(Mockito.anyIterable()))
+                .thenReturn(List.of(servicio2));
+        PaqueteInvalidoError excepcion = Assertions.assertThrows(PaqueteInvalidoError.class,
+                () -> paqueteTuristicoService.editarPaquete(paqueteEdicionDTO)
+        );
+        Assertions.assertEquals("Hay servicios turísticos inexistentes", excepcion.getMessage());
 
     }
 
