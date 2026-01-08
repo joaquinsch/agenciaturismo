@@ -15,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -95,5 +96,38 @@ public class ClienteControllerTests {
                         .content(objectMapper.writeValueAsString(cliente))
                 ).andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.mensaje").value("El cliente no existe"));
+    }
+
+    @Test
+    public void deberiaEditarElCliente() throws Exception {
+        Cliente clienteAEditar = Cliente.builder() //datos q se pasan por parametro
+                .id_cliente(1L)
+                .nombre("PEDRO")
+                .apellido("GONZALEZ")
+                .dni("1122223333")
+                .celular("1155332211")
+                .email("asd@gmail.com")
+                .nacionalidad("peruano")
+                .build();
+        Cliente clienteEditadoDevueltoEsperado = Cliente.builder()
+                .id_cliente(1L)
+                .nombre("PEDRO")
+                .apellido("GONZALEZ")
+                .dni("1122223333")
+                .celular("1155332211")
+                .email("asd@gmail.com")
+                .nacionalidad("peruano")
+                .build();
+        Mockito.when(clienteService.editarCliente(Mockito.any(Cliente.class)))
+                .thenReturn(clienteEditadoDevueltoEsperado);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/clientes/editar")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(clienteAEditar))
+                ).andExpect(status().isOk())
+                .andExpect(jsonPath("$.nombre")
+                        .value("PEDRO"))
+                .andExpect(jsonPath("$.apellido")
+                        .value("GONZALEZ"));
     }
 }

@@ -32,4 +32,10 @@ public class ClienteController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @PutMapping("/editar")
+    public ResponseEntity<Cliente> editarCliente(@RequestBody Cliente cliente) {
+        Cliente buscado = clienteService.editarCliente(cliente);
+        return new ResponseEntity<>(buscado, HttpStatus.OK);
+    }
+
 }

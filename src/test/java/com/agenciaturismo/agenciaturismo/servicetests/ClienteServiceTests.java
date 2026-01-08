@@ -63,4 +63,36 @@ public class ClienteServiceTests {
 
         Mockito.verify(clienteRepository).deleteById(1L);
     }
+
+    @Test
+    public void deberiaEditarElCliente() {
+        Mockito.when(clienteRepository.findById(cli.getId_cliente()))
+                .thenReturn(Optional.ofNullable(cli));
+        Cliente clienteEditadoDevueltoEsperado = Cliente.builder()
+                .id_cliente(1L)
+                .nombre("PEDRITO")
+                .apellido("NUÑEZ")
+                .dni("1122223333")
+                .celular("1155332211")
+                .email("asd@gmail.com")
+                .nacionalidad("colombiano")
+                .build();
+        Mockito.when(clienteRepository.save(Mockito.any(Cliente.class)))
+                .thenReturn(clienteEditadoDevueltoEsperado);
+
+        Cliente clienteAEditar = Cliente.builder()
+                .id_cliente(1L)
+                .nombre("PEDRITO")
+                .apellido("NUÑEZ")
+                .dni("1122223333")
+                .celular("1155332211")
+                .email("asd@gmail.com")
+                .nacionalidad("colombiano")
+                .build();
+        Cliente editado = clienteService.editarCliente(clienteAEditar);
+        Assertions.assertEquals("PEDRITO", editado.getNombre());
+        Assertions.assertEquals("NUÑEZ", editado.getApellido());
+        Assertions.assertEquals("colombiano", editado.getNacionalidad());
+
+    }
 }
