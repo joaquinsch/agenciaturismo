@@ -24,4 +24,10 @@ public class ClienteServiceImpl implements ClienteService {
                         () -> new ClienteInexistenteError("El cliente no existe")
                 );
     }
+
+    @Override
+    public void eliminarCliente(Long id_cliente) {
+        buscarCliente(id_cliente);
+        this.clienteRepository.deleteById(id_cliente);
+    }
 }

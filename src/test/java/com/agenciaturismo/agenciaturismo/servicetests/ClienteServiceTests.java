@@ -54,4 +54,13 @@ public class ClienteServiceTests {
         Assertions.assertEquals("1155332211", buscado.getCelular());
 
     }
+
+    @Test
+    public void deberiaEliminarElCliente(){
+        Mockito.when(clienteRepository.findById(1L))
+                .thenReturn(Optional.ofNullable(cli));
+        clienteService.eliminarCliente(1L);
+
+        Mockito.verify(clienteRepository).deleteById(1L);
+    }
 }

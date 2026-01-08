@@ -2,6 +2,7 @@ package com.agenciaturismo.agenciaturismo.controllertests;
 
 
 import com.agenciaturismo.agenciaturismo.controller.ClienteController;
+import com.agenciaturismo.agenciaturismo.exceptions.ClienteInexistenteError;
 import com.agenciaturismo.agenciaturismo.model.Cliente;
 import com.agenciaturismo.agenciaturismo.service.ClienteServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -62,5 +63,37 @@ public class ClienteControllerTests {
                         .content(objectMapper.writeValueAsString(cliente))
                 ).andExpect(status().isFound())
                 .andExpect(jsonPath("$.id_cliente").value(1L));
+    }
+
+    @Test
+    public void deberiaDarErrorClienteInexistente() throws Exception {
+        Mockito.when(clienteService.buscarCliente(2L))
+                .thenThrow(new ClienteInexistenteError("El cliente no existe"));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/clientes/2")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(cliente))
+                ).andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.mensaje").value("El cliente no existe"));
+    }
+
+    @Test
+    public void deberiaEliminarElClienteBuscado() throws Exception{
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/clientes/eliminar/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void deberiaDarErrorClienteInexistenteAlEliminar() throws Exception {
+        Mockito.doThrow(new ClienteInexistenteError("El cliente no existe"))
+                .when(clienteService)
+                .eliminarCliente(2L);
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/clientes/eliminar/2")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(cliente))
+                ).andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.mensaje").value("El cliente no existe"));
     }
 }

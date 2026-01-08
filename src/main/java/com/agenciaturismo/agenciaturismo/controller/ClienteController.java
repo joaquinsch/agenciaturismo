@@ -26,4 +26,10 @@ public class ClienteController {
         return new ResponseEntity<>(buscado, HttpStatus.FOUND);
     }
 
+    @DeleteMapping("/eliminar/{id_cliente}")
+    public ResponseEntity<Cliente> eliminarCliente(@PathVariable Long id_cliente) {
+        clienteService.eliminarCliente(id_cliente);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
 }
