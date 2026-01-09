@@ -23,6 +23,7 @@ public class PaqueteTuristico extends ProductoTuristico {
     )
     private List<ServicioTuristico> lista_servicios_incluidos;
     private Double costo_paquete;
+    private boolean activo = true;
     public static final double DESCUENTO = 0.1;
 
     /*

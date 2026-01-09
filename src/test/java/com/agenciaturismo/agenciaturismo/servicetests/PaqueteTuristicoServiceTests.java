@@ -178,10 +178,11 @@ public class PaqueteTuristicoServiceTests {
     public void deberiaEliminarElPaquete() {
        Mockito.when(paqueteRepository.findById(1L))
                .thenReturn(Optional.of(paquete));
-       paqueteTuristicoService.eliminarPaquete(1L);
-        Mockito.verify(paqueteRepository).deleteById(paquete.getCodigo_producto());
-        Assertions.assertEquals(0, this.paqueteRepository.findAll().size());
-
+       Mockito.when(paqueteRepository.save(Mockito.any(PaqueteTuristico.class)))
+               .thenReturn(paquete);
+       // eliminar un paquete es "desactivarlo", o sea poner activo = false
+       PaqueteTuristico eliminado = paqueteTuristicoService.eliminarPaquete(1L);
+       Mockito.verify(paqueteRepository).save(eliminado);
     }
 
     @Test
