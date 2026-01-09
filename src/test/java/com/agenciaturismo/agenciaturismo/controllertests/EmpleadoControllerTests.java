@@ -114,4 +114,45 @@ public class EmpleadoControllerTests {
         ).andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.mensaje").value("El empleado no existe"));
     }
+
+    @Test
+    public void deberiaEditarElEmpleado() throws Exception {
+        Empleado clienteAEditar = Empleado.builder() //datos q se pasan por parametro
+                .id_empleado(1L)
+                .nombre("jose")
+                .apellido("gomez")
+                .direccion("calle falsa 125")
+                .dni("1122225555")
+                .fecha_nac(LocalDate.of(1999, 9, 26))
+                .nacionalidad("BOLIVIANO")
+                .celular("1112341234")
+                .email("asd@gmail.com")
+                .cargo("vendedor de paquetes")
+                .sueldo(900000.0)
+                .ventas(null)
+                .build();
+        Empleado empleadoEditadoDevueltoEsperado = Empleado.builder()
+                .id_empleado(1L)
+                .nombre("jose")
+                .apellido("gomez")
+                .direccion("calle falsa 125")
+                .dni("1122225555")
+                .fecha_nac(LocalDate.of(1999, 9, 26))
+                .nacionalidad("BOLIVIANO")
+                .celular("1112341234")
+                .email("asd@gmail.com")
+                .cargo("vendedor de paquetes")
+                .sueldo(900000.0)
+                .ventas(null)
+                .build();
+        Mockito.when(empleadoService.editarEmpleado(Mockito.any(Empleado.class)))
+                .thenReturn(empleadoEditadoDevueltoEsperado);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/empleados/editar")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(clienteAEditar))
+                ).andExpect(status().isOk())
+                .andExpect(jsonPath("$.cargo")
+                        .value("vendedor de paquetes"));
+    }
 }

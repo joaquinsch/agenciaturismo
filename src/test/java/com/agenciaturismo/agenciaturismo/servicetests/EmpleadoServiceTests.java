@@ -74,12 +74,52 @@ public class EmpleadoServiceTests {
     }
 
     @Test
-    public void deberiaEliminarElCliente(){
+    public void deberiaEliminarElEmpleado(){
         Mockito.when(empleadoRepository.findById(1L))
                 .thenReturn(Optional.ofNullable(empleado));
         empleadoService.eliminarEmpleado(empleado.getId_empleado());
 
         Mockito.verify(empleadoRepository).deleteById(1L);
+    }
+
+    @Test
+    public void deberiaEditarElEmpleado() {
+        Mockito.when(empleadoRepository.findById(empleado.getId_empleado()))
+                .thenReturn(Optional.ofNullable(empleado));
+        Empleado empleadoAEditar = Empleado.builder() //datos q se pasan por parametro
+                .id_empleado(1L)
+                .nombre("jose")
+                .apellido("gomez")
+                .direccion("calle falsa 125")
+                .dni("1122225555")
+                .fecha_nac(LocalDate.of(1999, 9, 26))
+                .nacionalidad("BOLIVIANO")
+                .celular("1112341234")
+                .email("asd@gmail.com")
+                .cargo("vendedor de paquetes")
+                .sueldo(900000.0)
+                .ventas(null)
+                .build();
+        Empleado empleadoEditadoDevueltoEsperado = Empleado.builder()
+                .id_empleado(1L)
+                .nombre("jose")
+                .apellido("gomez")
+                .direccion("calle falsa 125")
+                .dni("1122225555")
+                .fecha_nac(LocalDate.of(1999, 9, 26))
+                .nacionalidad("BOLIVIANO")
+                .celular("1112341234")
+                .email("asd@gmail.com")
+                .cargo("vendedor de paquetes")
+                .sueldo(900000.0)
+                .ventas(null)
+                .build();
+        Mockito.when(empleadoRepository.save(Mockito.any(Empleado.class)))
+                .thenReturn(empleadoEditadoDevueltoEsperado);
+        Empleado editado = empleadoService.editarEmpleado(empleadoAEditar);
+        Assertions.assertEquals("vendedor de paquetes", editado.getCargo());
+        Assertions.assertEquals("BOLIVIANO", editado.getNacionalidad());
+        Assertions.assertEquals("calle falsa 125", editado.getDireccion());
     }
 
 

@@ -32,4 +32,10 @@ public class EmpleadoController {
         empleadoService.eliminarEmpleado(id_empleado);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @PutMapping("/editar")
+    public ResponseEntity<Empleado> editarEmpleado(@RequestBody Empleado empleado) {
+        Empleado editado = empleadoService.editarEmpleado(empleado);
+        return new ResponseEntity<>(editado, HttpStatus.OK);
+    }
 }
