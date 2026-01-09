@@ -5,4 +5,5 @@ import com.agenciaturismo.agenciaturismo.model.Empleado;
 
 public interface EmpleadoService {
     Empleado guardarEmpleado(EmpleadoDTO empleadoDTO);
+    Empleado buscarEmpleado(Long id_empleado);
 }

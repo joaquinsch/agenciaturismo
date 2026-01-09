@@ -15,6 +15,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 @ActiveProfiles("test")
@@ -61,6 +62,15 @@ public class EmpleadoServiceTests {
         Empleado guardado = empleadoService.guardarEmpleado(empleadoDTO);
         Assertions.assertEquals(0, guardado.getVentas().size());
         Mockito.verify(empleadoRepository).save(Mockito.any(Empleado.class));
+    }
+
+    @Test
+    public void deberiaEncontrarElEmpleado() {
+        Mockito.when(empleadoRepository.findById(1L))
+                .thenReturn(Optional.ofNullable(empleado));
+        Empleado buscado = empleadoService.buscarEmpleado(1L);
+        Assertions.assertEquals(1L, buscado.getId_empleado());
+        Assertions.assertEquals("1112341234", buscado.getCelular());
     }
 
 

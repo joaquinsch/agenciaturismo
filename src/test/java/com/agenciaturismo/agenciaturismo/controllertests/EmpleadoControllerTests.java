@@ -83,5 +83,16 @@ public class EmpleadoControllerTests {
                 .andExpect(jsonPath("$.nombre").value("jose"));
     }
 
+    @Test
+    public void deberiaEncontrarElEmpleado() throws Exception {
+        Mockito.when(this.empleadoService.buscarEmpleado(1L))
+                .thenReturn(empleado);
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/empleados/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(empleado))
+                ).andExpect(status().isFound())
+                .andExpect(jsonPath("$.id_empleado").value(1L));
+    }
+
 
 }

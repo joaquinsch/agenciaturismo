@@ -1,6 +1,7 @@
 package com.agenciaturismo.agenciaturismo.service;
 
 import com.agenciaturismo.agenciaturismo.dto.EmpleadoDTO;
+import com.agenciaturismo.agenciaturismo.exceptions.EmpleadoInexistenteError;
 import com.agenciaturismo.agenciaturismo.model.Empleado;
 import com.agenciaturismo.agenciaturismo.repository.EmpleadoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,5 +29,11 @@ public class EmpleadoServiceImpl implements EmpleadoService {
                 .build();
 
         return empleadoRepository.save(guardado);
+    }
+
+    @Override
+    public Empleado buscarEmpleado(Long id_empleado) {
+        return this.empleadoRepository.findById(id_empleado)
+                .orElseThrow(() -> new EmpleadoInexistenteError("El empleado no existe"));
     }
 }

@@ -7,10 +7,7 @@ import com.agenciaturismo.agenciaturismo.service.EmpleadoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/empleados")
@@ -22,5 +19,11 @@ public class EmpleadoController {
     public ResponseEntity<Empleado> guardarEmpleado(@RequestBody EmpleadoDTO empleadoDTO) {
         Empleado guardado = empleadoService.guardarEmpleado(empleadoDTO);
         return new ResponseEntity<>(guardado, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id_empleado}")
+    public ResponseEntity<Empleado> buscarEmpleado(@PathVariable Long id_empleado) {
+        Empleado buscado = empleadoService.buscarEmpleado(id_empleado);
+        return new ResponseEntity<>(buscado, HttpStatus.FOUND);
     }
 }
