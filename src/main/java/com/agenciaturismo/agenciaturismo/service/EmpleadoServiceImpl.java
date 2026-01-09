@@ -36,4 +36,10 @@ public class EmpleadoServiceImpl implements EmpleadoService {
         return this.empleadoRepository.findById(id_empleado)
                 .orElseThrow(() -> new EmpleadoInexistenteError("El empleado no existe"));
     }
+
+    @Override
+    public void eliminarEmpleado(Long id_cliente) {
+        buscarEmpleado(id_cliente);
+        empleadoRepository.deleteById(id_cliente);
+    }
 }

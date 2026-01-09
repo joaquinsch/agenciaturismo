@@ -73,5 +73,14 @@ public class EmpleadoServiceTests {
         Assertions.assertEquals("1112341234", buscado.getCelular());
     }
 
+    @Test
+    public void deberiaEliminarElCliente(){
+        Mockito.when(empleadoRepository.findById(1L))
+                .thenReturn(Optional.ofNullable(empleado));
+        empleadoService.eliminarEmpleado(empleado.getId_empleado());
+
+        Mockito.verify(empleadoRepository).deleteById(1L);
+    }
+
 
 }

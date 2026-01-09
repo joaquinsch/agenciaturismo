@@ -26,4 +26,10 @@ public class EmpleadoController {
         Empleado buscado = empleadoService.buscarEmpleado(id_empleado);
         return new ResponseEntity<>(buscado, HttpStatus.FOUND);
     }
+
+    @DeleteMapping("/eliminar/{id_empleado}")
+    public ResponseEntity<Empleado> eliminarEmpleado(@PathVariable Long id_empleado) {
+        empleadoService.eliminarEmpleado(id_empleado);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }

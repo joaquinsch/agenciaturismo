@@ -94,5 +94,12 @@ public class EmpleadoControllerTests {
                 .andExpect(jsonPath("$.id_empleado").value(1L));
     }
 
+    @Test
+    public void deberiaEliminarElEmpleado() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/empleados/eliminar/1")
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isNoContent());
+    }
+
 
 }
