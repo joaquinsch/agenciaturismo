@@ -32,7 +32,7 @@ public class PaqueteTuristicoServiceImpl implements PaqueteTuristicoService {
         PaqueteTuristico paquete = PaqueteTuristico.builder()
                 .lista_servicios_incluidos(servicios_incluidos)
                 .costo_paquete(paqueteDTO.getCosto_paquete())
-                .activo(true)
+                .estado(PaqueteTuristico.Estado.ACTIVO)
                 .tipo_producto(ProductoTuristico.TipoProducto.PAQUETE)
                 .build();
         validarCostoDePaquete(paquete);
@@ -50,7 +50,7 @@ public class PaqueteTuristicoServiceImpl implements PaqueteTuristicoService {
     @Override
     public PaqueteTuristico eliminarPaquete(Long codigo_producto) {
         PaqueteTuristico buscado = buscarPaquete(codigo_producto);
-        buscado.setActivo(false);
+        buscado.setEstado(PaqueteTuristico.Estado.ELIMINADO);
         return this.paqueteRepository.save(buscado);
     }
 

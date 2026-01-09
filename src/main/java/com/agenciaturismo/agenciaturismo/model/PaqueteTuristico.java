@@ -16,6 +16,11 @@ import java.util.List;
 @NoArgsConstructor
 public class PaqueteTuristico extends ProductoTuristico {
 
+    public enum Estado {
+        ELIMINADO,
+        ACTIVO
+    }
+
     @ManyToMany
     @JoinTable(name = "paquetes_servicios",
                joinColumns = @JoinColumn(name = "codigo_paquete"),
@@ -23,7 +28,8 @@ public class PaqueteTuristico extends ProductoTuristico {
     )
     private List<ServicioTuristico> lista_servicios_incluidos;
     private Double costo_paquete;
-    private boolean activo = true;
+    @Enumerated(EnumType.STRING)
+    private Estado estado;
     public static final double DESCUENTO = 0.1;
 
     /*

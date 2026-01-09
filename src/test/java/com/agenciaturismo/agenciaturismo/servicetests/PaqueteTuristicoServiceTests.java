@@ -180,9 +180,10 @@ public class PaqueteTuristicoServiceTests {
                .thenReturn(Optional.of(paquete));
        Mockito.when(paqueteRepository.save(Mockito.any(PaqueteTuristico.class)))
                .thenReturn(paquete);
-       // eliminar un paquete es "desactivarlo", o sea poner activo = false
+       // eliminar un paquete es "desactivarlo", o sea ponerlo en estado = ELIMINADO
        PaqueteTuristico eliminado = paqueteTuristicoService.eliminarPaquete(1L);
        Mockito.verify(paqueteRepository).save(eliminado);
+       Assertions.assertEquals(PaqueteTuristico.Estado.ELIMINADO, eliminado.getEstado());
     }
 
     @Test
