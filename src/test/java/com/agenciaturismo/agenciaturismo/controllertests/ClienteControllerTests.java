@@ -87,13 +87,13 @@ public class ClienteControllerTests {
 
     @Test
     public void deberiaDarErrorClienteInexistenteAlEliminar() throws Exception {
+        // esto se hace cuando queres comprobar que un metodo void tira error
         Mockito.doThrow(new ClienteInexistenteError("El cliente no existe"))
                 .when(clienteService)
                 .eliminarCliente(2L);
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/clientes/eliminar/2")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(cliente))
                 ).andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.mensaje").value("El cliente no existe"));
     }

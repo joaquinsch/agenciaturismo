@@ -3,6 +3,7 @@ package com.agenciaturismo.agenciaturismo.controllertests;
 
 import com.agenciaturismo.agenciaturismo.controller.EmpleadoController;
 import com.agenciaturismo.agenciaturismo.dto.EmpleadoDTO;
+import com.agenciaturismo.agenciaturismo.exceptions.EmpleadoInexistenteError;
 import com.agenciaturismo.agenciaturismo.model.Empleado;
 import com.agenciaturismo.agenciaturismo.model.Venta;
 import com.agenciaturismo.agenciaturismo.service.EmpleadoServiceImpl;
@@ -101,5 +102,16 @@ public class EmpleadoControllerTests {
         ).andExpect(status().isNoContent());
     }
 
+    @Test
+    public void deberiaDarErrorEmpleadoInexistente() throws Exception {
+        // esto se hace cuando queres comprobar que un metodo void tira error
+        Mockito.doThrow(new EmpleadoInexistenteError("El empleado no existe"))
+                .when(empleadoService)
+                .eliminarEmpleado(2L);
 
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/empleados/eliminar/2")
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.mensaje").value("El empleado no existe"));
+    }
 }
