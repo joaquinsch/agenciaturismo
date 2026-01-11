@@ -28,13 +28,15 @@ public class ServicioTuristicoServiceImpl implements ServicioTuristicoService {
             throw new FechaInvalidaError("La fecha ingresada es inválida");
         }
         servicioTuristico.setTipo_producto(ProductoTuristico.TipoProducto.SERVICIO);
+        servicioTuristico.setEstado(ProductoTuristico.Estado.ACTIVO);
         return this.servicioRepository.save(servicioTuristico);
     }
 
     @Override
-    public void eliminarServicio(Long codigo_producto) {
-        buscarServicio(codigo_producto);
-        this.servicioRepository.deleteById(codigo_producto);
+    public ServicioTuristico eliminarServicio(Long codigo_producto) {
+        ServicioTuristico buscado = buscarServicio(codigo_producto);
+        buscado.setEstado(ProductoTuristico.Estado.ELIMINADO);
+        return servicioRepository.save(buscado);
     }
 
     @Override

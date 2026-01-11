@@ -72,10 +72,12 @@ public class ServicioTuristicoServiceTests {
     public void deberiaEliminarUnServicio(){
         Mockito.when(servicioRepository.findById(servicio.getCodigo_producto()))
                 .thenReturn(Optional.of(servicio));
-        servicioTuristicoService.eliminarServicio(servicio.getCodigo_producto());
+        Mockito.when(servicioRepository.save(Mockito.any(ServicioTuristico.class)))
+                .thenReturn(servicio);
+        ServicioTuristico servicioEliminado = servicioTuristicoService.eliminarServicio(servicio.getCodigo_producto());
 
-        Mockito.verify(servicioRepository).deleteById(servicio.getCodigo_producto());
-        Assertions.assertEquals(0, this.servicioRepository.findAll().size());
+        Mockito.verify(servicioRepository).save(servicioEliminado);
+        Assertions.assertEquals(ServicioTuristico.Estado.ELIMINADO, servicioEliminado.getEstado());
         //Mockito.verifyNoMoreInteractions(servicioRepository); // qcyo
     }
 
@@ -152,21 +154,5 @@ public class ServicioTuristicoServiceTests {
         );
         Assertions.assertEquals("La fecha ingresada es inválida", excepcion.getMessage());
     }
-    
-    @Test
-    public void deberiaGuardarUnServicioParaUnaFechaDada(){
 
-        proveedorDeFechaFija =
-                new ProveedorDeFechaFija(LocalDate.of(2026, 1, 8));
-        ServicioTuristico serv = ServicioTuristico.builder()
-                .nombre("pasaje")
-                .descripcion_breve("pasaje por colectivo")
-                .destino_servicio("formosa")
-                .fecha_servicio(LocalDate.of(2026, 1, 10))
-                .costo_servicio(500.0)
-                .build();
-
-        Assertions.assertEquals("pasaje", serv.getNombre());
-
-    }
 }

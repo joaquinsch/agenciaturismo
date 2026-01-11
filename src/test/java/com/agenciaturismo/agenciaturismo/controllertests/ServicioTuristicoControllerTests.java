@@ -111,7 +111,6 @@ public class ServicioTuristicoControllerTests {
     public void deberiaEliminarElServicioTuristico() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/servicios/eliminar/1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(servicio))
         ).andExpect(status().isNoContent());
     }
 
