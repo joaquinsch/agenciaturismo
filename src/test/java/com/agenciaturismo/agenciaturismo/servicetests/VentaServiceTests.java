@@ -173,7 +173,7 @@ public class VentaServiceTests {
 
     @Test
     public void deberiaEliminarLaVentaBuscada() {
-        Mockito.when(this.ventaRepository.findById(Mockito.anyLong()))
+        Mockito.when(this.ventaRepository.findById(1L))
                 .thenReturn(Optional.ofNullable(venta));
         ventaService.eliminarVenta(venta.getNum_venta());
         Assertions.assertEquals(0, ventaRepository.findAll().size());

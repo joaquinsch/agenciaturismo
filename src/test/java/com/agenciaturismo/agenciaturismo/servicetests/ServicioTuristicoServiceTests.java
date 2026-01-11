@@ -54,9 +54,14 @@ public class ServicioTuristicoServiceTests {
     public void deberiaGuardarElServicio(){
         // simulo q la fecha de hoy es anterior a la del servicio
         proveedorDeFechaFija = new ProveedorDeFechaFija(LocalDate.of(2026, 1, 9));
+        ServicioTuristicoServiceImpl servicioTuristicoService1 =
+                new ServicioTuristicoServiceImpl(
+                        servicioRepository,
+                        proveedorDeFechaFija
+                );
         Mockito.when(servicioRepository.save(Mockito.any(ServicioTuristico.class))).thenReturn(servicio);
 
-        ServicioTuristico guardado = servicioTuristicoService.guardarServicio(servicio);
+        ServicioTuristico guardado = servicioTuristicoService1.guardarServicio(servicio);
         Assertions.assertEquals(1L, guardado.getCodigo_producto());
         Assertions.assertNotNull(guardado);
         Mockito.verify(servicioRepository).save(servicio);
