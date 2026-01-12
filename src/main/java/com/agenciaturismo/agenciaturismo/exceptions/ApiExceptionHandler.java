@@ -61,4 +61,10 @@ public class ApiExceptionHandler {
         ApiError apiError = new ApiError(e.getMessage(), HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(value = {EdicionInvalidaError.class})
+    public ResponseEntity<ApiError> handleEdicionInvalidaError(EdicionInvalidaError e) {
+        ApiError apiError = new ApiError(e.getMessage(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+    }
 }

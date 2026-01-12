@@ -1,6 +1,7 @@
 package com.agenciaturismo.agenciaturismo.service;
 
 import com.agenciaturismo.agenciaturismo.exceptions.CostoInvalidoError;
+import com.agenciaturismo.agenciaturismo.exceptions.EdicionInvalidaError;
 import com.agenciaturismo.agenciaturismo.exceptions.FechaInvalidaError;
 import com.agenciaturismo.agenciaturismo.exceptions.ServicioInexistenteError;
 import com.agenciaturismo.agenciaturismo.model.IProveedorDeFecha;
@@ -50,6 +51,9 @@ public class ServicioTuristicoServiceImpl implements ServicioTuristicoService {
     @Override
     public ServicioTuristico editarServicio(ServicioTuristico servicioTuristico) {
         ServicioTuristico buscado = this.buscarServicio(servicioTuristico.getCodigo_producto());
+        if (buscado.getEstado().equals(ProductoTuristico.Estado.ELIMINADO)) {
+            throw new EdicionInvalidaError("El servicio fue eliminado");
+        }
         buscado.setCodigo_producto(servicioTuristico.getCodigo_producto());
         buscado.setNombre(servicioTuristico.getNombre());
         buscado.setDescripcion_breve(servicioTuristico.getDescripcion_breve());

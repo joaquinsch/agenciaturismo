@@ -2,9 +2,11 @@ package com.agenciaturismo.agenciaturismo.servicetests;
 
 import com.agenciaturismo.agenciaturismo.ProveedorDeFechaFija;
 import com.agenciaturismo.agenciaturismo.exceptions.CostoInvalidoError;
+import com.agenciaturismo.agenciaturismo.exceptions.EdicionInvalidaError;
 import com.agenciaturismo.agenciaturismo.exceptions.FechaInvalidaError;
 import com.agenciaturismo.agenciaturismo.exceptions.ServicioInexistenteError;
 import com.agenciaturismo.agenciaturismo.model.IProveedorDeFecha;
+import com.agenciaturismo.agenciaturismo.model.ProductoTuristico;
 import com.agenciaturismo.agenciaturismo.model.ServicioTuristico;
 import com.agenciaturismo.agenciaturismo.repository.ServicioRepository;
 import com.agenciaturismo.agenciaturismo.service.ServicioTuristicoServiceImpl;
@@ -48,6 +50,7 @@ public class ServicioTuristicoServiceTests {
             .descripcion_breve("el mejor")
             .fecha_servicio(LocalDate.of(2026,1,10))
             .costo_servicio(100.0)
+            .estado(ProductoTuristico.Estado.ACTIVO)
             .build();
 
     @Test
@@ -153,6 +156,24 @@ public class ServicioTuristicoServiceTests {
                 ()-> servicioTuristicoService1.guardarServicio(serv)
         );
         Assertions.assertEquals("La fecha ingresada es inválida", excepcion.getMessage());
+    }
+
+    @Test
+    public void noDeberiaPoderEditarseSiEstaEnEstadoEliminado(){
+        ServicioTuristico servicio= ServicioTuristico.builder()
+                .codigo_producto(3L)
+                .nombre("Viaje a China")
+                .descripcion_breve("el mejor")
+                .fecha_servicio(LocalDate.of(2026,1,20))
+                .costo_servicio(100.0)
+                .estado(ProductoTuristico.Estado.ELIMINADO)
+                .build();
+        Mockito.when(servicioRepository.findById(3L))
+                .thenReturn(Optional.of(servicio));
+        EdicionInvalidaError excepcion = Assertions.assertThrows(EdicionInvalidaError.class,
+                () -> servicioTuristicoService.editarServicio(servicio)
+                );
+        Assertions.assertEquals("El servicio fue eliminado", excepcion.getMessage());
     }
 
 }
