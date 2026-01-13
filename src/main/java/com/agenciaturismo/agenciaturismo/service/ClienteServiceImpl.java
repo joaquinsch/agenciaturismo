@@ -47,6 +47,7 @@ public class ClienteServiceImpl implements ClienteService {
                 .nacionalidad(cliente.getNacionalidad())
                 .celular(cliente.getCelular())
                 .email(cliente.getEmail())
+                .estado(Usuario.Estado.ACTIVO)
                 .build();
         return clienteRepository.save(editado);
     }

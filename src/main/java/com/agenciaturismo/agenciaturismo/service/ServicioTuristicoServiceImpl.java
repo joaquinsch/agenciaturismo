@@ -60,6 +60,7 @@ public class ServicioTuristicoServiceImpl implements ServicioTuristicoService {
         buscado.setDestino_servicio(servicioTuristico.getDestino_servicio());
         buscado.setFecha_servicio(servicioTuristico.getFecha_servicio());
         buscado.setCosto_servicio(servicioTuristico.getCosto_servicio());
+        buscado.setEstado(ProductoTuristico.Estado.ACTIVO);
         return this.servicioRepository.save(buscado);
     }
 }

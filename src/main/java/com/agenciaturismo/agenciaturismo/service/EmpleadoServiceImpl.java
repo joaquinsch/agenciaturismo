@@ -3,6 +3,7 @@ package com.agenciaturismo.agenciaturismo.service;
 import com.agenciaturismo.agenciaturismo.dto.EmpleadoDTO;
 import com.agenciaturismo.agenciaturismo.exceptions.EmpleadoInexistenteError;
 import com.agenciaturismo.agenciaturismo.model.Empleado;
+import com.agenciaturismo.agenciaturismo.model.Usuario;
 import com.agenciaturismo.agenciaturismo.repository.EmpleadoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,7 @@ public class EmpleadoServiceImpl implements EmpleadoService {
                 .email(empleadoDTO.getEmail())
                 .cargo(empleadoDTO.getCargo())
                 .sueldo(empleadoDTO.getSueldo())
+                .estado(Usuario.Estado.ACTIVO)
                 .build();
 
         return empleadoRepository.save(guardado);
@@ -39,9 +41,10 @@ public class EmpleadoServiceImpl implements EmpleadoService {
     }
 
     @Override
-    public void eliminarEmpleado(Long id_cliente) {
-        buscarEmpleado(id_cliente);
-        empleadoRepository.deleteById(id_cliente);
+    public Empleado eliminarEmpleado(Long id_cliente) {
+        Empleado buscado = buscarEmpleado(id_cliente);
+        buscado.setEstado(Usuario.Estado.ELIMINADO);
+        return empleadoRepository.save(buscado);
     }
 
     @Override
@@ -59,6 +62,7 @@ public class EmpleadoServiceImpl implements EmpleadoService {
                 .email(empleado.getEmail())
                 .cargo(empleado.getCargo())
                 .sueldo(empleado.getSueldo())
+                .estado(Usuario.Estado.ACTIVO)
                 .build();
         return empleadoRepository.save(editado);
     }

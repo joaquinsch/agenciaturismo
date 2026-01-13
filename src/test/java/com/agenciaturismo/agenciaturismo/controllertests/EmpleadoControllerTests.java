@@ -5,6 +5,7 @@ import com.agenciaturismo.agenciaturismo.controller.EmpleadoController;
 import com.agenciaturismo.agenciaturismo.dto.EmpleadoDTO;
 import com.agenciaturismo.agenciaturismo.exceptions.EmpleadoInexistenteError;
 import com.agenciaturismo.agenciaturismo.model.Empleado;
+import com.agenciaturismo.agenciaturismo.model.Usuario;
 import com.agenciaturismo.agenciaturismo.model.Venta;
 import com.agenciaturismo.agenciaturismo.service.EmpleadoServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -47,6 +48,7 @@ public class EmpleadoControllerTests {
             .cargo("tecnico de soporte")
             .sueldo(900000.0)
             .ventas(null)
+            .estado(Usuario.Estado.ACTIVO)
             .build();
 
     Venta venta = Venta.builder()
@@ -81,7 +83,8 @@ public class EmpleadoControllerTests {
                         .content(objectMapper.writeValueAsString(empleadoDTO))
                 ).andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id_empleado").value(1L))
-                .andExpect(jsonPath("$.nombre").value("jose"));
+                .andExpect(jsonPath("$.nombre").value("jose"))
+                .andExpect(jsonPath("$.estado").value("ACTIVO"));
     }
 
     @Test

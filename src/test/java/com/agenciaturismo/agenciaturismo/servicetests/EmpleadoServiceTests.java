@@ -77,9 +77,12 @@ public class EmpleadoServiceTests {
     public void deberiaEliminarElEmpleado(){
         Mockito.when(empleadoRepository.findById(1L))
                 .thenReturn(Optional.ofNullable(empleado));
-        empleadoService.eliminarEmpleado(empleado.getId_empleado());
+        Mockito.when(empleadoRepository.save(Mockito.any(Empleado.class)))
+                        .thenReturn(empleado);
 
-        Mockito.verify(empleadoRepository).deleteById(1L);
+        Empleado eliminado = empleadoService.eliminarEmpleado(empleado.getId_empleado());
+
+        Mockito.verify(empleadoRepository).save(eliminado);
     }
 
     @Test

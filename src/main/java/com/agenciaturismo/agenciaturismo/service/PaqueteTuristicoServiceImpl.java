@@ -65,6 +65,7 @@ public class PaqueteTuristicoServiceImpl implements PaqueteTuristicoService {
                 .lista_servicios_incluidos(servicios_incluidos)
                 .costo_paquete(paqueteEdicionDTO.getCosto_paquete())
                 .tipo_producto(ProductoTuristico.TipoProducto.PAQUETE)
+                .estado(ProductoTuristico.Estado.ACTIVO)
                 .build();
         validarCostoDePaquete(paqueteEditado);
 

@@ -30,7 +30,7 @@ public class VentaController {
 
     @DeleteMapping("/eliminar/{num_venta}")
     public ResponseEntity<Venta> eliminarVenta(@PathVariable Long num_venta) {
-        Venta buscada = ventaService.buscarVenta(num_venta);
+        ventaService.eliminarVenta(num_venta);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
