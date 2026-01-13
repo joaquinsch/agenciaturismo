@@ -2,6 +2,7 @@ package com.agenciaturismo.agenciaturismo.service;
 
 import com.agenciaturismo.agenciaturismo.exceptions.ClienteInexistenteError;
 import com.agenciaturismo.agenciaturismo.model.Cliente;
+import com.agenciaturismo.agenciaturismo.model.Usuario;
 import com.agenciaturismo.agenciaturismo.repository.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public Cliente guardarCliente(Cliente cliente) {
+        cliente.setEstado(Usuario.Estado.ACTIVO);
         return clienteRepository.save(cliente);
     }
 
@@ -26,9 +28,10 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
-    public void eliminarCliente(Long id_cliente) {
-        buscarCliente(id_cliente);
-        this.clienteRepository.deleteById(id_cliente);
+    public Cliente eliminarCliente(Long id_cliente) {
+        Cliente buscado = buscarCliente(id_cliente);
+        buscado.setEstado(Usuario.Estado.ELIMINADO);
+        return clienteRepository.save(buscado);
     }
 
     @Override

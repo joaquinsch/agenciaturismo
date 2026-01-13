@@ -59,9 +59,12 @@ public class ClienteServiceTests {
     public void deberiaEliminarElCliente(){
         Mockito.when(clienteRepository.findById(1L))
                 .thenReturn(Optional.ofNullable(cli));
-        clienteService.eliminarCliente(1L);
+        Mockito.when(clienteRepository.save(Mockito.any(Cliente.class)))
+                .thenReturn(cli);
+        Cliente eliminado = clienteService.eliminarCliente(cli.getId_cliente());
 
-        Mockito.verify(clienteRepository).deleteById(1L);
+        Mockito.verify(clienteRepository).save(eliminado);
+        Assertions.assertEquals(Cliente.Estado.ELIMINADO, eliminado.getEstado());
     }
 
     @Test

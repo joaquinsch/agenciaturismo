@@ -4,6 +4,7 @@ package com.agenciaturismo.agenciaturismo.controllertests;
 import com.agenciaturismo.agenciaturismo.controller.ClienteController;
 import com.agenciaturismo.agenciaturismo.exceptions.ClienteInexistenteError;
 import com.agenciaturismo.agenciaturismo.model.Cliente;
+import com.agenciaturismo.agenciaturismo.model.Usuario;
 import com.agenciaturismo.agenciaturismo.service.ClienteServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -39,6 +40,7 @@ public class ClienteControllerTests {
             .celular("1155332211")
             .email("asd@gmail.com")
             .nacionalidad("peruano")
+            .estado(Usuario.Estado.ACTIVO)
             .build();
 
     @Test
@@ -52,7 +54,8 @@ public class ClienteControllerTests {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id_cliente").value(1L))
                 .andExpect(jsonPath("$.nombre").value("carlos"))
-                .andExpect(jsonPath("$.email").value("asd@gmail.com"));
+                .andExpect(jsonPath("$.email").value("asd@gmail.com"))
+                .andExpect(jsonPath("$.estado").value("ACTIVO"));
     }
 
     @Test
