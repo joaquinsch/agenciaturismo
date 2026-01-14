@@ -357,4 +357,43 @@ public class PaqueteTuristicoServiceTests {
                 excepcion.getMessage());
     }
 
+    @Test
+    public void deberiaDarErrorSiIntentaGuardarPaqueteConServiciosEliminados() {
+        ServicioTuristico servicio1 = ServicioTuristico.builder()
+                .codigo_producto(1L)
+                .nombre("Viaje por colectivo")
+                .costo_servicio(100.0)
+                .fecha_servicio(LocalDate.of(2026,2,1))
+                .descripcion_breve("viaje largo")
+                .destino_servicio("salta")
+                .estado(ProductoTuristico.Estado.ACTIVO)
+                .build();
+
+        ServicioTuristico servicio2 = ServicioTuristico.builder()
+                .codigo_producto(2L)
+                .nombre("hotel por noche")
+                .costo_servicio(50.0)
+                .fecha_servicio(LocalDate.of(2026,1,17))
+                .descripcion_breve("cinco estrellas")
+                .destino_servicio("caribe")
+                .estado(ProductoTuristico.Estado.ELIMINADO)
+                .build();
+        PaqueteEdicionDTO paqueteAEditar = PaqueteEdicionDTO.builder()
+                .codigo_producto(1L)
+                .costo_paquete(135.0)
+                .lista_ids_servicios_incluidos(List.of(servicio1.getCodigo_producto(), servicio2.getCodigo_producto()))
+                .build();
+        PaqueteDTO paqueteDTO = PaqueteDTO.builder()
+                .costo_paquete(135.0)
+                .lista_ids_servicios_incluidos(List.of(1L, 2L))
+                .build();
+        Mockito.when(this.servicioRepository.findAllById(Mockito.anyIterable()))
+                .thenReturn(List.of(servicio1, servicio2));
+
+        PaqueteInvalidoError excepcion = Assertions.assertThrows(PaqueteInvalidoError.class,
+                () -> paqueteTuristicoService.guardarPaquete(paqueteDTO));
+        Assertions.assertEquals("El paquete contiene servicios eliminados",
+                excepcion.getMessage());
+    }
+
 }
