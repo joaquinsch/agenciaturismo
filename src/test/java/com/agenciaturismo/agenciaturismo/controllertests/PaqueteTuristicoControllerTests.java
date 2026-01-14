@@ -3,6 +3,7 @@ import com.agenciaturismo.agenciaturismo.controller.PaqueteTuristicoController;
 import com.agenciaturismo.agenciaturismo.dto.PaqueteDTO;
 import com.agenciaturismo.agenciaturismo.dto.PaqueteEdicionDTO;
 import com.agenciaturismo.agenciaturismo.exceptions.PaqueteInexistenteError;
+import com.agenciaturismo.agenciaturismo.exceptions.PaqueteInvalidoError;
 import com.agenciaturismo.agenciaturismo.model.PaqueteTuristico;
 import com.agenciaturismo.agenciaturismo.model.ServicioTuristico;
 import com.agenciaturismo.agenciaturismo.service.PaqueteTuristicoServiceImpl;
@@ -133,5 +134,16 @@ public class PaqueteTuristicoControllerTests {
                 .andExpect(jsonPath("$.codigo_producto").value(1L))
                 .andExpect(jsonPath("$.costo_paquete").value(500.0))
                 .andExpect(jsonPath("$.lista_servicios_incluidos").isEmpty());
+    }
+
+    @Test
+    public void deberiaDarErrorSiIntentaEditarUnPaquetePoniendoServiciosEliminados() throws Exception{
+        Mockito.when(paqueteTuristicoService.editarPaquete(Mockito.any(PaqueteEdicionDTO.class)))
+                .thenThrow(new PaqueteInvalidoError("El paquete contiene servicios eliminados"));
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/paquetes/editar")
+                .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(paquete)) // tiene que ir uno cualquiera
+        ).andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.mensaje").value("El paquete contiene servicios eliminados"));
     }
 }

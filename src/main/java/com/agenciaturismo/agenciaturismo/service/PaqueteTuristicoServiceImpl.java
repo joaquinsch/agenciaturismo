@@ -59,6 +59,7 @@ public class PaqueteTuristicoServiceImpl implements PaqueteTuristicoService {
         PaqueteTuristico buscado = buscarPaquete(paqueteEdicionDTO.getCodigo_producto());
         List<ServicioTuristico> servicios_incluidos = servicioRepository.findAllById(paqueteEdicionDTO.getLista_ids_servicios_incluidos());
         validarServiciosDelPaquete(paqueteEdicionDTO.getLista_ids_servicios_incluidos(), servicios_incluidos);
+        validarServiciosActivos(servicios_incluidos);
 
         PaqueteTuristico paqueteEditado = PaqueteTuristico.builder()
                 .codigo_producto(buscado.getCodigo_producto())
@@ -84,5 +85,12 @@ public class PaqueteTuristicoServiceImpl implements PaqueteTuristicoService {
     private void validarCostoDePaquete(PaqueteTuristico paqueteTuristico) {
         if (!paqueteTuristico.validarCostoDePaquete())
             throw new CostoInvalidoError("El costo del paquete no coincide con la suma de los servicios menos 10%");
+    }
+    private void validarServiciosActivos(List<ServicioTuristico> servicios) {
+        for (ServicioTuristico servicio : servicios) {
+            if (servicio.getEstado().equals(ProductoTuristico.Estado.ELIMINADO)) {
+                throw new PaqueteInvalidoError("El paquete contiene servicios eliminados");
+            }
+        }
     }
 }
