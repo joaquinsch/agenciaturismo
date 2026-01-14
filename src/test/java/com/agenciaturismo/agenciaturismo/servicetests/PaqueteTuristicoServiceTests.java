@@ -76,6 +76,7 @@ public class PaqueteTuristicoServiceTests {
             .lista_servicios_incluidos(lista)
             .tipo_producto(ProductoTuristico.TipoProducto.PAQUETE)
             .costo_paquete(135.0)
+            .estado(ProductoTuristico.Estado.ACTIVO)
             .build();
     PaqueteDTO paqueteDTO = PaqueteDTO.builder()
             .lista_ids_servicios_incluidos(List.of(1L, 2L))
@@ -394,6 +395,30 @@ public class PaqueteTuristicoServiceTests {
                 () -> paqueteTuristicoService.guardarPaquete(paqueteDTO));
         Assertions.assertEquals("El paquete contiene servicios eliminados",
                 excepcion.getMessage());
+    }
+
+
+    @Test
+    public void deberiaDarErrorSiIntentaEditarseUnPaqueteEliminado() {
+        PaqueteTuristico paqueteEliminado = PaqueteTuristico.builder()
+                .codigo_producto(1L)
+                .lista_servicios_incluidos(lista)
+                .tipo_producto(ProductoTuristico.TipoProducto.PAQUETE)
+                .costo_paquete(135.0)
+                .estado(ProductoTuristico.Estado.ELIMINADO)
+                .build();
+        Mockito.when(this.paqueteRepository.findById(paquete.getCodigo_producto()))
+                .thenReturn(Optional.of(paqueteEliminado));
+        PaqueteEdicionDTO paqueteEdicionDTO = PaqueteEdicionDTO.builder()
+                .codigo_producto(1L)
+                .costo_paquete(1000.0)
+                .lista_ids_servicios_incluidos(List.of(1L, 2L))
+                .build();
+        PaqueteInvalidoError excepcion = Assertions.assertThrows(PaqueteInvalidoError.class,
+                () -> paqueteTuristicoService.editarPaquete(paqueteEdicionDTO)
+        );
+        Assertions.assertEquals("El paquete fue eliminado", excepcion.getMessage());
+
     }
 
 }
