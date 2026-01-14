@@ -90,8 +90,12 @@ public class VentaServiceImpl implements VentaService {
     }
 
     private ProductoTuristico validarProducto(Long codigo_producto) {
-        return productoRepository.findById(codigo_producto)
+        ProductoTuristico producto = productoRepository.findById(codigo_producto)
                 .orElseThrow(() -> new ProductoInexistenteError("El producto ingresado no existe"));
+        if (producto.getEstado() == ProductoTuristico.Estado.ELIMINADO) {
+            throw new ProductoInexistenteError("El producto elegido fue eliminado");
+        }
+        return producto;
     }
 
     private void validarFecha(VentaDTO ventaDTO) {

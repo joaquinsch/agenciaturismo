@@ -245,4 +245,43 @@ public class VentaServiceTests {
         );
         Assertions.assertEquals("La fecha ingresada es inválida", excepcion.getMessage());
     }
+
+    @Test
+    public void deberiaDarErrorSiIntentaGuardarLaVentaDeUnProductoEliminado() {
+        proveedorDeFechaFija = new ProveedorDeFechaFija(LocalDate.of(2026, 1, 13));
+        VentaServiceImpl ventaServiceConProveedor = new VentaServiceImpl(ventaRepository,
+                clienteRepository,
+                empleadoRepository,
+                productoRepository,
+                proveedorDeFechaFija);
+        Mockito.when(this.clienteRepository.findById(Mockito.any(Long.class)))
+                .thenReturn(Optional.ofNullable(cliente));
+        Mockito.when(this.empleadoRepository.findById(Mockito.any(Long.class)))
+                .thenReturn(Optional.ofNullable(empleado));
+
+        ServicioTuristico servicioEliminado = ServicioTuristico.builder()
+                .codigo_producto(5L)
+                .nombre("Viaje a Japon")
+                .descripcion_breve("el mejor")
+                .fecha_servicio(LocalDate.of(2013,1,11))
+                .costo_servicio(100.0)
+                .estado(ProductoTuristico.Estado.ELIMINADO)
+                .build();
+        Mockito.when(this.productoRepository.findById(Mockito.any(Long.class)))
+                .thenReturn(Optional.ofNullable(servicioEliminado));
+
+        VentaDTO ventaConServicioEliminado = VentaDTO.builder()
+                .fecha_venta(LocalDate.of(2026, 1, 13))
+                .medio_pago("tarjeta")
+                .id_cliente(1L)
+                .id_empleado(1L)
+                .codigo_producto(5L)
+                .build();
+        ProductoInexistenteError excepcion = Assertions.assertThrows(ProductoInexistenteError.class,
+                () -> ventaServiceConProveedor.guardarVenta(ventaConServicioEliminado)
+        );
+
+        Assertions.assertEquals("El producto elegido fue eliminado", excepcion.getMessage());
+
+    }
 }
