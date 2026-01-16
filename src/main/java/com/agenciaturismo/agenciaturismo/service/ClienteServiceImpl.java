@@ -1,6 +1,7 @@
 package com.agenciaturismo.agenciaturismo.service;
 
 import com.agenciaturismo.agenciaturismo.exceptions.ClienteInexistenteError;
+import com.agenciaturismo.agenciaturismo.exceptions.EdicionInvalidaError;
 import com.agenciaturismo.agenciaturismo.model.Cliente;
 import com.agenciaturismo.agenciaturismo.model.Usuario;
 import com.agenciaturismo.agenciaturismo.repository.ClienteRepository;
@@ -37,6 +38,7 @@ public class ClienteServiceImpl implements ClienteService {
     @Override
     public Cliente editarCliente(Cliente cliente) {
         Cliente buscado = buscarCliente(cliente.getId_cliente());
+        validarCliente(cliente.getId_cliente());
         Cliente editado = Cliente.builder()
                 .id_cliente(cliente.getId_cliente())
                 .nombre(cliente.getNombre())
@@ -50,5 +52,14 @@ public class ClienteServiceImpl implements ClienteService {
                 .estado(Usuario.Estado.ACTIVO)
                 .build();
         return clienteRepository.save(editado);
+    }
+
+    private Cliente validarCliente(Long id_cliente) {
+        Cliente cliente = clienteRepository.findById(id_cliente)
+                .orElseThrow(() -> new ClienteInexistenteError("El cliente ingresado no existe"));
+        if (cliente.getEstado() == Usuario.Estado.ELIMINADO) {
+            throw new EdicionInvalidaError("El cliente elegido fue eliminado");
+        }
+        return cliente;
     }
 }
