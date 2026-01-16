@@ -1,6 +1,7 @@
 package com.agenciaturismo.agenciaturismo.service;
 
 import com.agenciaturismo.agenciaturismo.dto.EmpleadoDTO;
+import com.agenciaturismo.agenciaturismo.exceptions.EdicionInvalidaError;
 import com.agenciaturismo.agenciaturismo.exceptions.EmpleadoInexistenteError;
 import com.agenciaturismo.agenciaturismo.model.Empleado;
 import com.agenciaturismo.agenciaturismo.model.Usuario;
@@ -49,7 +50,8 @@ public class EmpleadoServiceImpl implements EmpleadoService {
 
     @Override
     public Empleado editarEmpleado(Empleado empleado) {
-        buscarEmpleado(empleado.getId_empleado());
+        Empleado buscado = buscarEmpleado(empleado.getId_empleado());
+        validarEmpleado(empleado.getId_empleado());
         Empleado editado = Empleado.builder()
                 .id_empleado(empleado.getId_empleado())
                 .nombre(empleado.getNombre())
@@ -66,4 +68,14 @@ public class EmpleadoServiceImpl implements EmpleadoService {
                 .build();
         return empleadoRepository.save(editado);
     }
+
+    private Empleado validarEmpleado(Long id_empleado) {
+        Empleado empleado = empleadoRepository.findById(id_empleado)
+                .orElseThrow(() -> new EmpleadoInexistenteError("El empleado ingresado no existe"));
+        if (empleado.getEstado() == Usuario.Estado.ELIMINADO) {
+            throw new EdicionInvalidaError("El empleado elegido fue eliminado");
+        }
+        return empleado;
+    }
+
 }

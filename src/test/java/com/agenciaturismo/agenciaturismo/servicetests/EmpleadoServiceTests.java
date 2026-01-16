@@ -1,7 +1,9 @@
 package com.agenciaturismo.agenciaturismo.servicetests;
 
 import com.agenciaturismo.agenciaturismo.dto.EmpleadoDTO;
+import com.agenciaturismo.agenciaturismo.exceptions.EdicionInvalidaError;
 import com.agenciaturismo.agenciaturismo.model.Empleado;
+import com.agenciaturismo.agenciaturismo.model.Usuario;
 import com.agenciaturismo.agenciaturismo.repository.EmpleadoRepository;
 import com.agenciaturismo.agenciaturismo.service.EmpleadoServiceImpl;
 import org.junit.jupiter.api.Assertions;
@@ -53,6 +55,22 @@ public class EmpleadoServiceTests {
             .email("asd@gmail.com")
             .cargo("tecnico de soporte")
             .sueldo(900000.0)
+            .build();
+
+    Empleado empleadoEliminado = Empleado.builder()
+            .id_empleado(2L)
+            .nombre("agustin")
+            .apellido("perez")
+            .direccion("calle falsa 125")
+            .dni("12345556")
+            .fecha_nac(LocalDate.of(1998, 8, 20))
+            .nacionalidad("argentino")
+            .celular("1144445558")
+            .email("agusrossi@gmail.com")
+            .cargo("Vendedor")
+            .sueldo(1000.0)
+            .estado(Usuario.Estado.ELIMINADO)
+            .ventas(new ArrayList<>())
             .build();
 
     @Test
@@ -123,6 +141,16 @@ public class EmpleadoServiceTests {
         Assertions.assertEquals("vendedor de paquetes", editado.getCargo());
         Assertions.assertEquals("BOLIVIANO", editado.getNacionalidad());
         Assertions.assertEquals("calle falsa 125", editado.getDireccion());
+    }
+
+    @Test
+    public void deberiaDarErrorSiIntentaEditarEmpleadoEliminado() {
+        Mockito.when(empleadoRepository.findById(empleadoEliminado.getId_empleado()))
+                .thenReturn(Optional.of(empleadoEliminado));
+        EdicionInvalidaError excepcion = Assertions.assertThrows(EdicionInvalidaError.class,
+                () -> empleadoService.editarEmpleado(empleadoEliminado)
+        );
+        Assertions.assertEquals("El empleado elegido fue eliminado", excepcion.getMessage());
     }
 
 
