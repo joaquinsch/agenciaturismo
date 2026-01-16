@@ -80,13 +80,21 @@ public class VentaServiceImpl implements VentaService {
     }
 
     private Cliente validarCliente(Long id_cliente) {
-        return clienteRepository.findById(id_cliente)
+        Cliente cliente = clienteRepository.findById(id_cliente)
                 .orElseThrow(() -> new ClienteInexistenteError("El cliente ingresado no existe"));
+        if (cliente.getEstado() == Usuario.Estado.ELIMINADO) {
+            throw new ClienteInexistenteError("El cliente elegido fue eliminado");
+        }
+        return cliente;
     }
 
     private Empleado validarEmpleado(Long id_empleado) {
-        return empleadoRepository.findById(id_empleado)
+        Empleado empleado = empleadoRepository.findById(id_empleado)
                 .orElseThrow(() -> new EmpleadoInexistenteError("El empleado ingresado no existe"));
+        if (empleado.getEstado() == Usuario.Estado.ELIMINADO) {
+            throw new EmpleadoInexistenteError("El empleado elegido fue eliminado");
+        }
+        return empleado;
     }
 
     private ProductoTuristico validarProducto(Long codigo_producto) {

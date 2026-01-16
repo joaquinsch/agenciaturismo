@@ -111,6 +111,21 @@ public class VentaServiceTests {
             .codigo_producto(1L)
             .build();
 
+    Empleado empleadoEliminado = Empleado.builder()
+            .id_empleado(2L)
+            .nombre("agustin")
+            .apellido("perez")
+            .direccion("calle falsa 125")
+            .dni("12345556")
+            .fecha_nac(LocalDate.of(1998, 8, 20))
+            .nacionalidad("argentino")
+            .celular("1144445558")
+            .email("agusrossi@gmail.com")
+            .cargo("Vendedor")
+            .sueldo(1000.0)
+            .estado(Usuario.Estado.ELIMINADO)
+            .ventas(new ArrayList<>())
+            .build();
     @Test
     public void deberiaGuardarUnaVenta(){
         proveedorDeFechaFija = new ProveedorDeFechaFija(LocalDate.of(2026, 1, 1));
@@ -325,5 +340,24 @@ public class VentaServiceTests {
 
         Assertions.assertEquals("El producto elegido fue eliminado", excepcion.getMessage());
 
+    }
+
+    @Test
+    public void deberiaDarErrorSiIntentaGuardarLaVentaConUnEmpleadoEliminado() {
+        Mockito.when(this.empleadoRepository.findById(Mockito.any(Long.class)))
+                .thenReturn(Optional.ofNullable(empleadoEliminado));
+        Mockito.when(this.clienteRepository.findById(Mockito.any(Long.class)))
+                .thenReturn(Optional.ofNullable(cliente));
+        VentaDTO ventaDTO = VentaDTO.builder()
+                .fecha_venta(LocalDate.of(2026, 1, 2))
+                .medio_pago("tarjeta")
+                .id_cliente(1L)
+                .id_empleado(empleadoEliminado.getId_empleado())
+                .codigo_producto(1L)
+                .build();
+        EmpleadoInexistenteError excepcion = Assertions.assertThrows(EmpleadoInexistenteError.class,
+                () -> ventaService.guardarVenta(ventaDTO)
+        );
+        Assertions.assertEquals("El empleado elegido fue eliminado", excepcion.getMessage());
     }
 }
