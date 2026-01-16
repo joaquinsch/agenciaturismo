@@ -51,7 +51,7 @@ public class EmpleadoServiceImpl implements EmpleadoService {
     public Empleado editarEmpleado(Empleado empleado) {
         buscarEmpleado(empleado.getId_empleado());
         Empleado editado = Empleado.builder()
-                .id_empleado(1L)
+                .id_empleado(empleado.getId_empleado())
                 .nombre(empleado.getNombre())
                 .apellido(empleado.getApellido())
                 .direccion(empleado.getDireccion())
