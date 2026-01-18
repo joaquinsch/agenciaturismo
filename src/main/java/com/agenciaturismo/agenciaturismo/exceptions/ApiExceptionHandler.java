@@ -2,6 +2,7 @@ package com.agenciaturismo.agenciaturismo.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -65,6 +66,20 @@ public class ApiExceptionHandler {
     @ExceptionHandler(value = {EdicionInvalidaError.class})
     public ResponseEntity<ApiError> handleEdicionInvalidaError(EdicionInvalidaError e) {
         ApiError apiError = new ApiError(e.getMessage(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = {MethodArgumentNotValidException.class})
+    public ResponseEntity<ApiError> handleMethodArgumentNotValidExceptionError(MethodArgumentNotValidException e) {
+        String mensaje = e.getBindingResult().getFieldErrors().get(0).getDefaultMessage();
+        // otra forma de obtener el mensaje que tira el @Email
+        /*String mensaje = e.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(FieldError::getDefaultMessage)
+                .findFirst()
+                .orElse("Datos inválidos");*/
+        ApiError apiError = new ApiError(mensaje, HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
 }

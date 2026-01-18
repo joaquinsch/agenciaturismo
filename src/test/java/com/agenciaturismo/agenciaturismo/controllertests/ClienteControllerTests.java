@@ -133,4 +133,24 @@ public class ClienteControllerTests {
                 .andExpect(jsonPath("$.apellido")
                         .value("GONZALEZ"));
     }
+
+    @Test
+    public void deberiaDarErrorSiIntentaGuardarClienteConMailInvalido() throws Exception {
+        Cliente clienteInvalido = Cliente.builder()
+                .id_cliente(3L)
+                .nombre("carlos")
+                .apellido("gomez")
+                .dni("1122223333")
+                .celular("1155332211")
+                .email("asdgmail.com") // mail mal
+                .nacionalidad("peruano")
+                .build();
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/clientes/guardar")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(clienteInvalido))
+                )
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.mensaje").value("El email ingresado es inválido"));
+    }
 }

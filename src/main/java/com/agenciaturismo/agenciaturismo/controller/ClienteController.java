@@ -2,6 +2,7 @@ package com.agenciaturismo.agenciaturismo.controller;
 
 import com.agenciaturismo.agenciaturismo.model.Cliente;
 import com.agenciaturismo.agenciaturismo.service.ClienteService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +16,7 @@ public class ClienteController {
     private ClienteService clienteService;
 
     @PostMapping("/guardar")
-    public ResponseEntity<Cliente> guardarCliente(@RequestBody Cliente cliente) {
+    public ResponseEntity<Cliente> guardarCliente(@Valid @RequestBody Cliente cliente) {
         Cliente guardado = clienteService.guardarCliente(cliente);
         return new ResponseEntity<>(guardado, HttpStatus.CREATED);
     }

@@ -3,6 +3,7 @@ package com.agenciaturismo.agenciaturismo.model;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.MappedSuperclass;
+import jakarta.validation.constraints.Email;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -23,6 +24,7 @@ public abstract class Usuario {
     private LocalDate fecha_nac;
     private String nacionalidad;
     private String celular;
+    @Email(message = "El email ingresado es inválido")
     private String email;
     @Enumerated(EnumType.STRING)
     private Estado estado;
