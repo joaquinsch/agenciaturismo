@@ -34,7 +34,7 @@ public class ClienteController {
     }
 
     @PutMapping("/editar")
-    public ResponseEntity<Cliente> editarCliente(@RequestBody Cliente cliente) {
+    public ResponseEntity<Cliente> editarCliente(@Valid @RequestBody Cliente cliente) {
         Cliente buscado = clienteService.editarCliente(cliente);
         return new ResponseEntity<>(buscado, HttpStatus.OK);
     }
