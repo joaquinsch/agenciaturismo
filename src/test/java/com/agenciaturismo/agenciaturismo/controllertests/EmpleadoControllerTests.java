@@ -64,7 +64,7 @@ public class EmpleadoControllerTests {
             .nombre("jose")
             .apellido("gomez")
             .direccion("calle falsa 123")
-            .dni("1122223333")
+            .dni("22223333")
             .fecha_nac(LocalDate.of(1999, 9, 26))
             .nacionalidad("argentino")
             .celular("1112341234")
@@ -120,15 +120,15 @@ public class EmpleadoControllerTests {
 
     @Test
     public void deberiaEditarElEmpleado() throws Exception {
-        Empleado clienteAEditar = Empleado.builder() //datos q se pasan por parametro
+        Empleado empleadoAEditar = Empleado.builder() //datos q se pasan por parametro
                 .id_empleado(1L)
                 .nombre("jose")
                 .apellido("gomez")
                 .direccion("calle falsa 125")
-                .dni("1122225555")
+                .dni("22225555")
                 .fecha_nac(LocalDate.of(1999, 9, 26))
                 .nacionalidad("BOLIVIANO")
-                .celular("1112341234")
+                .celular("+54 11 12341234")
                 .email("asd@gmail.com")
                 .cargo("vendedor de paquetes")
                 .sueldo(900000.0)
@@ -153,7 +153,7 @@ public class EmpleadoControllerTests {
 
         mockMvc.perform(MockMvcRequestBuilders.put("/api/empleados/editar")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(clienteAEditar))
+                        .content(objectMapper.writeValueAsString(empleadoAEditar))
                 ).andExpect(status().isOk())
                 .andExpect(jsonPath("$.cargo")
                         .value("vendedor de paquetes"));

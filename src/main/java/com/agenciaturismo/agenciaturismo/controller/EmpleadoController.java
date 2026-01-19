@@ -4,6 +4,7 @@ package com.agenciaturismo.agenciaturismo.controller;
 import com.agenciaturismo.agenciaturismo.dto.EmpleadoDTO;
 import com.agenciaturismo.agenciaturismo.model.Empleado;
 import com.agenciaturismo.agenciaturismo.service.EmpleadoService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,7 @@ public class EmpleadoController {
     private EmpleadoService empleadoService;
 
     @PostMapping("/guardar")
-    public ResponseEntity<Empleado> guardarEmpleado(@RequestBody EmpleadoDTO empleadoDTO) {
+    public ResponseEntity<Empleado> guardarEmpleado(@Valid @RequestBody EmpleadoDTO empleadoDTO) {
         Empleado guardado = empleadoService.guardarEmpleado(empleadoDTO);
         return new ResponseEntity<>(guardado, HttpStatus.CREATED);
     }
@@ -34,7 +35,7 @@ public class EmpleadoController {
     }
 
     @PutMapping("/editar")
-    public ResponseEntity<Empleado> editarEmpleado(@RequestBody Empleado empleado) {
+    public ResponseEntity<Empleado> editarEmpleado(@Valid @RequestBody Empleado empleado) {
         Empleado editado = empleadoService.editarEmpleado(empleado);
         return new ResponseEntity<>(editado, HttpStatus.OK);
     }
