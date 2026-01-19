@@ -158,4 +158,25 @@ public class VentaRepositoryTests {
         Assertions.assertEquals(0, ventaRepository.findAll().size());
     }
 
+    @Test
+    void deberiaGenerarIdAutomaticamenteConIdentity() {
+        Cliente cli = Cliente.builder()
+                .nombre("carlitos")
+                .apellido("perez")
+                .direccion("asd 123")
+                .dni("12341234")
+                .fecha_nac(LocalDate.of(1990,1,26))
+                .nacionalidad("argentino")
+                .celular("12341234")
+                .email("asd@gmail.com")
+                .build();
+
+        Assertions.assertNull(cli.getId_cliente());
+
+        Cliente guardado = clienteRepository.save(cli);
+
+        Assertions.assertNotNull(guardado.getId_cliente());
+        Assertions.assertTrue(guardado.getId_cliente() > 0);
+    }
+
 }
