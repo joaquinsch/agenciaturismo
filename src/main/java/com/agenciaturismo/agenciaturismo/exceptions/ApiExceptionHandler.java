@@ -2,6 +2,7 @@ package com.agenciaturismo.agenciaturismo.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -82,4 +83,15 @@ public class ApiExceptionHandler {
         ApiError apiError = new ApiError(mensaje, HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ApiError> handleHttpMessageNotReadableError(
+            HttpMessageNotReadableException e) {
+
+        String mensaje = "La fecha de nacimiento ingresada es inválida. Use: yyyy-MM-dd (ejemplo: 1999-09-29)";
+
+        ApiError apiError = new ApiError(mensaje, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+    }
+
 }

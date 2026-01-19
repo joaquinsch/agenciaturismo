@@ -17,6 +17,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 
+import java.time.LocalDate;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -36,10 +38,12 @@ public class ClienteControllerTests {
             .id_cliente(1L)
             .nombre("carlos")
             .apellido("gomez")
-            .dni("1122223333")
+            .dni("11223333")
+            .fecha_nac(LocalDate.of(1999, 9, 29))
             .celular("1155332211")
             .email("asd@gmail.com")
             .nacionalidad("peruano")
+            .direccion("calle 12345")
             .estado(Usuario.Estado.ACTIVO)
             .build();
 
@@ -107,8 +111,10 @@ public class ClienteControllerTests {
                 .id_cliente(1L)
                 .nombre("PEDRO")
                 .apellido("GONZALEZ")
-                .dni("1122223333")
+                .dni("22223333")
+                .fecha_nac(LocalDate.of(2021, 9, 25))
                 .celular("1155332211")
+                .direccion("calle 123")
                 .email("asd@gmail.com")
                 .nacionalidad("peruano")
                 .build();
@@ -116,7 +122,8 @@ public class ClienteControllerTests {
                 .id_cliente(1L)
                 .nombre("PEDRO")
                 .apellido("GONZALEZ")
-                .dni("1122223333")
+                .dni("22223333")
+                .fecha_nac(LocalDate.of(2021, 9, 25))
                 .celular("1155332211")
                 .email("asd@gmail.com")
                 .nacionalidad("peruano")
@@ -140,8 +147,10 @@ public class ClienteControllerTests {
                 .id_cliente(3L)
                 .nombre("carlos")
                 .apellido("gomez")
-                .dni("1122223333")
+                .dni("22223333")
                 .celular("1155332211")
+                .direccion("lima 123 - capital")
+                .fecha_nac(LocalDate.of(1999,12,9))
                 .email("asdgmail.com") // mail mal
                 .nacionalidad("peruano")
                 .build();

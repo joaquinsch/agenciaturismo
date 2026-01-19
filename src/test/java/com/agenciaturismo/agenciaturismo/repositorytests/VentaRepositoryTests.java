@@ -29,9 +29,28 @@ public class VentaRepositoryTests {
     ProductoRepository productoRepository;
 
     Cliente cli = Cliente.builder()
+            //.id_cliente(1L)
+            .nombre("carlitos")
+            .apellido("perez")
+            .direccion("asd 123")
+            .dni("12341234")
+            .fecha_nac(LocalDate.of(1990,1,26))
+            .nacionalidad("argentino")
+            .celular("12341234")
+            .email("asd@gmail.com")
             .build();
     Empleado empleado = Empleado.builder()
-
+           // .id_empleado(1L)
+            .cargo("administrativo")
+            .sueldo(1000.0)
+            .nombre("carlitos")
+            .apellido("perez")
+            .direccion("asd 123")
+            .dni("12341234")
+            .fecha_nac(LocalDate.of(1990,1,26))
+            .nacionalidad("argentino")
+            .celular("12341234")
+            .email("asd@gmail.com")
             .build();
     ProductoTuristico prod = ServicioTuristico.builder()
 
@@ -81,9 +100,26 @@ public class VentaRepositoryTests {
         productoRepository.save(prod);
 
         Cliente cli2 = Cliente.builder()
+                .nombre("carlitos")
+                .apellido("perez")
+                .direccion("asd 123")
+                .dni("12341234")
+                .fecha_nac(LocalDate.of(1990,1,26))
+                .nacionalidad("argentino")
+                .celular("12341234")
+                .email("asd@gmail.com")
                 .build();
         Empleado empleado2 = Empleado.builder()
-
+                .cargo("administrativo")
+                .sueldo(1000.0)
+                .nombre("carlitos")
+                .apellido("perez")
+                .direccion("asd 123")
+                .dni("12341234")
+                .fecha_nac(LocalDate.of(1990,1,26))
+                .nacionalidad("argentino")
+                .celular("12341234")
+                .email("asd@gmail.com")
                 .build();
         ProductoTuristico prod2 = ServicioTuristico.builder()
                 .nombre("viaje a peru")
@@ -120,7 +156,6 @@ public class VentaRepositoryTests {
         Assertions.assertEquals(1, ventaRepository.findAll().size());
         ventaRepository.deleteById(1L);
         Assertions.assertEquals(0, ventaRepository.findAll().size());
-
     }
 
 }
