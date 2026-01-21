@@ -88,8 +88,12 @@ public class PaqueteTuristicoServiceImpl implements PaqueteTuristicoService {
         }
     }
     private void validarCostoDePaquete(PaqueteTuristico paqueteTuristico) {
-        if (!paqueteTuristico.validarCostoDePaquete())
+        if (paqueteTuristico.getCosto_paquete() == null) {
+            throw new CostoInvalidoError("Debes ingresar el costo del paquete");
+        }
+        if (!paqueteTuristico.validarCostoDePaquete()) {
             throw new CostoInvalidoError("El costo del paquete no coincide con la suma de los servicios menos 10%");
+        }
     }
     private void validarEstadoDePaquete(PaqueteTuristico paqueteTuristico) {
         if (paqueteTuristico.getEstado() == ProductoTuristico.Estado.ELIMINADO)
