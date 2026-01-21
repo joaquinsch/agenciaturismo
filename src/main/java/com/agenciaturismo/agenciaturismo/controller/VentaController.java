@@ -4,6 +4,7 @@ import com.agenciaturismo.agenciaturismo.dto.VentaDTO;
 import com.agenciaturismo.agenciaturismo.dto.VentaEdicionDTO;
 import com.agenciaturismo.agenciaturismo.model.Venta;
 import com.agenciaturismo.agenciaturismo.service.VentaService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,7 @@ public class VentaController {
     private VentaService ventaService;
 
     @PostMapping("/guardar")
-    public ResponseEntity<Venta> guardarVenta(@RequestBody VentaDTO ventaDTO) {
+    public ResponseEntity<Venta> guardarVenta(@Valid @RequestBody VentaDTO ventaDTO) {
         Venta guardada = ventaService.guardarVenta(ventaDTO);
         return new ResponseEntity<>(guardada, HttpStatus.CREATED);
     }
@@ -35,7 +36,7 @@ public class VentaController {
     }
 
     @PutMapping("/editar")
-    public ResponseEntity<Venta> editarVenta(@RequestBody VentaEdicionDTO ventaEdicionDTO) {
+    public ResponseEntity<Venta> editarVenta(@Valid @RequestBody VentaEdicionDTO ventaEdicionDTO) {
         Venta editada = ventaService.editarVenta(ventaEdicionDTO);
         return new ResponseEntity<>(editada, HttpStatus.OK);
     }
