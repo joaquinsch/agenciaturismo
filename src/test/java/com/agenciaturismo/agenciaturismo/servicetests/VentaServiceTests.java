@@ -3,6 +3,7 @@ package com.agenciaturismo.agenciaturismo.servicetests;
 import com.agenciaturismo.agenciaturismo.ProveedorDeFechaFija;
 import com.agenciaturismo.agenciaturismo.dto.VentaDTO;
 import com.agenciaturismo.agenciaturismo.dto.VentaEdicionDTO;
+import com.agenciaturismo.agenciaturismo.dto.VentaResponseDTO;
 import com.agenciaturismo.agenciaturismo.exceptions.ClienteInexistenteError;
 import com.agenciaturismo.agenciaturismo.exceptions.EmpleadoInexistenteError;
 import com.agenciaturismo.agenciaturismo.exceptions.FechaInvalidaError;
@@ -110,6 +111,14 @@ public class VentaServiceTests {
             .id_empleado(1L)
             .codigo_producto(1L)
             .build();
+    VentaResponseDTO ventaDevuelta = VentaResponseDTO.builder()
+            .num_venta(1L)
+            .fecha_venta(LocalDate.of(2026, 1, 2))
+            .medio_pago("tarjeta")
+            .id_cliente(cliente.getId_cliente())
+            .id_empleado(empleado.getId_empleado())
+            .codigo_producto(servicioVendido.getCodigo_producto())
+            .build();
 
     Empleado empleadoEliminado = Empleado.builder()
             .id_empleado(2L)
@@ -144,12 +153,12 @@ public class VentaServiceTests {
         Mockito.when(this.productoRepository.findById(Mockito.any(Long.class)))
                 .thenReturn(Optional.ofNullable(servicioVendido));
 
-        Venta guardada = ventaServiceConProveedor.guardarVenta(ventaDTO);
+        VentaResponseDTO guardada = ventaServiceConProveedor.guardarVenta(ventaDTO);
         Assertions.assertEquals(1L, guardada.getNum_venta());
         Assertions.assertEquals(LocalDate.of(2026, 1, 2), guardada.getFecha_venta());
-        Assertions.assertEquals(1L, guardada.getCliente().getId_cliente());
-        Assertions.assertEquals(1L, guardada.getEmpleado().getId_empleado());
-        Assertions.assertEquals(1L, guardada.getProducto_turistico().getCodigo_producto());
+        Assertions.assertEquals(1L, guardada.getId_cliente());
+        Assertions.assertEquals(1L, guardada.getId_empleado());
+        Assertions.assertEquals(1L, guardada.getCodigo_producto());
     }
 
     @Test
@@ -219,7 +228,7 @@ public class VentaServiceTests {
                 .id_empleado(1L)
                 .codigo_producto(2L)
                 .build();
-        Venta ventaEditadaDevueltaEsperada = Venta.builder()
+        Venta ventaPersistida = Venta.builder()
                 .num_venta(1L)
                 .fecha_venta(LocalDate.of(2026, 1, 2))
                 .medio_pago("tarjeta")
@@ -227,11 +236,20 @@ public class VentaServiceTests {
                 .empleado(empleado)
                 .producto_turistico(paquete)
                 .build();
+        assert paquete != null;
+        VentaResponseDTO ventaEditadaDevueltaEsperada = VentaResponseDTO.builder()
+                .num_venta(1L)
+                .fecha_venta(LocalDate.of(2026, 1, 2))
+                .medio_pago("tarjeta")
+                .id_cliente(cliente.getId_cliente())
+                .id_empleado(empleado.getId_empleado())
+                .codigo_producto(paquete.getCodigo_producto())
+                .build();
         Mockito.when(ventaRepository.save(Mockito.any(Venta.class)))
-                .thenReturn(ventaEditadaDevueltaEsperada);
-        Venta ventaEditada = ventaService.editarVenta(ventaEdicionDTO);
-        Assertions.assertEquals(ventaEditadaDevueltaEsperada.getProducto_turistico(),
-                ventaEditada.getProducto_turistico());
+                .thenReturn(ventaPersistida);
+        VentaResponseDTO ventaEditada = ventaService.editarVenta(ventaEdicionDTO);
+        Assertions.assertEquals(ventaEditadaDevueltaEsperada.getCodigo_producto(),
+                ventaEditada.getCodigo_producto());
     }
 
     @Test

@@ -2,6 +2,7 @@ package com.agenciaturismo.agenciaturismo.controller;
 
 import com.agenciaturismo.agenciaturismo.dto.VentaDTO;
 import com.agenciaturismo.agenciaturismo.dto.VentaEdicionDTO;
+import com.agenciaturismo.agenciaturismo.dto.VentaResponseDTO;
 import com.agenciaturismo.agenciaturismo.model.Venta;
 import com.agenciaturismo.agenciaturismo.service.VentaService;
 import jakarta.validation.Valid;
@@ -18,8 +19,8 @@ public class VentaController {
     private VentaService ventaService;
 
     @PostMapping("/guardar")
-    public ResponseEntity<Venta> guardarVenta(@Valid @RequestBody VentaDTO ventaDTO) {
-        Venta guardada = ventaService.guardarVenta(ventaDTO);
+    public ResponseEntity<VentaResponseDTO> guardarVenta(@Valid @RequestBody VentaDTO ventaDTO) {
+        VentaResponseDTO guardada = ventaService.guardarVenta(ventaDTO);
         return new ResponseEntity<>(guardada, HttpStatus.CREATED);
     }
 
@@ -36,8 +37,8 @@ public class VentaController {
     }
 
     @PutMapping("/editar")
-    public ResponseEntity<Venta> editarVenta(@Valid @RequestBody VentaEdicionDTO ventaEdicionDTO) {
-        Venta editada = ventaService.editarVenta(ventaEdicionDTO);
+    public ResponseEntity<VentaResponseDTO> editarVenta(@Valid @RequestBody VentaEdicionDTO ventaEdicionDTO) {
+        VentaResponseDTO editada = ventaService.editarVenta(ventaEdicionDTO);
         return new ResponseEntity<>(editada, HttpStatus.OK);
     }
 }

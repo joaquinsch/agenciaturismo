@@ -3,6 +3,7 @@ package com.agenciaturismo.agenciaturismo.controllertests;
 import com.agenciaturismo.agenciaturismo.controller.VentaController;
 import com.agenciaturismo.agenciaturismo.dto.VentaDTO;
 import com.agenciaturismo.agenciaturismo.dto.VentaEdicionDTO;
+import com.agenciaturismo.agenciaturismo.dto.VentaResponseDTO;
 import com.agenciaturismo.agenciaturismo.exceptions.ClienteInexistenteError;
 import com.agenciaturismo.agenciaturismo.exceptions.EmpleadoInexistenteError;
 import com.agenciaturismo.agenciaturismo.exceptions.VentaInexistenteError;
@@ -71,13 +72,21 @@ public class VentaControllerTests {
             .costo_servicio(100.0)
             .build();
 
-    Venta venta = Venta.builder()
+    Venta venta= Venta.builder()
             .num_venta(1L)
             .fecha_venta(LocalDate.of(2026, 1, 2))
             .medio_pago("tarjeta")
             .cliente(cliente)
             .empleado(empleado)
             .producto_turistico(servicioVendido)
+            .build();
+    VentaResponseDTO ventaDevuelta = VentaResponseDTO.builder()
+            .num_venta(1L)
+            .fecha_venta(LocalDate.of(2026, 1, 2))
+            .medio_pago("tarjeta")
+            .id_cliente(cliente.getId_cliente())
+            .id_empleado(empleado.getId_empleado())
+            .codigo_producto(servicioVendido.getCodigo_producto())
             .build();
     VentaDTO ventaDTO = VentaDTO.builder()
             .fecha_venta(LocalDate.of(2026, 1, 2))
@@ -112,13 +121,13 @@ public class VentaControllerTests {
             .lista_servicios_incluidos(lista)
             .costo_paquete(135.0)
             .build();
-    Venta ventaDePaquete = Venta.builder()
+    VentaResponseDTO ventaDePaquete = VentaResponseDTO.builder()
             .num_venta(2L)
             .fecha_venta(LocalDate.of(2026, 2, 1))
             .medio_pago("tarjeta")
-            .cliente(cliente)
-            .empleado(empleado)
-            .producto_turistico(paqueteVendido)
+            .id_cliente(cliente.getId_cliente())
+            .id_empleado(empleado.getId_empleado())
+            .codigo_producto(paqueteVendido.getCodigo_producto())
             .build();
 
     VentaDTO ventaDTOpaquete = VentaDTO.builder()
@@ -132,14 +141,14 @@ public class VentaControllerTests {
     @Test
     public void deberiaGuardarLaVenta() throws Exception {
         Mockito.when(ventaService.guardarVenta(Mockito.any(VentaDTO.class)))
-                .thenReturn(venta);
+                .thenReturn(ventaDevuelta);
         mockMvc.perform(MockMvcRequestBuilders.post("/api/ventas/guardar")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(ventaDTO))
         ).andExpect(status().isCreated())
         .andExpect(jsonPath("$.num_venta").value(venta.getNum_venta()))
                 .andExpect(jsonPath("$.medio_pago").value(venta.getMedio_pago()))
-                .andExpect(jsonPath("$.producto_turistico.codigo_producto")
+                .andExpect(jsonPath("$.codigo_producto")
                         .value(venta.getProducto_turistico().getCodigo_producto()));
 
         Mockito.verify(ventaService).guardarVenta(Mockito.any(VentaDTO.class));
@@ -204,10 +213,8 @@ public class VentaControllerTests {
                 ).andExpect(status().isCreated())
                 .andExpect(jsonPath("$.num_venta").value(ventaDePaquete.getNum_venta()))
                 .andExpect(jsonPath("$.medio_pago").value(ventaDePaquete.getMedio_pago()))
-                .andExpect(jsonPath("$.producto_turistico.codigo_producto")
-                        .value(ventaDePaquete.getProducto_turistico().getCodigo_producto()))
-                .andExpect(jsonPath("$.producto_turistico.costo_paquete")
-                        .value(135.0));
+                .andExpect(jsonPath("$.codigo_producto")
+                        .value(ventaDePaquete.getCodigo_producto()));
 
 
         Mockito.verify(ventaService).guardarVenta(Mockito.any(VentaDTO.class));
@@ -224,13 +231,13 @@ public class VentaControllerTests {
 
     @Test
     public void deberiaEditarLaVentaDeUnServicioAlCambiarlaPorUnPaquete() throws Exception {
-        Venta ventaEditadaDevueltaEsperada = Venta.builder()
+        VentaResponseDTO ventaEditadaDevueltaEsperada = VentaResponseDTO.builder()
                 .num_venta(1L)
                 .fecha_venta(LocalDate.of(2026, 1, 18))
                 .medio_pago("tarjeta de credito")
-                .cliente(cliente)
-                .empleado(empleado)
-                .producto_turistico(paqueteVendido)
+                .id_cliente(cliente.getId_cliente())
+                .id_empleado(empleado.getId_empleado())
+                .codigo_producto(paqueteVendido.getCodigo_producto())
                 .build();
         Mockito.when(ventaService.editarVenta(Mockito.any(VentaEdicionDTO.class)))
                 .thenReturn(ventaEditadaDevueltaEsperada);
@@ -246,9 +253,7 @@ public class VentaControllerTests {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(ventaEdicionDTO))
         ).andExpect(status().isOk())
-                .andExpect(jsonPath("$.producto_turistico.codigo_producto")
-                        .value(2))
-                .andExpect(jsonPath("$.producto_turistico.costo_paquete")
-                        .value(135.0));
+                .andExpect(jsonPath("$.codigo_producto")
+                        .value(2));
     }
 }

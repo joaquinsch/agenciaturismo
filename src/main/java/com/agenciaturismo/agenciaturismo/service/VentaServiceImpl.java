@@ -2,6 +2,7 @@ package com.agenciaturismo.agenciaturismo.service;
 
 import com.agenciaturismo.agenciaturismo.dto.VentaDTO;
 import com.agenciaturismo.agenciaturismo.dto.VentaEdicionDTO;
+import com.agenciaturismo.agenciaturismo.dto.VentaResponseDTO;
 import com.agenciaturismo.agenciaturismo.exceptions.*;
 import com.agenciaturismo.agenciaturismo.model.*;
 import com.agenciaturismo.agenciaturismo.repository.ClienteRepository;
@@ -34,7 +35,7 @@ public class VentaServiceImpl implements VentaService {
     }
 
     @Override
-    public Venta guardarVenta(VentaDTO ventaDTO) {
+    public VentaResponseDTO guardarVenta(VentaDTO ventaDTO) {
         Cliente cliente = validarCliente(ventaDTO.getId_cliente());
         Empleado empleado = validarEmpleado(ventaDTO.getId_empleado());
         ProductoTuristico producto = validarProducto(ventaDTO.getCodigo_producto());
@@ -46,7 +47,15 @@ public class VentaServiceImpl implements VentaService {
                 .empleado(empleado)
                 .producto_turistico(producto)
                 .build();
-        return this.ventaRepository.save(venta);
+        Venta persistida = ventaRepository.save(venta);
+        return VentaResponseDTO.builder()
+                .num_venta(persistida.getNum_venta())
+                .fecha_venta(venta.getFecha_venta())
+                .medio_pago(venta.getMedio_pago())
+                .id_cliente(cliente.getId_cliente())
+                .id_empleado(empleado.getId_empleado())
+                .codigo_producto(producto.getCodigo_producto())
+                .build();
     }
 
     @Override
@@ -63,7 +72,7 @@ public class VentaServiceImpl implements VentaService {
     }
 
     @Override
-    public Venta editarVenta(VentaEdicionDTO ventaEdicionDTO) {
+    public VentaResponseDTO editarVenta(VentaEdicionDTO ventaEdicionDTO) {
         buscarVenta(ventaEdicionDTO.getNum_venta());
         Cliente cliente = validarCliente(ventaEdicionDTO.getId_cliente());
         Empleado empleado = validarEmpleado(ventaEdicionDTO.getId_empleado());
@@ -76,7 +85,15 @@ public class VentaServiceImpl implements VentaService {
                 .empleado(empleado)
                 .producto_turistico(producto)
                 .build();
-        return ventaRepository.save(editada);
+        Venta persistida = ventaRepository.save(editada);
+        return VentaResponseDTO.builder()
+                .num_venta(persistida.getNum_venta())
+                .fecha_venta(editada.getFecha_venta())
+                .medio_pago(editada.getMedio_pago())
+                .id_cliente(editada.getCliente().getId_cliente())
+                .id_empleado(editada.getEmpleado().getId_empleado())
+                .codigo_producto(editada.getProducto_turistico().getCodigo_producto())
+                .build();
     }
 
     private Cliente validarCliente(Long id_cliente) {
