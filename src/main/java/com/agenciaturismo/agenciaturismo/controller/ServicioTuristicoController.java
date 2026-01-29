@@ -20,19 +20,19 @@ public class ServicioTuristicoController {
         return new ResponseEntity<>(buscado, HttpStatus.OK);
     }
 
-    @PostMapping("/guardar")
+    @PostMapping
     public ResponseEntity<ServicioTuristico> guardarServicio(@RequestBody ServicioTuristico servicioTuristico) {
         ServicioTuristico guardado = this.servicioTuristicoService.guardarServicio(servicioTuristico);
         return new ResponseEntity<>(guardado, HttpStatus.CREATED);
     }
 
-    @PutMapping("/editar")
+    @PutMapping
     public ResponseEntity<ServicioTuristico> editarServicio(@RequestBody ServicioTuristico servicioTuristico) {
         ServicioTuristico editado = this.servicioTuristicoService.editarServicio(servicioTuristico);
         return new ResponseEntity<>(editado, HttpStatus.OK);
     }
 
-    @DeleteMapping("/eliminar/{codigo_producto}")
+    @DeleteMapping("/{codigo_producto}")
     public ResponseEntity<ServicioTuristico> eliminarServicio(@Valid @PathVariable Long codigo_producto) {
         this.servicioTuristicoService.eliminarServicio(codigo_producto);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

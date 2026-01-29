@@ -142,7 +142,7 @@ public class VentaControllerTests {
     public void deberiaGuardarLaVenta() throws Exception {
         Mockito.when(ventaService.guardarVenta(Mockito.any(VentaDTO.class)))
                 .thenReturn(ventaDevuelta);
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/ventas/guardar")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/ventas")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(ventaDTO))
         ).andExpect(status().isCreated())
@@ -159,7 +159,7 @@ public class VentaControllerTests {
         Mockito.when(this.ventaService.guardarVenta(Mockito.any(VentaDTO.class)))
                 .thenThrow(new ClienteInexistenteError("El cliente no existe"));
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/ventas/guardar")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/ventas")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(ventaDTO))
         ).andExpect(status().isNotFound())
@@ -171,7 +171,7 @@ public class VentaControllerTests {
         Mockito.when(this.ventaService.guardarVenta(Mockito.any(VentaDTO.class)))
                 .thenThrow(new EmpleadoInexistenteError("El empleado no existe"));
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/ventas/guardar")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/ventas")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(ventaDTO))
                 ).andExpect(status().isNotFound())
@@ -184,7 +184,7 @@ public class VentaControllerTests {
                 .thenReturn(venta);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/ventas/1"))
-                .andExpect(status().isFound())
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.num_venta").value(1L))
                 .andExpect(jsonPath("$.fecha_venta").value("2026-01-02"))
                 .andExpect(jsonPath("$.medio_pago").value("tarjeta"))
@@ -207,7 +207,7 @@ public class VentaControllerTests {
     public void deberiaGuardarLaVentaDeUnPaqueteTuristico() throws Exception {
         Mockito.when(ventaService.guardarVenta(Mockito.any(VentaDTO.class)))
                 .thenReturn(ventaDePaquete);
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/ventas/guardar")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/ventas")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(ventaDTOpaquete))
                 ).andExpect(status().isCreated())
@@ -224,7 +224,7 @@ public class VentaControllerTests {
     public void deberiaEliminarLaVenta() throws Exception {
         Mockito.when(this.ventaService.buscarVenta(1L))
                         .thenReturn(venta);
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/ventas/eliminar/1")
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/ventas/1")
                         .contentType(MediaType.APPLICATION_JSON)
                 ).andExpect(status().isNoContent());
     }
@@ -249,7 +249,7 @@ public class VentaControllerTests {
                 .id_empleado(1L)
                 .codigo_producto(2L)
                 .build();
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/ventas/editar")
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/ventas")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(ventaEdicionDTO))
         ).andExpect(status().isOk())

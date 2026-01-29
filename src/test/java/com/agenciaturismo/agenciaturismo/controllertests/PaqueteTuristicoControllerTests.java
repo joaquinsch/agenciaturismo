@@ -80,7 +80,7 @@ public class PaqueteTuristicoControllerTests {
                 .costo_paquete(135.0)
                 .build();
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/paquetes/guardar")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/paquetes")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(paqDTO))
         ).andExpect(status().isCreated())
@@ -94,7 +94,7 @@ public class PaqueteTuristicoControllerTests {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/paquetes/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(paquete))
-                ).andExpect(status().isFound())
+                ).andExpect(status().isOk())
                 .andExpect(jsonPath("$.codigo_producto").value(1L));
     }
 
@@ -110,7 +110,7 @@ public class PaqueteTuristicoControllerTests {
 
     @Test
     public void deberiaEliminarElPaquete() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/paquetes/eliminar/1")
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/paquetes/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 //.content(objectMapper.writeValueAsString(paquete))
         ).andExpect(status().isNoContent());
@@ -126,7 +126,7 @@ public class PaqueteTuristicoControllerTests {
                 .build();
         Mockito.when(paqueteTuristicoService.editarPaquete(Mockito.any(PaqueteEdicionDTO.class)))
                 .thenReturn(editado);
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/paquetes/editar")
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/paquetes")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(editado))
                 )
@@ -140,7 +140,7 @@ public class PaqueteTuristicoControllerTests {
     public void deberiaDarErrorSiIntentaEditarUnPaquetePoniendoServiciosEliminados() throws Exception{
         Mockito.when(paqueteTuristicoService.editarPaquete(Mockito.any(PaqueteEdicionDTO.class)))
                 .thenThrow(new PaqueteInvalidoError("El paquete contiene servicios eliminados"));
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/paquetes/editar")
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/paquetes")
                 .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(paquete)) // tiene que ir uno cualquiera
         ).andExpect(status().isBadRequest())

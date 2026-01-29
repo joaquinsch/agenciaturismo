@@ -16,7 +16,7 @@ public class PaqueteTuristicoController {
     @Autowired
     private PaqueteTuristicoService paqueteTuristicoService;
 
-    @PostMapping("/guardar")
+    @PostMapping
     public ResponseEntity<PaqueteTuristico> guardarPaquete(@Valid @RequestBody PaqueteDTO paqueteDTO) {
         PaqueteTuristico guardado = paqueteTuristicoService.guardarPaquete(paqueteDTO);
         return new ResponseEntity<>(guardado, HttpStatus.CREATED);
@@ -25,16 +25,16 @@ public class PaqueteTuristicoController {
     @GetMapping("/{codigo_producto}")
     public ResponseEntity<PaqueteTuristico> buscarPaquete(@PathVariable Long codigo_producto) {
         PaqueteTuristico buscado = paqueteTuristicoService.buscarPaquete(codigo_producto);
-        return new ResponseEntity<>(buscado, HttpStatus.FOUND);
+        return new ResponseEntity<>(buscado, HttpStatus.OK);
     }
 
-    @DeleteMapping("/eliminar/{codigo_producto}")
+    @DeleteMapping("/{codigo_producto}")
     public ResponseEntity<PaqueteTuristico> eliminarPaquete(@PathVariable Long codigo_producto) {
         this.paqueteTuristicoService.eliminarPaquete(codigo_producto);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping("/editar")
+    @PutMapping
     public ResponseEntity<PaqueteTuristico> editarPaquete(@Valid @RequestBody PaqueteEdicionDTO paqueteEdicionDTO) {
         PaqueteTuristico editado = this.paqueteTuristicoService.editarPaquete(paqueteEdicionDTO);
         return new ResponseEntity<>(editado, HttpStatus.OK);

@@ -18,7 +18,7 @@ public class VentaController {
     @Autowired
     private VentaService ventaService;
 
-    @PostMapping("/guardar")
+    @PostMapping
     public ResponseEntity<VentaResponseDTO> guardarVenta(@Valid @RequestBody VentaDTO ventaDTO) {
         VentaResponseDTO guardada = ventaService.guardarVenta(ventaDTO);
         return new ResponseEntity<>(guardada, HttpStatus.CREATED);
@@ -27,16 +27,16 @@ public class VentaController {
     @GetMapping("/{num_venta}")
     public ResponseEntity<Venta> buscarVenta(@PathVariable Long num_venta) {
         Venta buscada = ventaService.buscarVenta(num_venta);
-        return new ResponseEntity<>(buscada, HttpStatus.FOUND);
+        return new ResponseEntity<>(buscada, HttpStatus.OK);
     }
 
-    @DeleteMapping("/eliminar/{num_venta}")
+    @DeleteMapping("/{num_venta}")
     public ResponseEntity<Venta> eliminarVenta(@PathVariable Long num_venta) {
         ventaService.eliminarVenta(num_venta);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping("/editar")
+    @PutMapping
     public ResponseEntity<VentaResponseDTO> editarVenta(@Valid @RequestBody VentaEdicionDTO ventaEdicionDTO) {
         VentaResponseDTO editada = ventaService.editarVenta(ventaEdicionDTO);
         return new ResponseEntity<>(editada, HttpStatus.OK);

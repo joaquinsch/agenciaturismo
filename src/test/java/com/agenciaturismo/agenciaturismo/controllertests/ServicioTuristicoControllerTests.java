@@ -77,7 +77,7 @@ public class ServicioTuristicoControllerTests {
         Mockito.when(servicioTuristicoService.guardarServicio(Mockito.any()))
                 .thenReturn(servicio2);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/servicios/guardar")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/servicios")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(servicio2))
                 )
@@ -94,7 +94,7 @@ public class ServicioTuristicoControllerTests {
         Mockito.when(servicioTuristicoService.editarServicio(Mockito.any()))
                 .thenReturn(servicio);
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/servicios/editar")
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/servicios")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(servicio))
                 )
@@ -109,7 +109,7 @@ public class ServicioTuristicoControllerTests {
 
     @Test
     public void deberiaEliminarElServicioTuristico() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/servicios/eliminar/1")
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/servicios/1")
                 .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isNoContent());
     }
@@ -127,7 +127,7 @@ public class ServicioTuristicoControllerTests {
 
         Mockito.when(this.servicioTuristicoService.guardarServicio(Mockito.any(ServicioTuristico.class)))
                 .thenThrow(FechaInvalidaError.class);
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/servicios/guardar")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/servicios")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(serv))
         ).andExpect(status().isBadRequest());
