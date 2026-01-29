@@ -1,5 +1,6 @@
 package com.agenciaturismo.agenciaturismo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
@@ -21,6 +22,7 @@ public class Cliente extends Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_cliente;
+    @JsonIgnore
     @OneToMany(mappedBy = "cliente")
     private List<Venta> ventas;
 }

@@ -1,5 +1,6 @@
 package com.agenciaturismo.agenciaturismo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.AccessLevel;
@@ -28,6 +29,7 @@ public class Empleado extends Usuario {
     @NotNull(message = "Debes ingresar un sueldo")
     @DecimalMin(value = "0.0", inclusive = false, message = "El sueldo debe ser mayor a 0")
     private Double sueldo;
+    @JsonIgnore
     @OneToMany(mappedBy = "empleado")
     private List<Venta> ventas;
 }

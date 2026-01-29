@@ -1,4 +1,5 @@
 package com.agenciaturismo.agenciaturismo.model;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,6 +32,7 @@ public class ProductoTuristico {
     private TipoProducto tipo_producto;
     @Enumerated(EnumType.STRING)
     private Estado estado;
+    @JsonIgnore
     @OneToMany(mappedBy = "producto_turistico")
     private List<Venta> ventas;
 
