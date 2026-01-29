@@ -51,7 +51,7 @@ public class ClienteControllerTests {
     public void deberiaGuardarElCliente() throws Exception {
         Mockito.when(clienteService.guardarCliente(Mockito.any(Cliente.class)))
                 .thenReturn(cliente);
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/clientes/guardar")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/clientes")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(cliente))
                 )
@@ -69,7 +69,7 @@ public class ClienteControllerTests {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/clientes/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(cliente))
-                ).andExpect(status().isFound())
+                ).andExpect(status().isOk())
                 .andExpect(jsonPath("$.id_cliente").value(1L));
     }
 
@@ -87,7 +87,7 @@ public class ClienteControllerTests {
 
     @Test
     public void deberiaEliminarElClienteBuscado() throws Exception{
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/clientes/eliminar/1")
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/clientes/1")
                         .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isNoContent());
     }
@@ -99,7 +99,7 @@ public class ClienteControllerTests {
                 .when(clienteService)
                 .eliminarCliente(2L);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/clientes/eliminar/2")
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/clientes/2")
                         .contentType(MediaType.APPLICATION_JSON)
                 ).andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.mensaje").value("El cliente no existe"));
@@ -131,7 +131,7 @@ public class ClienteControllerTests {
         Mockito.when(clienteService.editarCliente(Mockito.any(Cliente.class)))
                 .thenReturn(clienteEditadoDevueltoEsperado);
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/clientes/editar")
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/clientes")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(clienteAEditar))
                 ).andExpect(status().isOk())
@@ -155,7 +155,7 @@ public class ClienteControllerTests {
                 .nacionalidad("peruano")
                 .build();
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/clientes/guardar")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/clientes")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(clienteInvalido))
                 )

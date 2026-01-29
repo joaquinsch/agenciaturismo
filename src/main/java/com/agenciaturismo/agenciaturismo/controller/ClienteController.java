@@ -15,7 +15,7 @@ public class ClienteController {
     @Autowired
     private ClienteService clienteService;
 
-    @PostMapping("/guardar")
+    @PostMapping
     public ResponseEntity<Cliente> guardarCliente(@Valid @RequestBody Cliente cliente) {
         Cliente guardado = clienteService.guardarCliente(cliente);
         return new ResponseEntity<>(guardado, HttpStatus.CREATED);
@@ -24,16 +24,16 @@ public class ClienteController {
     @GetMapping("/{id_cliente}")
     public ResponseEntity<Cliente> buscarCliente(@PathVariable Long id_cliente) {
         Cliente buscado = clienteService.buscarCliente(id_cliente);
-        return new ResponseEntity<>(buscado, HttpStatus.FOUND);
+        return new ResponseEntity<>(buscado, HttpStatus.OK);
     }
 
-    @DeleteMapping("/eliminar/{id_cliente}")
+    @DeleteMapping("/{id_cliente}")
     public ResponseEntity<Cliente> eliminarCliente(@PathVariable Long id_cliente) {
         clienteService.eliminarCliente(id_cliente);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping("/editar")
+    @PutMapping
     public ResponseEntity<Cliente> editarCliente(@Valid @RequestBody Cliente cliente) {
         Cliente buscado = clienteService.editarCliente(cliente);
         return new ResponseEntity<>(buscado, HttpStatus.OK);
