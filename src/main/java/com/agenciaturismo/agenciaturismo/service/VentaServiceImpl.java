@@ -59,10 +59,18 @@ public class VentaServiceImpl implements VentaService {
     }
 
     @Override
-    public Venta buscarVenta(Long num_venta) {
-        return this.ventaRepository.findById(num_venta).orElseThrow(
+    public VentaResponseDTO buscarVenta(Long num_venta) {
+        Venta buscada = this.ventaRepository.findById(num_venta).orElseThrow(
                 () -> new VentaInexistenteError("La venta no existe")
         );
+        return VentaResponseDTO.builder()
+                .num_venta(buscada.getNum_venta())
+                .fecha_venta(buscada.getFecha_venta())
+                .medio_pago(buscada.getMedio_pago())
+                .id_cliente(buscada.getCliente().getId_cliente())
+                .id_empleado(buscada.getEmpleado().getId_empleado())
+                .codigo_producto(buscada.getProducto_turistico().getCodigo_producto())
+                .build();
     }
 
     @Override

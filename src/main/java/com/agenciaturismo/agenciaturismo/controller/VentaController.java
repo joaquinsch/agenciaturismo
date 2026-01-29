@@ -25,8 +25,8 @@ public class VentaController {
     }
 
     @GetMapping("/{num_venta}")
-    public ResponseEntity<Venta> buscarVenta(@PathVariable Long num_venta) {
-        Venta buscada = ventaService.buscarVenta(num_venta);
+    public ResponseEntity<VentaResponseDTO> buscarVenta(@PathVariable Long num_venta) {
+        VentaResponseDTO buscada = ventaService.buscarVenta(num_venta);
         return new ResponseEntity<>(buscada, HttpStatus.OK);
     }
 

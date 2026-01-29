@@ -181,15 +181,15 @@ public class VentaControllerTests {
     @Test
     public void deberiaDevolverUnaVenta() throws Exception{
         Mockito.when(ventaService.buscarVenta(1L))
-                .thenReturn(venta);
+                .thenReturn(ventaDevuelta);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/ventas/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.num_venta").value(1L))
                 .andExpect(jsonPath("$.fecha_venta").value("2026-01-02"))
                 .andExpect(jsonPath("$.medio_pago").value("tarjeta"))
-                .andExpect(jsonPath("$.cliente.nombre").value("carlos"))
-                .andExpect(jsonPath("$.producto_turistico.nombre").value("Viaje a China"));
+                .andExpect(jsonPath("$.id_cliente").value(1L))
+                .andExpect(jsonPath("$.codigo_producto").value(1L));
     }
 
     @Test
@@ -223,7 +223,7 @@ public class VentaControllerTests {
     @Test
     public void deberiaEliminarLaVenta() throws Exception {
         Mockito.when(this.ventaService.buscarVenta(1L))
-                        .thenReturn(venta);
+                        .thenReturn(ventaDevuelta);
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/ventas/1")
                         .contentType(MediaType.APPLICATION_JSON)
                 ).andExpect(status().isNoContent());
