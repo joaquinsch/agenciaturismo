@@ -78,7 +78,7 @@ public class EmpleadoControllerTests {
         Mockito.when(empleadoService.guardarEmpleado(Mockito.any(EmpleadoDTO.class)))
                 .thenReturn(empleado);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/empleados/guardar")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/empleados")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(empleadoDTO))
                 ).andExpect(status().isCreated())
@@ -94,13 +94,13 @@ public class EmpleadoControllerTests {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/empleados/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(empleado))
-                ).andExpect(status().isFound())
+                ).andExpect(status().isOk())
                 .andExpect(jsonPath("$.id_empleado").value(1L));
     }
 
     @Test
     public void deberiaEliminarElEmpleado() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/empleados/eliminar/1")
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/empleados/1")
                 .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isNoContent());
     }
@@ -112,7 +112,7 @@ public class EmpleadoControllerTests {
                 .when(empleadoService)
                 .eliminarEmpleado(2L);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/empleados/eliminar/2")
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/empleados/2")
                 .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.mensaje").value("El empleado no existe"));
@@ -151,7 +151,7 @@ public class EmpleadoControllerTests {
         Mockito.when(empleadoService.editarEmpleado(Mockito.any(Empleado.class)))
                 .thenReturn(empleadoEditadoDevueltoEsperado);
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/empleados/editar")
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/empleados")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(empleadoAEditar))
                 ).andExpect(status().isOk())
