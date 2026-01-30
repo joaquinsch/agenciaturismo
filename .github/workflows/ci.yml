@@ -1,4 +1,4 @@
-name: Java CI
+name: Java CI + CD (Render Docker)
 
 on:
   push:
@@ -25,7 +25,6 @@ jobs:
       - name: Run Checkstyle
         run: mvn -B checkstyle:check
 
-      # Subir reporte como artifact (para poder verlo en GitHub)
       - name: Upload Checkstyle report
         uses: actions/upload-artifact@v4
         with:
@@ -39,3 +38,15 @@ jobs:
       # ===== TESTS =====
       - name: Run tests
         run: mvn test
+
+  deploy:
+    name: Deploy to Render
+    needs: build
+    runs-on: ubuntu-latest
+
+    # solo deploy en push a master (no en PR)
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+
+    steps:
+      - name: Trigger Render Deploy Hook
+        run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
