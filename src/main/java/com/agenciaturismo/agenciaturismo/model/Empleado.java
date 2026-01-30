@@ -22,7 +22,7 @@ public class Empleado extends Usuario {
     private Long id_empleado;
     @NotNull(message = "Debes ingresar el cargo válido")
     @NotBlank(message = "Debes ingresar el cargo")
-    @Pattern(regexp = "^[A-Za-zÁÉÍÓÚáéíóúÑñ ]{1,20}$",
+    @Pattern(regexp = "^[A-Za-zÁÉÍÓÚáéíóúÑñ ]{1,25}$",
             message = "El cargo es inválido"
     )
     private String cargo;
