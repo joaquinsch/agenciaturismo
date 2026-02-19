@@ -1,7 +1,7 @@
 # Agencia de Turismo
-
-- Se puede probar en: https://agenciaturismo.onrender.com
-- Por ej: https://agenciaturismo.onrender.com/empleados/1
+										
+- Se puede probar en: https://agenciaturismo.onrender.com	
+- Por ej: https://agenciaturismo.onrender.com/api/empleados/1
 - La bd está hosteada en railway
 
 ## Contexto
