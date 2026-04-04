@@ -138,10 +138,10 @@ public class EmpleadoControllerTests {
                 .nombre("jose")
                 .apellido("gomez")
                 .direccion("calle falsa 125")
-                .dni("1122225555")
+                .dni("22225555")
                 .fecha_nac(LocalDate.of(1999, 9, 26))
                 .nacionalidad("BOLIVIANO")
-                .celular("1112341234")
+                .celular("+54 11 12341234")
                 .email("asd@gmail.com")
                 .cargo("vendedor de paquetes")
                 .sueldo(900000.0)
@@ -155,6 +155,8 @@ public class EmpleadoControllerTests {
                         .content(objectMapper.writeValueAsString(empleadoAEditar))
                 ).andExpect(status().isOk())
                 .andExpect(jsonPath("$.cargo")
-                        .value("vendedor de paquetes"));
+                        .value("vendedor de paquetes"))
+                .andExpect(jsonPath("$.celular")
+                        .value("+54 11 12341234"));
     }
 }
