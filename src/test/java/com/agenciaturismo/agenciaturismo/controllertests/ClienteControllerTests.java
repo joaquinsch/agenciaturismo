@@ -108,7 +108,6 @@ public class ClienteControllerTests {
     @Test
     public void deberiaEditarElCliente() throws Exception {
         Cliente clienteAEditar = Cliente.builder() //datos q se pasan por parametro
-                .id_cliente(1L)
                 .nombre("PEDRO")
                 .apellido("GONZALEZ")
                 .dni("22223333")
@@ -128,10 +127,10 @@ public class ClienteControllerTests {
                 .email("asd@gmail.com")
                 .nacionalidad("peruano")
                 .build();
-        Mockito.when(clienteService.editarCliente(Mockito.any(Cliente.class)))
+        Mockito.when(clienteService.editarCliente(Mockito.anyLong(), Mockito.any(Cliente.class)))
                 .thenReturn(clienteEditadoDevueltoEsperado);
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/clientes")
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/clientes/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(clienteAEditar))
                 ).andExpect(status().isOk())

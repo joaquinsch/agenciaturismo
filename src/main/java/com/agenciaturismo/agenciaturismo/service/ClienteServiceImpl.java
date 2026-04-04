@@ -36,11 +36,11 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
-    public Cliente editarCliente(Cliente cliente) {
-        Cliente buscado = buscarCliente(cliente.getId_cliente());
-        validarCliente(cliente.getId_cliente());
+    public Cliente editarCliente(Long id_cliente, Cliente cliente) {
+        Cliente buscado = buscarCliente(id_cliente);
+        validarCliente(id_cliente);
         Cliente editado = Cliente.builder()
-                .id_cliente(cliente.getId_cliente())
+                .id_cliente(id_cliente)
                 .nombre(cliente.getNombre())
                 .apellido(cliente.getApellido())
                 .direccion(cliente.getDireccion())

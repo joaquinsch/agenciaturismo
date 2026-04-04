@@ -84,7 +84,6 @@ public class ClienteServiceTests {
                 .thenReturn(clienteEditadoDevueltoEsperado);
 
         Cliente clienteAEditar = Cliente.builder()
-                .id_cliente(1L)
                 .nombre("PEDRITO")
                 .apellido("NUÑEZ")
                 .dni("1122223333")
@@ -92,7 +91,7 @@ public class ClienteServiceTests {
                 .email("asd@gmail.com")
                 .nacionalidad("colombiano")
                 .build();
-        Cliente editado = clienteService.editarCliente(clienteAEditar);
+        Cliente editado = clienteService.editarCliente(1L, clienteAEditar);
         Assertions.assertEquals("PEDRITO", editado.getNombre());
         Assertions.assertEquals("NUÑEZ", editado.getApellido());
         Assertions.assertEquals("colombiano", editado.getNacionalidad());

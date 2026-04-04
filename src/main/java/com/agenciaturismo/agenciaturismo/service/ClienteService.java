@@ -6,5 +6,5 @@ public interface ClienteService {
     Cliente guardarCliente(Cliente cliente);
     Cliente buscarCliente(Long id_cliente);
     Cliente eliminarCliente(Long id_cliente);
-    Cliente editarCliente(Cliente cliente);
+    Cliente editarCliente(Long id_cliente, Cliente cliente);
 }
