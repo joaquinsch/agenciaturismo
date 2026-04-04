@@ -88,8 +88,16 @@ public class ApiExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ApiError> handleHttpMessageNotReadableError(
             HttpMessageNotReadableException e) {
+        String mensaje;
 
-        String mensaje = "La fecha de nacimiento ingresada es inválida. Use: yyyy-MM-dd (ejemplo: 1999-09-29)";
+        if (e.getMessage() != null && (e.getMessage().contains("LocalDate") ||
+                e.getMessage().contains("birthDate") ||
+                e.getMessage().contains("DateTimeParseException"))) {
+            mensaje = "La fecha de nacimiento ingresada es inválida. Use: yyyy-MM-dd (ejemplo: 1999-09-29)";
+        } else {
+            // Error genérico de JSON mal formado
+            mensaje = "El JSON enviado tiene un formato inválido. Revise la sintaxis (comillas, comas, llaves, etc.)";
+        }
 
         ApiError apiError = new ApiError(mensaje, HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
