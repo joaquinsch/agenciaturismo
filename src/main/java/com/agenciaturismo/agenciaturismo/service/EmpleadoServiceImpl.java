@@ -49,11 +49,11 @@ public class EmpleadoServiceImpl implements EmpleadoService {
     }
 
     @Override
-    public Empleado editarEmpleado(Empleado empleado) {
-        Empleado buscado = buscarEmpleado(empleado.getId_empleado());
-        validarEmpleado(empleado.getId_empleado());
+    public Empleado editarEmpleado(Long id_empleado, Empleado empleado) {
+        Empleado buscado = buscarEmpleado(id_empleado);
+        validarEmpleado(id_empleado);
         Empleado editado = Empleado.builder()
-                .id_empleado(empleado.getId_empleado())
+                .id_empleado(id_empleado)
                 .nombre(empleado.getNombre())
                 .apellido(empleado.getApellido())
                 .direccion(empleado.getDireccion())

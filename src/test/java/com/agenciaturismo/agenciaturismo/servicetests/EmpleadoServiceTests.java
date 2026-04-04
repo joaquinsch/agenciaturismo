@@ -108,7 +108,6 @@ public class EmpleadoServiceTests {
         Mockito.when(empleadoRepository.findById(empleado.getId_empleado()))
                 .thenReturn(Optional.ofNullable(empleado));
         Empleado empleadoAEditar = Empleado.builder() //datos q se pasan por parametro
-                .id_empleado(1L)
                 .nombre("jose")
                 .apellido("gomez")
                 .direccion("calle falsa 125")
@@ -137,7 +136,7 @@ public class EmpleadoServiceTests {
                 .build();
         Mockito.when(empleadoRepository.save(Mockito.any(Empleado.class)))
                 .thenReturn(empleadoEditadoDevueltoEsperado);
-        Empleado editado = empleadoService.editarEmpleado(empleadoAEditar);
+        Empleado editado = empleadoService.editarEmpleado(empleado.getId_empleado(), empleadoAEditar);
         Assertions.assertEquals("vendedor de paquetes", editado.getCargo());
         Assertions.assertEquals("BOLIVIANO", editado.getNacionalidad());
         Assertions.assertEquals("calle falsa 125", editado.getDireccion());
@@ -147,8 +146,21 @@ public class EmpleadoServiceTests {
     public void deberiaDarErrorSiIntentaEditarEmpleadoEliminado() {
         Mockito.when(empleadoRepository.findById(empleadoEliminado.getId_empleado()))
                 .thenReturn(Optional.of(empleadoEliminado));
+        Empleado empleadoAEditar = Empleado.builder() //datos q se pasan por parametro
+                .nombre("jose")
+                .apellido("gomez")
+                .direccion("calle falsa 125")
+                .dni("1122225555")
+                .fecha_nac(LocalDate.of(1999, 9, 26))
+                .nacionalidad("BOLIVIANO")
+                .celular("1112341234")
+                .email("asd@gmail.com")
+                .cargo("vendedor de paquetes")
+                .sueldo(900000.0)
+                .ventas(null)
+                .build();
         EdicionInvalidaError excepcion = Assertions.assertThrows(EdicionInvalidaError.class,
-                () -> empleadoService.editarEmpleado(empleadoEliminado)
+                () -> empleadoService.editarEmpleado(empleadoEliminado.getId_empleado(), empleadoAEditar)
         );
         Assertions.assertEquals("El empleado elegido fue eliminado", excepcion.getMessage());
     }

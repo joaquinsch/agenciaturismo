@@ -121,7 +121,6 @@ public class EmpleadoControllerTests {
     @Test
     public void deberiaEditarElEmpleado() throws Exception {
         Empleado empleadoAEditar = Empleado.builder() //datos q se pasan por parametro
-                .id_empleado(1L)
                 .nombre("jose")
                 .apellido("gomez")
                 .direccion("calle falsa 125")
@@ -148,10 +147,10 @@ public class EmpleadoControllerTests {
                 .sueldo(900000.0)
                 .ventas(null)
                 .build();
-        Mockito.when(empleadoService.editarEmpleado(Mockito.any(Empleado.class)))
+        Mockito.when(empleadoService.editarEmpleado(Mockito.anyLong(), Mockito.any(Empleado.class)))
                 .thenReturn(empleadoEditadoDevueltoEsperado);
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/empleados")
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/empleados/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(empleadoAEditar))
                 ).andExpect(status().isOk())

@@ -7,5 +7,5 @@ public interface EmpleadoService {
     Empleado guardarEmpleado(EmpleadoDTO empleadoDTO);
     Empleado buscarEmpleado(Long id_empleado);
     Empleado eliminarEmpleado(Long id_cliente);
-    Empleado editarEmpleado(Empleado empleado);
+    Empleado editarEmpleado(Long id_empleado, Empleado empleado);
 }

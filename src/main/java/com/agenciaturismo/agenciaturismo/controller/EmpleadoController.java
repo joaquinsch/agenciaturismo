@@ -34,9 +34,9 @@ public class EmpleadoController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping
-    public ResponseEntity<Empleado> editarEmpleado(@Valid @RequestBody Empleado empleado) {
-        Empleado editado = empleadoService.editarEmpleado(empleado);
+    @PutMapping("/{id_empleado}")
+    public ResponseEntity<Empleado> editarEmpleado(@PathVariable Long id_empleado, @Valid @RequestBody Empleado empleado) {
+        Empleado editado = empleadoService.editarEmpleado(id_empleado, empleado);
         return new ResponseEntity<>(editado, HttpStatus.OK);
     }
 }
