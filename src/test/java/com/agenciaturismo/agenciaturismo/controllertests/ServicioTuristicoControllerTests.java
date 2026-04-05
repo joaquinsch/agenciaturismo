@@ -91,18 +91,35 @@ public class ServicioTuristicoControllerTests {
 
     @Test
     public void deberiaEditarElServicioTuristico() throws Exception{
-        Mockito.when(servicioTuristicoService.editarServicio(Mockito.any()))
-                .thenReturn(servicio);
+        ServicioTuristico datosAEditar = ServicioTuristico.builder()
+                .nombre("pasaje")
+                .descripcion_breve("PASAJE A ITALIA")
+                .destino_servicio("ROMA")
+                .fecha_servicio(LocalDate.of(2026, 1, 7))
+                .costo_servicio(500.0)
+                .build();
+        ServicioTuristico servicioEditadoDevuelto = ServicioTuristico.builder()
+                .codigo_producto(1L)
+                .nombre("pasaje")
+                .descripcion_breve("PASAJE A ITALIA")
+                .destino_servicio("ROMA")
+                .fecha_servicio(LocalDate.of(2026, 1, 7))
+                .costo_servicio(500.0)
+                .build();
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/servicios")
+
+        Mockito.when(servicioTuristicoService.editarServicio(Mockito.anyLong(), Mockito.any()))
+                .thenReturn(servicioEditadoDevuelto);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/servicios/1")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(servicio))
+                        .content(objectMapper.writeValueAsString(datosAEditar))
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.codigo_producto").value(1L))
                 .andExpect(jsonPath("$.nombre").value("pasaje"))
-                .andExpect(jsonPath("$.descripcion_breve").value("pasaje por colectivo"))
-                .andExpect(jsonPath("$.destino_servicio").value("formosa"))
+                .andExpect(jsonPath("$.descripcion_breve").value("PASAJE A ITALIA"))
+                .andExpect(jsonPath("$.destino_servicio").value("ROMA"))
                 .andExpect(jsonPath("$.fecha_servicio").value("2026-01-07"))
                 .andExpect(jsonPath("$.costo_servicio").value(500.0));
     }

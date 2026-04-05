@@ -124,7 +124,7 @@ public class ServicioTuristicoServiceTests {
 
         Mockito.when(servicioRepository.save(Mockito.any(ServicioTuristico.class))).thenReturn(aEditar);
 
-        ServicioTuristico servicioEditado = this.servicioTuristicoService.editarServicio(aEditar);
+        ServicioTuristico servicioEditado = this.servicioTuristicoService.editarServicio(servicio.getCodigo_producto(), aEditar);
 
         Assertions.assertEquals(1L, servicioEditado.getCodigo_producto());
         Assertions.assertEquals("pasaje", servicioEditado.getNombre());
@@ -160,7 +160,7 @@ public class ServicioTuristicoServiceTests {
 
     @Test
     public void noDeberiaPoderEditarseSiEstaEnEstadoEliminado(){
-        ServicioTuristico servicio= ServicioTuristico.builder()
+        ServicioTuristico servicioEliminado = ServicioTuristico.builder()
                 .codigo_producto(3L)
                 .nombre("Viaje a China")
                 .descripcion_breve("el mejor")
@@ -169,9 +169,9 @@ public class ServicioTuristicoServiceTests {
                 .estado(ProductoTuristico.Estado.ELIMINADO)
                 .build();
         Mockito.when(servicioRepository.findById(3L))
-                .thenReturn(Optional.of(servicio));
+                .thenReturn(Optional.of(servicioEliminado));
         EdicionInvalidaError excepcion = Assertions.assertThrows(EdicionInvalidaError.class,
-                () -> servicioTuristicoService.editarServicio(servicio)
+                () -> servicioTuristicoService.editarServicio(servicioEliminado.getCodigo_producto(), new ServicioTuristico())
                 );
         Assertions.assertEquals("El servicio fue eliminado", excepcion.getMessage());
     }

@@ -26,9 +26,10 @@ public class ServicioTuristicoController {
         return new ResponseEntity<>(guardado, HttpStatus.CREATED);
     }
 
-    @PutMapping
-    public ResponseEntity<ServicioTuristico> editarServicio(@RequestBody ServicioTuristico servicioTuristico) {
-        ServicioTuristico editado = this.servicioTuristicoService.editarServicio(servicioTuristico);
+    @PutMapping("/{codigo_producto}")
+    public ResponseEntity<ServicioTuristico> editarServicio(@PathVariable Long codigo_producto,
+                                                            @RequestBody ServicioTuristico servicioTuristico) {
+        ServicioTuristico editado = this.servicioTuristicoService.editarServicio(codigo_producto, servicioTuristico);
         return new ResponseEntity<>(editado, HttpStatus.OK);
     }
 

@@ -7,5 +7,5 @@ public interface ServicioTuristicoService {
     ServicioTuristico guardarServicio(ServicioTuristico servicioTuristico);
     ServicioTuristico eliminarServicio(Long codigo_producto);
     ServicioTuristico buscarServicio(Long codigo_producto);
-    ServicioTuristico editarServicio(ServicioTuristico servicioTuristico);
+    ServicioTuristico editarServicio(Long codigo_producto, ServicioTuristico servicioTuristico);
 }

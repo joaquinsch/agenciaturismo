@@ -49,12 +49,11 @@ public class ServicioTuristicoServiceImpl implements ServicioTuristicoService {
     }
 
     @Override
-    public ServicioTuristico editarServicio(ServicioTuristico servicioTuristico) {
-        ServicioTuristico buscado = this.buscarServicio(servicioTuristico.getCodigo_producto());
-        if (buscado.getEstado().equals(ProductoTuristico.Estado.ELIMINADO)) {
-            throw new EdicionInvalidaError("El servicio fue eliminado");
-        }
-        buscado.setCodigo_producto(servicioTuristico.getCodigo_producto());
+    public ServicioTuristico editarServicio(Long codigo_producto, ServicioTuristico servicioTuristico) {
+        ServicioTuristico buscado = this.buscarServicio(codigo_producto);
+        validarServicio(buscado);
+
+        buscado.setCodigo_producto(codigo_producto);
         buscado.setNombre(servicioTuristico.getNombre());
         buscado.setDescripcion_breve(servicioTuristico.getDescripcion_breve());
         buscado.setDestino_servicio(servicioTuristico.getDestino_servicio());
@@ -62,5 +61,11 @@ public class ServicioTuristicoServiceImpl implements ServicioTuristicoService {
         buscado.setCosto_servicio(servicioTuristico.getCosto_servicio());
         buscado.setEstado(ProductoTuristico.Estado.ACTIVO);
         return this.servicioRepository.save(buscado);
+    }
+
+    private void validarServicio(ServicioTuristico buscado) {
+        if (buscado.getEstado().equals(ProductoTuristico.Estado.ELIMINADO)) {
+            throw new EdicionInvalidaError("El servicio fue eliminado");
+        }
     }
 }
