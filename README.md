@@ -1,9 +1,5 @@
 # Agencia de Turismo
 										
-- Se puede probar en: https://agenciaturismo.onrender.com	
-- Por ej: https://agenciaturismo.onrender.com/api/empleados/1
-- La bd está hosteada en railway
-
 ## Contexto
 - Es un desafío de programación, la consigna está en el repositorio por si se quiere leer.
 
