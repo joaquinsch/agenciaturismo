@@ -119,22 +119,28 @@ public class PaqueteTuristicoControllerTests {
     @Test
     public void deberiaEditarElPaqueteSiSeModificaUnServicioDelMismo() throws Exception {
 
-        PaqueteTuristico editado = PaqueteTuristico.builder()
+        PaqueteEdicionDTO paqueteEdicionDTO = PaqueteEdicionDTO.builder()
+                .costo_paquete(270.0)
+                .lista_ids_servicios_incluidos(List.of(1L,4L))
+                .build();
+        PaqueteTuristico devuelto = PaqueteTuristico.builder()
                 .codigo_producto(1L)
-                .costo_paquete(500.0)
-                .lista_servicios_incluidos(new ArrayList<>())
+                .costo_paquete(270.0)
+                .lista_servicios_incluidos(List.of(servicio1, servicio3))
                 .build();
         Mockito.when(paqueteTuristicoService.editarPaquete(Mockito.anyLong(), Mockito.any(PaqueteEdicionDTO.class)))
-                .thenReturn(editado);
+                .thenReturn(devuelto);
         Assertions.assertEquals(135.0, paquete.getCosto_paquete());
         mockMvc.perform(MockMvcRequestBuilders.put("/api/paquetes/1")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(editado))
+                        .content(objectMapper.writeValueAsString(paqueteEdicionDTO))
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.codigo_producto").value(1L))
-                .andExpect(jsonPath("$.costo_paquete").value(500.0))
-                .andExpect(jsonPath("$.lista_servicios_incluidos").isEmpty());
+                .andExpect(jsonPath("$.costo_paquete").value(270.0))
+                .andExpect(jsonPath("$.lista_servicios_incluidos[0].nombre").value("Viaje por colectivo"))
+                .andExpect(jsonPath("$.lista_servicios_incluidos[1].nombre").value("EXCURSION AL HIELO"));
+
     }
 
     @Test
