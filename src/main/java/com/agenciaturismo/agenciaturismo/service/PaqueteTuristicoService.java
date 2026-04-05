@@ -8,5 +8,5 @@ public interface PaqueteTuristicoService {
     PaqueteTuristico guardarPaquete(PaqueteDTO paqueteDTO);
     PaqueteTuristico buscarPaquete(Long codigo_producto);
     PaqueteTuristico eliminarPaquete(Long codigo_producto);
-    PaqueteTuristico editarPaquete(PaqueteEdicionDTO paqueteAEditarDTO);
+    PaqueteTuristico editarPaquete(Long codigo_producto, PaqueteEdicionDTO paqueteAEditarDTO);
 }

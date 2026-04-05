@@ -55,14 +55,14 @@ public class PaqueteTuristicoServiceImpl implements PaqueteTuristicoService {
     }
 
     @Override
-    public PaqueteTuristico editarPaquete(PaqueteEdicionDTO paqueteEdicionDTO) {
-        PaqueteTuristico buscado = buscarPaquete(paqueteEdicionDTO.getCodigo_producto());
+    public PaqueteTuristico editarPaquete(Long codigo_producto, PaqueteEdicionDTO paqueteEdicionDTO) {
+        PaqueteTuristico buscado = buscarPaquete(codigo_producto);
         validarEstadoDePaquete(buscado);
         List<ServicioTuristico> servicios_incluidos = servicioRepository.findAllById(paqueteEdicionDTO.getLista_ids_servicios_incluidos());
         validarServiciosDelPaquete(paqueteEdicionDTO.getLista_ids_servicios_incluidos(), servicios_incluidos);
 
         PaqueteTuristico paqueteEditado = PaqueteTuristico.builder()
-                .codigo_producto(buscado.getCodigo_producto())
+                .codigo_producto(codigo_producto)
                 .lista_servicios_incluidos(servicios_incluidos)
                 .costo_paquete(paqueteEdicionDTO.getCosto_paquete())
                 .tipo_producto(ProductoTuristico.TipoProducto.PAQUETE)

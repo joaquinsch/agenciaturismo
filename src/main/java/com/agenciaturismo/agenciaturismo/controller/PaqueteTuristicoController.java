@@ -34,9 +34,10 @@ public class PaqueteTuristicoController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping
-    public ResponseEntity<PaqueteTuristico> editarPaquete(@Valid @RequestBody PaqueteEdicionDTO paqueteEdicionDTO) {
-        PaqueteTuristico editado = this.paqueteTuristicoService.editarPaquete(paqueteEdicionDTO);
+    @PutMapping("/{codigo_producto}")
+    public ResponseEntity<PaqueteTuristico> editarPaquete(@PathVariable Long codigo_producto,
+                                                          @Valid @RequestBody PaqueteEdicionDTO paqueteEdicionDTO) {
+        PaqueteTuristico editado = this.paqueteTuristicoService.editarPaquete(codigo_producto, paqueteEdicionDTO);
         return new ResponseEntity<>(editado, HttpStatus.OK);
     }
 }

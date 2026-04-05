@@ -8,6 +8,7 @@ import com.agenciaturismo.agenciaturismo.model.PaqueteTuristico;
 import com.agenciaturismo.agenciaturismo.model.ServicioTuristico;
 import com.agenciaturismo.agenciaturismo.service.PaqueteTuristicoServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,7 +105,6 @@ public class PaqueteTuristicoControllerTests {
                 .thenThrow(PaqueteInexistenteError.class);
         mockMvc.perform(MockMvcRequestBuilders.get("/api/paquetes/2")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(paquete))
         ).andExpect(status().isNotFound());
     }
 
@@ -124,9 +124,10 @@ public class PaqueteTuristicoControllerTests {
                 .costo_paquete(500.0)
                 .lista_servicios_incluidos(new ArrayList<>())
                 .build();
-        Mockito.when(paqueteTuristicoService.editarPaquete(Mockito.any(PaqueteEdicionDTO.class)))
+        Mockito.when(paqueteTuristicoService.editarPaquete(Mockito.anyLong(), Mockito.any(PaqueteEdicionDTO.class)))
                 .thenReturn(editado);
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/paquetes")
+        Assertions.assertEquals(135.0, paquete.getCosto_paquete());
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/paquetes/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(editado))
                 )
@@ -138,9 +139,9 @@ public class PaqueteTuristicoControllerTests {
 
     @Test
     public void deberiaDarErrorSiIntentaEditarUnPaquetePoniendoServiciosEliminados() throws Exception{
-        Mockito.when(paqueteTuristicoService.editarPaquete(Mockito.any(PaqueteEdicionDTO.class)))
+        Mockito.when(paqueteTuristicoService.editarPaquete(Mockito.anyLong(), Mockito.any(PaqueteEdicionDTO.class)))
                 .thenThrow(new PaqueteInvalidoError("El paquete contiene servicios eliminados"));
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/paquetes")
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/paquetes/1")
                 .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(paquete)) // tiene que ir uno cualquiera
         ).andExpect(status().isBadRequest())
