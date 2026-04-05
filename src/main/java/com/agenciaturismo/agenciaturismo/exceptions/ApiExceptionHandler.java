@@ -4,9 +4,12 @@ import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @RestControllerAdvice
 public class ApiExceptionHandler {
@@ -114,5 +117,30 @@ public class ApiExceptionHandler {
 
         ApiError apiError = new ApiError(mensaje, HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+    }
+    // VALIDACION DE URLS
+    /*
+        Si ingresa un parámetro inválido, por ej: GET /api/clientes/asd
+     */
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ApiError> handleNoMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
+        ApiError apiError = new ApiError("El parámetro ingresado es inválido", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+    }
+    /*
+        Si ingresa un verbo inválido, por ej: POST /api/clientes/3
+     */
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ApiError> handleNoHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
+        ApiError apiError = new ApiError("La acción es inválida", HttpStatus.METHOD_NOT_ALLOWED);
+        return new ResponseEntity<>(apiError, HttpStatus.METHOD_NOT_ALLOWED);
+    }
+    /*
+        Si ingresa una url inválida, por ej: POST /asd
+     */
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ApiError> handleNoResourceFoundException(NoResourceFoundException e) {
+        ApiError apiError = new ApiError("No se encontró el recurso ingresado", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
     }
 }
